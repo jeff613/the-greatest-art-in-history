@@ -1,0 +1,70 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import ArtworkCard from '../../components/ArtworkCard.astro';
+
+export async function getStaticPaths() {
+  const artists = await getCollection('artists');
+  return artists.map((artist) => ({ params: { slug: artist.id }, props: { artist } }));
+}
+
+const { artist } = Astro.props;
+const period = await getEntry(artist.data.period);
+const { Content } = await render(artist);
+const works = (await getCollection('works', (w) => w.data.artist.id === artist.id)).sort(
+  (a, b) => a.data.year.localeCompare(b.data.year)
+);
+---
+
+<Base title={`${artist.data.name} — The Greatest Art in History`}>
+  <div class="artist-head">
+    <Image
+      src={artist.data.portrait}
+      widths={[400, 800]}
+      sizes="320px"
+      alt={`Portrait of ${artist.data.name}`}
+    />
+    <div>
+      <p class="kicker">{period.data.name} · {artist.data.birth}–{artist.data.death}</p>
+      <h1>{artist.data.name}</h1>
+      <p class="hook">{artist.data.hook}</p>
+    </div>
+  </div>
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  <section class="timeline prose">
+    <h2>Life in brief</h2>
+    <ul>
+      {artist.data.timeline.map((item) => (
+        <li><strong>{item.year}</strong> — {item.event}</li>
+      ))}
+    </ul>
+  </section>
+
+  <section>
+    <div class="page-head"><h2>In the collection</h2></div>
+    <div class="grid">
+      {works.map((work) => (
+        <ArtworkCard work={work} artistName={artist.data.name} />
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .artist-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    align-items: end;
+    padding: 3.5rem clamp(1rem, 4vw, 3rem) 2rem;
+  }
+  .artist-head :global(img) { width: 240px; height: auto; }
+  .hook { font-style: italic; color: var(--muted); font-size: 1.15rem; }
+  .timeline ul { list-style: none; padding: 0; }
+  .timeline li { border-left: 1px solid var(--accent); padding-left: 1.25rem; margin-bottom: 0.9rem; }
+</style>
