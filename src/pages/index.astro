@@ -9,12 +9,14 @@ const entries = await Promise.all(
     .sort((a, b) => a.id.localeCompare(b.id))
     .map(async (work) => {
       const artist = await getEntry(work.data.artist);
+      const period = await getEntry(work.data.period);
       const hero = await getImage({ src: work.data.image, width: 2400, format: 'webp' });
       return {
         slug: work.id,
         title: work.data.title,
         artist: artist.data.name,
         year: work.data.year,
+        period: period.data.name,
         src: hero.src,
       };
     })
@@ -41,37 +43,120 @@ const entries = await Promise.all(
     </noscript>
   </section>
 
+  <div id="gallery-walk"></div>
+
+  <template id="room-template">
+    <section class="room">
+      <a class="daily-bg room-link" href="/">
+        <img class="room-img" alt="" loading="lazy" decoding="async" />
+        <span class="scrim"></span>
+      </a>
+      <div class="wall-label">
+        <p class="kicker room-period"></p>
+        <h2 class="display italic room-title"></h2>
+        <p class="byline room-byline"></p>
+        <a class="read-link room-read" href="/">Read the story →</a>
+      </div>
+    </section>
+  </template>
+
+  <section class="walk-end" id="walk-end" hidden>
+    <p class="kicker">You've walked the whole gallery</p>
+    <p class="walk-end-links"><a href="/artists/">Artists</a> · <a href="/periods/">Periods</a></p>
+  </section>
+
   <script type="application/json" id="works-data" set:html={JSON.stringify(entries).replace(/</g, '\\u003c')} />
 </Base>
 
-<script>
-  type Entry = { slug: string; title: string; artist: string; year: string; src: string };
+<style>
+  :global(html) { scroll-snap-type: y proximity; }
+  .daily-hero { scroll-snap-align: start; }
+  :global(#gallery-walk .room) {
+    position: relative;
+    height: 100svh;
+    scroll-snap-align: start;
+  }
+  :global(#gallery-walk .room-img) { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(#gallery-walk .room-img) { opacity: 0; transition: opacity 1.2s ease-out; }
+    :global(#gallery-walk .room-img.is-loaded) { opacity: 1; }
+  }
+  .walk-end {
+    min-height: 42svh;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    gap: 0.4rem;
+    scroll-snap-align: end;
+  }
+  .walk-end-links { margin: 0; }
+  .walk-end-links a { border-bottom: 1px solid var(--gilt); }
+</style>
 
-  function initDaily(): void {
+<script>
+  type Entry = {
+    slug: string;
+    title: string;
+    artist: string;
+    year: string;
+    period: string;
+    src: string;
+  };
+
+  function initHome(): void {
     const dataEl = document.getElementById('works-data');
-    if (!dataEl) return; // navigated to a non-home page
+    if (!dataEl) return; // not the home page
     const data: Entry[] = JSON.parse(dataEl.textContent!);
 
     const now = new Date();
     const key = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
     let hash = 0;
     for (const ch of key) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-    const entry = data[hash % data.length];
+    const dailyIndex = hash % data.length;
+    const daily = data[dailyIndex];
 
-    const img = document.getElementById('daily-img') as HTMLImageElement;
-    img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
-    img.src = entry.src;
-    img.alt = `${entry.title} by ${entry.artist}`;
-    if (img.complete) img.classList.add('is-loaded');
+    const dailyImg = document.getElementById('daily-img') as HTMLImageElement;
+    dailyImg.addEventListener('load', () => dailyImg.classList.add('is-loaded'), { once: true });
+    dailyImg.src = daily.src;
+    dailyImg.alt = `${daily.title} by ${daily.artist}`;
+    if (dailyImg.complete) dailyImg.classList.add('is-loaded');
 
     const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     document.getElementById('daily-kicker')!.textContent = `Artwork of the Day — ${dateLabel}`;
-    document.getElementById('daily-title')!.textContent = entry.title;
-    document.getElementById('daily-byline')!.textContent = `${entry.artist}, ${entry.year}`;
-    const url = `/works/${entry.slug}/`;
-    (document.getElementById('daily-link') as HTMLAnchorElement).href = url;
-    (document.getElementById('daily-read') as HTMLAnchorElement).href = url;
+    document.getElementById('daily-title')!.textContent = daily.title;
+    document.getElementById('daily-byline')!.textContent = `${daily.artist}, ${daily.year}`;
+    const dailyUrl = `/works/${daily.slug}/`;
+    (document.getElementById('daily-link') as HTMLAnchorElement).href = dailyUrl;
+    (document.getElementById('daily-read') as HTMLAnchorElement).href = dailyUrl;
+
+    // Gallery walk: remaining works, shuffled fresh each visit.
+    const walk = document.getElementById('gallery-walk')!;
+    if (walk.childElementCount > 0) return; // already built (defensive)
+    const template = document.getElementById('room-template') as HTMLTemplateElement;
+
+    const rest = data.filter((_, i) => i !== dailyIndex);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+
+    for (const entry of rest) {
+      const node = template.content.cloneNode(true) as DocumentFragment;
+      const img = node.querySelector('.room-img') as HTMLImageElement;
+      img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+      img.src = entry.src;
+      img.alt = `${entry.title} by ${entry.artist}`;
+      node.querySelector('.room-period')!.textContent = entry.period;
+      node.querySelector('.room-title')!.textContent = entry.title;
+      node.querySelector('.room-byline')!.textContent = `${entry.artist}, ${entry.year}`;
+      const url = `/works/${entry.slug}/`;
+      (node.querySelector('.room-link') as HTMLAnchorElement).href = url;
+      (node.querySelector('.room-read') as HTMLAnchorElement).href = url;
+      walk.appendChild(node);
+    }
+
+    document.getElementById('walk-end')!.hidden = false;
   }
 
-  document.addEventListener('astro:page-load', initDaily);
+  document.addEventListener('astro:page-load', initHome);
 </script>
