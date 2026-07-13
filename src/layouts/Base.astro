@@ -1,0 +1,36 @@
+---
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/600.css';
+import '@fontsource/cormorant-garamond/700.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  dark?: boolean;
+}
+const { title = 'The Greatest Art in History', dark = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body class:list={[{ dark }]}>
+    <header class="site-header">
+      <a class="wordmark" href="/">The Greatest Art<span> in History</span></a>
+      <nav>
+        <a href="/artists/">Artists</a>
+        <a href="/periods/">Periods</a>
+      </nav>
+    </header>
+    <main><slot /></main>
+    <footer class="site-footer">
+      <p>A personal gallery of public-domain masterpieces. Images courtesy of museum open-access programs and Wikimedia Commons.</p>
+    </footer>
+  </body>
+</html>

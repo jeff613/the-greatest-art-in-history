@@ -6,7 +6,7 @@
 
 **Architecture:** Astro content collections hold all content as markdown with zod-typed frontmatter (periods, artists, works). Pages are statically generated; the only client-side JS is the daily-pick/shuffle script on the homepage and the full-screen zoom on artwork pages. High-res public-domain images live in `src/assets/` and are resized by Astro's image pipeline at build time.
 
-**Tech Stack:** Astro 5 (static, TypeScript strict), sharp (image checks), @fontsource/cormorant-garamond + @fontsource/inter (self-hosted fonts). No database, no backend, no UI framework.
+**Tech Stack:** Astro 7 (static, TypeScript strict; scaffolded latest — content-collections API identical to v5), sharp (image checks), @fontsource/cormorant-garamond + @fontsource/inter (self-hosted fonts). No database, no backend, no UI framework.
 
 **Spec:** `docs/superpowers/specs/2026-07-12-virtual-gallery-design.md`
 
