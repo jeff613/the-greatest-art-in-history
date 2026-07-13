@@ -264,3 +264,14 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- narrow viewports: keep the floating header on one line ---------- */
+@media (max-width: 640px) {
+  .site-header { padding: 1.2rem var(--pad); }
+  .wordmark { letter-spacing: 0.22em; font-size: 0.78rem; }
+  .site-header .nav-left, .site-header .nav-right { font-size: 0.65rem; letter-spacing: 0.14em; }
+}
+@media (max-width: 380px) {
+  .wordmark { letter-spacing: 0.12em; font-size: 0.72rem; }
+  .site-header .nav-left, .site-header .nav-right { font-size: 0.6rem; letter-spacing: 0.1em; }
+}
