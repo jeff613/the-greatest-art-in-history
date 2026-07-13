@@ -36,5 +36,9 @@ cards.sort((a, b) => a.work.data.year.localeCompare(b.work.data.year));
 </Base>
 
 <style>
-  .intro { margin-bottom: 1.5rem; }
+  .intro {
+    margin: 0 0 1.5rem;
+    padding: 0 var(--pad);
+    max-width: calc(var(--measure) + 2 * var(--pad));
+  }
 </style>
