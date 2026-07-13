@@ -5,12 +5,14 @@ import '@fontsource/cormorant-garamond/700.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
   dark?: boolean;
+  bare?: boolean;
 }
-const { title = 'The Greatest Art in History', dark = false } = Astro.props;
+const { title = 'The Greatest Art in History', dark = false, bare = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,18 +22,19 @@ const { title = 'The Greatest Art in History', dark = false } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <ClientRouter />
   </head>
   <body class:list={[{ dark }]}>
     <header class="site-header">
-      <a class="wordmark" href="/">The Greatest Art<span> in History</span></a>
-      <nav>
-        <a href="/artists/">Artists</a>
-        <a href="/periods/">Periods</a>
-      </nav>
+      <a class="nav-left" href="/artists/">Artists</a>
+      <a class="wordmark" href="/">The Greatest Art</a>
+      <a class="nav-right" href="/periods/">Periods</a>
     </header>
     <main><slot /></main>
-    <footer class="site-footer">
-      <p>A personal gallery of public-domain masterpieces. Images courtesy of museum open-access programs and Wikimedia Commons.</p>
-    </footer>
+    {!bare && (
+      <footer class="site-footer">
+        <p>A personal gallery of public-domain masterpieces · images courtesy of museum open-access programs and Wikimedia Commons</p>
+      </footer>
+    )}
   </body>
 </html>
