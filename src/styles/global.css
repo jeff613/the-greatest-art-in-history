@@ -9,6 +9,7 @@
   --line: #e2dccf;
   --line-room: #2a2521;
   --gilt: #8a6d3b;
+  --gilt-room: #c9a36a;
   --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --sans: 'Inter', system-ui, sans-serif;
   --measure: 42rem;
@@ -68,6 +69,9 @@ body.dark .site-header { color: var(--chalk); }
 }
 
 .site-header nav { display: contents; }
+.site-header .nav-left  { grid-column: 1; grid-row: 1; }
+.site-header .wordmark  { grid-column: 2; grid-row: 1; }
+.site-header .nav-right { grid-column: 3; grid-row: 1; }
 .site-header .nav-left  { justify-self: start; }
 .site-header .nav-right { justify-self: end; }
 .site-header .nav-left, .site-header .nav-right {
@@ -88,6 +92,8 @@ body.dark .site-header { color: var(--chalk); }
   color: var(--gilt);
   margin: 0 0 0.9rem;
 }
+body.dark .kicker { color: var(--gilt-room); }
+.reading-room .kicker { color: var(--gilt); }
 
 .display {
   font-family: var(--serif);

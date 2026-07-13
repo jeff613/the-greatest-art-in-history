@@ -26,9 +26,11 @@ const { title = 'The Greatest Art in History', dark = false, bare = false } = As
   </head>
   <body class:list={[{ dark }]}>
     <header class="site-header">
-      <a class="nav-left" href="/artists/">Artists</a>
       <a class="wordmark" href="/">The Greatest Art</a>
-      <a class="nav-right" href="/periods/">Periods</a>
+      <nav aria-label="Site">
+        <a class="nav-left" href="/artists/">Artists</a>
+        <a class="nav-right" href="/periods/">Periods</a>
+      </nav>
     </header>
     <main><slot /></main>
     {!bare && (
