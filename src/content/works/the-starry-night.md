@@ -41,5 +41,5 @@ He painted The Starry Night sane, lucid, and homesick — a Dutchman's church sp
 - The "morning star" was real. Astronomers have calculated that Venus blazed unusually bright over Provence at dawn in late May and June 1889, exactly where and when Vincent said he saw it.
 - The village is invented. It is not visible from his east-facing window, and the church's slender spire belongs to the Netherlands, not Provence — he transplanted it from home, more than 1,000 kilometers away.
 - Unsalable in his lifetime, it entered the Museum of Modern Art in 1941 through the Lillie P. Bliss Bequest — MoMA traded away two Cézannes and a Toulouse-Lautrec to get it. It has been the museum's crown jewel ever since.
-- In 2024, physicists writing in Physics of Fluids showed that the sky's swirls follow Kolmogorov's law of turbulence — a physical theory not formulated until half a century after Van Gogh's death.
+- In 2024, physicists writing in Physics of Fluids argued that the sky's swirls follow Kolmogorov's law of turbulence — a physical theory not formulated until half a century after Van Gogh's death.
 - Don McLean's 1971 ballad "Vincent (Starry, Starry Night)," written after reading a Van Gogh biography, carried the painting to a global audience and reached No. 1 in the UK charts.

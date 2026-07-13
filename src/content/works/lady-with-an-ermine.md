@@ -23,7 +23,7 @@ What makes the portrait feel alive, though, is the movement. Cecilia's body face
 
 Milan under Ludovico Sforza was a court obsessed with cleverness, and a portrait like this was meant to be read as much as admired. Educated courtiers delighted in *imprese* — emblems and puns that hid a message in plain sight — and Cecilia's ermine is exactly that kind of insider's riddle, legible to anyone who knew the duke's honors and the lady's name. She herself was no ornament: she wrote poetry, ran a salon, and later corresponded with Isabella d'Este, one of the most formidable women of the age.
 
-The painting's modern history is a thriller in itself. A Polish prince, Adam Jerzy Czartoryski, bought it in Italy in 1798 as a gift for his mother, and it became the treasure of the family collection. During the Second World War the Nazis looted it; for a time it hung in the Kraków residence of Hans Frank, the German governor of occupied Poland, before being recovered by Allied forces in 1945 and returned home.
+The painting's modern history is a thriller in itself. A Polish prince, Adam Jerzy Czartoryski, bought it in Italy in 1798 as a gift for his mother, and it became the treasure of the family collection. During the Second World War the Nazis looted it; for a time it hung in the Kraków residence of Hans Frank, the German governor of occupied Poland, before being recovered by Allied forces in 1945 and returned to Poland in 1946.
 
 ## The Artist at This Moment
 

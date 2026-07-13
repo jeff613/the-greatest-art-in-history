@@ -30,6 +30,8 @@ Put the master image in `src/assets/art/<slug>.jpg` (min 2500px long edge, publi
     ## Interesting Facts
     - 4–7 punchy bullets: thefts, scandals, hidden details, record prices.
 
+`year` must START with the 4-digit year (e.g. "1503–1519", not "c. 1503") — the site sorts works lexicographically by this string.
+
 No technique-analysis sections. Technique only appears inside a story.
 
 ## Adding an artist — src/content/artists/<slug>.md
