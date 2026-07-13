@@ -23,9 +23,9 @@ cards.sort((a, b) => a.work.data.year.localeCompare(b.work.data.year));
 <Base title={`${period.data.name} — The Greatest Art in History`}>
   <div class="page-head">
     <p class="kicker">{period.data.years}</p>
-    <h1>{period.data.name}</h1>
+    <h1 class="display">{period.data.name}</h1>
   </div>
-  <article class="prose intro">
+  <article class="prose lede intro">
     <Content />
   </article>
   <div class="grid">
@@ -36,5 +36,5 @@ cards.sort((a, b) => a.work.data.year.localeCompare(b.work.data.year));
 </Base>
 
 <style>
-  .intro { margin-bottom: 1rem; }
+  .intro { margin-bottom: 1.5rem; }
 </style>

@@ -15,7 +15,7 @@ for (const w of works) {
 <Base title="Periods — The Greatest Art in History">
   <div class="page-head">
     <p class="kicker">The Periods</p>
-    <h1>Five hundred years, five revolutions.</h1>
+    <h1 class="display">Five hundred years, five revolutions.</h1>
   </div>
   <ol class="period-list">
     {periods.map((period) => (
@@ -31,17 +31,35 @@ for (const w of works) {
 </Base>
 
 <style>
-  .period-list { list-style: none; margin: 0; padding: 1rem clamp(1rem, 4vw, 3rem) 5rem; }
+  .period-list {
+    list-style: none;
+    margin: 0;
+    padding: 1.5rem var(--pad) 6rem;
+  }
   .period-list li { border-top: 1px solid var(--line); }
+  .period-list li:last-child { border-bottom: 1px solid var(--line); }
   .period-list a {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 1.5rem;
-    padding: 1.75rem 0;
+    padding: 2.2rem 0;
   }
-  .period-list a:hover .name { color: var(--accent); }
-  .years { color: var(--muted); font-size: 0.85rem; min-width: 9rem; }
-  .name { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; flex: 1; }
-  .count { color: var(--muted); font-size: 0.85rem; }
+  .period-list a:hover .name { color: var(--gilt); }
+  .years {
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    min-width: 10rem;
+  }
+  .name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    flex: 1;
+    transition: color 0.4s ease;
+  }
+  .count { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; }
 </style>
