@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const periods = (await getCollection('periods')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const works = await getCollection('works');
+const countByPeriod = new Map<string, number>();
+for (const w of works) {
+  countByPeriod.set(w.data.period.id, (countByPeriod.get(w.data.period.id) ?? 0) + 1);
+}
+---
+
+<Base title="Periods — The Greatest Art in History">
+  <div class="page-head">
+    <p class="kicker">The Periods</p>
+    <h1>Five hundred years, five revolutions.</h1>
+  </div>
+  <ol class="period-list">
+    {periods.map((period) => (
+      <li>
+        <a href={`/periods/${period.id}/`}>
+          <span class="years">{period.data.years}</span>
+          <span class="name">{period.data.name}</span>
+          <span class="count">{countByPeriod.get(period.id) ?? 0} works →</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</Base>
+
+<style>
+  .period-list { list-style: none; margin: 0; padding: 1rem clamp(1rem, 4vw, 3rem) 5rem; }
+  .period-list li { border-top: 1px solid var(--line); }
+  .period-list a {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.75rem 0;
+  }
+  .period-list a:hover .name { color: var(--accent); }
+  .years { color: var(--muted); font-size: 0.85rem; min-width: 9rem; }
+  .name { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; flex: 1; }
+  .count { color: var(--muted); font-size: 0.85rem; }
+</style>

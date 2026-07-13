@@ -1,0 +1,40 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArtworkCard from '../../components/ArtworkCard.astro';
+
+export async function getStaticPaths() {
+  const periods = await getCollection('periods');
+  return periods.map((period) => ({ params: { slug: period.id }, props: { period } }));
+}
+
+const { period } = Astro.props;
+const { Content } = await render(period);
+const works = await getCollection('works', (w) => w.data.period.id === period.id);
+const cards = await Promise.all(
+  works.map(async (work) => ({
+    work,
+    artistName: (await getEntry(work.data.artist)).data.name,
+  }))
+);
+cards.sort((a, b) => a.work.data.year.localeCompare(b.work.data.year));
+---
+
+<Base title={`${period.data.name} — The Greatest Art in History`}>
+  <div class="page-head">
+    <p class="kicker">{period.data.years}</p>
+    <h1>{period.data.name}</h1>
+  </div>
+  <article class="prose intro">
+    <Content />
+  </article>
+  <div class="grid">
+    {cards.map(({ work, artistName }) => (
+      <ArtworkCard work={work} artistName={artistName} />
+    ))}
+  </div>
+</Base>
+
+<style>
+  .intro { margin-bottom: 1rem; }
+</style>
