@@ -9,7 +9,7 @@ interface Props {
 const { work, artistName } = Astro.props;
 ---
 
-<a class="card" href={`/works/${work.id}/`}>
+<a class="card" href={`/works/${work.id}/`} style={`--ar: ${(work.data.image.width / work.data.image.height).toFixed(3)}`}>
   <Image
     src={work.data.image}
     widths={[400, 800]}

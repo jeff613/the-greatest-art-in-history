@@ -183,12 +183,20 @@ body.dark .reading-room .kicker { color: var(--gilt); }
 .facts-line a { border-bottom: 1px solid var(--gilt); }
 
 /* ---------- grid & cards (uncropped, matted) ---------- */
+/* Justified rows: card widths follow each image's aspect ratio (--ar),
+   so every image in a row lands at the same height. */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 3.5rem 2.5rem;
-  align-items: start;
+  align-items: flex-start;
   padding: 2.5rem var(--pad) 5.5rem;
+}
+.grid .card { flex: var(--ar, 1) 1 calc(var(--ar, 1) * 17rem); }
+.grid::after { content: ''; flex: 1e6 1 0%; }
+@media (max-width: 640px) {
+  .grid .card { flex: 0 1 100%; }
+  .grid::after { display: none; }
 }
 
 .card img {

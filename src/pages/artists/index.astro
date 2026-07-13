@@ -21,7 +21,7 @@ withPeriod.sort(
   </div>
   <div class="grid">
     {withPeriod.map(({ artist }) => (
-      <a class="card" href={`/artists/${artist.id}/`}>
+      <a class="card" href={`/artists/${artist.id}/`} style={`--ar: ${(artist.data.portrait.width / artist.data.portrait.height).toFixed(3)}`}>
         <Image
           src={artist.data.portrait}
           widths={[400, 800]}
