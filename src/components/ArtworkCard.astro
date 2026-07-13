@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  work: CollectionEntry<'works'>;
+  artistName: string;
+}
+const { work, artistName } = Astro.props;
+---
+
+<a class="card" href={`/works/${work.id}/`}>
+  <Image
+    src={work.data.image}
+    widths={[400, 800]}
+    sizes="(min-width: 700px) 400px, 100vw"
+    alt={`${work.data.title} by ${artistName}`}
+  />
+  <h3>{work.data.title}</h3>
+  <p>{artistName}, {work.data.year}</p>
+</a>
