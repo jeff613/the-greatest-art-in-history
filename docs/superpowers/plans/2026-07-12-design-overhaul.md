@@ -317,6 +317,17 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- narrow viewports: keep the floating header on one line ---------- */
+@media (max-width: 640px) {
+  .site-header { padding: 1.2rem var(--pad); }
+  .wordmark { letter-spacing: 0.22em; font-size: 0.78rem; }
+  .site-header .nav-left, .site-header .nav-right { font-size: 0.65rem; letter-spacing: 0.14em; }
+}
+@media (max-width: 380px) {
+  .wordmark { letter-spacing: 0.12em; font-size: 0.72rem; }
+  .site-header .nav-left, .site-header .nav-right { font-size: 0.6rem; letter-spacing: 0.1em; }
+}
 ```
 
 - [ ] **Step 2: Replace `src/layouts/Base.astro` entirely with:**
@@ -985,3 +996,197 @@ git add -A && git commit -m "chore: design QA fixes"
 (Only if fixes were needed.)
 
 - [ ] **Step 5: Controller visual walkthrough** — the session controller (not a subagent) runs `npm run preview` and screenshots home, one artwork page (top/middle/bottom), artist page, both period pages, and a phone-width home in the browser, then presents them to Jeff for acceptance.
+
+---
+
+### Task 7: Gallery walk — scrollable random rooms on home
+
+**Files:**
+- Modify: `src/pages/index.astro` (full replacement)
+
+**Interfaces:**
+- Consumes: `.daily-hero .daily-bg .scrim .wall-label .kicker .display.italic .byline .read-link .anim-rise .anim-rise-2 .noscript-home #daily-img` (Task 1); Base `{ dark, bare }`.
+- Produces: works-data entries now `slug,title,artist,year,period,src` (period = period display name).
+
+- [ ] **Step 1: Replace `src/pages/index.astro` entirely with:**
+
+```astro
+---
+import { getCollection, getEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+
+const works = await getCollection('works');
+const entries = await Promise.all(
+  works
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map(async (work) => {
+      const artist = await getEntry(work.data.artist);
+      const period = await getEntry(work.data.period);
+      const hero = await getImage({ src: work.data.image, width: 2400, format: 'webp' });
+      return {
+        slug: work.id,
+        title: work.data.title,
+        artist: artist.data.name,
+        year: work.data.year,
+        period: period.data.name,
+        src: hero.src,
+      };
+    })
+);
+---
+
+<Base dark bare>
+  <section class="daily-hero">
+    <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of today's artwork">
+      <img id="daily-img" alt="" />
+      <span class="scrim"></span>
+    </a>
+    <div class="wall-label">
+      <p class="kicker anim-rise" id="daily-kicker">Artwork of the Day</p>
+      <h1 class="display italic anim-rise" id="daily-title"></h1>
+      <p class="byline anim-rise-2" id="daily-byline"></p>
+      <a class="read-link anim-rise-2" id="daily-read" href="/artists/">Read the story →</a>
+    </div>
+    <noscript>
+      <div class="noscript-home">
+        <p class="wordmark">The Greatest Art</p>
+        <p><a href="/artists/">Artists</a> · <a href="/periods/">Periods</a></p>
+      </div>
+    </noscript>
+  </section>
+
+  <div id="gallery-walk"></div>
+
+  <template id="room-template">
+    <section class="room">
+      <a class="daily-bg room-link" href="/">
+        <img class="room-img" alt="" loading="lazy" decoding="async" />
+        <span class="scrim"></span>
+      </a>
+      <div class="wall-label">
+        <p class="kicker room-period"></p>
+        <h2 class="display italic room-title"></h2>
+        <p class="byline room-byline"></p>
+        <a class="read-link room-read" href="/">Read the story →</a>
+      </div>
+    </section>
+  </template>
+
+  <section class="walk-end" id="walk-end" hidden>
+    <p class="kicker">You've walked the whole gallery</p>
+    <p class="walk-end-links"><a href="/artists/">Artists</a> · <a href="/periods/">Periods</a></p>
+  </section>
+
+  <script type="application/json" id="works-data" set:html={JSON.stringify(entries).replace(/</g, '\\u003c')} />
+</Base>
+
+<style>
+  :global(html) { scroll-snap-type: y proximity; }
+  .daily-hero { scroll-snap-align: start; }
+  :global(#gallery-walk .room) {
+    position: relative;
+    height: 100svh;
+    scroll-snap-align: start;
+  }
+  :global(#gallery-walk .room-img) { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(#gallery-walk .room-img) { opacity: 0; transition: opacity 1.2s ease-out; }
+    :global(#gallery-walk .room-img.is-loaded) { opacity: 1; }
+  }
+  .walk-end {
+    min-height: 42svh;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    gap: 0.4rem;
+    scroll-snap-align: end;
+  }
+  .walk-end-links { margin: 0; }
+  .walk-end-links a { border-bottom: 1px solid var(--gilt); }
+</style>
+
+<script>
+  type Entry = {
+    slug: string;
+    title: string;
+    artist: string;
+    year: string;
+    period: string;
+    src: string;
+  };
+
+  function initHome(): void {
+    const dataEl = document.getElementById('works-data');
+    if (!dataEl) return; // not the home page
+    const data: Entry[] = JSON.parse(dataEl.textContent!);
+
+    const now = new Date();
+    const key = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+    let hash = 0;
+    for (const ch of key) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+    const dailyIndex = hash % data.length;
+    const daily = data[dailyIndex];
+
+    const dailyImg = document.getElementById('daily-img') as HTMLImageElement;
+    dailyImg.addEventListener('load', () => dailyImg.classList.add('is-loaded'), { once: true });
+    dailyImg.src = daily.src;
+    dailyImg.alt = `${daily.title} by ${daily.artist}`;
+    if (dailyImg.complete) dailyImg.classList.add('is-loaded');
+
+    const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    document.getElementById('daily-kicker')!.textContent = `Artwork of the Day — ${dateLabel}`;
+    document.getElementById('daily-title')!.textContent = daily.title;
+    document.getElementById('daily-byline')!.textContent = `${daily.artist}, ${daily.year}`;
+    const dailyUrl = `/works/${daily.slug}/`;
+    (document.getElementById('daily-link') as HTMLAnchorElement).href = dailyUrl;
+    (document.getElementById('daily-read') as HTMLAnchorElement).href = dailyUrl;
+
+    // Gallery walk: remaining works, shuffled fresh each visit.
+    const walk = document.getElementById('gallery-walk')!;
+    if (walk.childElementCount > 0) return; // already built (defensive)
+    const template = document.getElementById('room-template') as HTMLTemplateElement;
+
+    const rest = data.filter((_, i) => i !== dailyIndex);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+
+    for (const entry of rest) {
+      const node = template.content.cloneNode(true) as DocumentFragment;
+      const img = node.querySelector('.room-img') as HTMLImageElement;
+      img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+      img.src = entry.src;
+      img.alt = `${entry.title} by ${entry.artist}`;
+      node.querySelector('.room-period')!.textContent = entry.period;
+      node.querySelector('.room-title')!.textContent = entry.title;
+      node.querySelector('.room-byline')!.textContent = `${entry.artist}, ${entry.year}`;
+      const url = `/works/${entry.slug}/`;
+      (node.querySelector('.room-link') as HTMLAnchorElement).href = url;
+      (node.querySelector('.room-read') as HTMLAnchorElement).href = url;
+      walk.appendChild(node);
+    }
+
+    document.getElementById('walk-end')!.hidden = false;
+  }
+
+  document.addEventListener('astro:page-load', initHome);
+</script>
+```
+
+- [ ] **Step 2: Build and inspect**
+
+Run: `npm run build`
+Expected: PASS. Inspect `dist/index.html`: works-data has 30 entries each with exactly `slug,title,artist,year,period,src`; `room-template` and `#gallery-walk` present; `walk-end` section present with `hidden` attribute (revealed by JS so no-JS users don't see a stray label under the noscript overlay); JSON escaping (`<`) intact.
+
+- [ ] **Step 3: Runtime check (dev or preview server)**
+
+Home renders daily room; scrolling reveals 29 more full-viewport rooms with period kickers; reload reshuffles the order below the (unchanged) daily pick; each room links to its work page.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/pages/index.astro
+git commit -m "feat(design): gallery walk — scrollable random rooms below the daily pick"
+```

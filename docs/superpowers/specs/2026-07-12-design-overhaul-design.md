@@ -45,14 +45,25 @@ routes/URLs, image assets, favicon.
 
 ## Page treatments
 
-### Home
+### Home — "the gallery walk"
 Artwork of the Day as the full-viewport background (`object-fit: cover`, centered),
 soft bottom gradient scrim for legibility. Bottom-left gallery-label block: kicker
 `ARTWORK OF THE DAY — <MONTH DAY>`, title in large italic display serif, artist + year
 line, quiet `Read the story →` link. The entire background links to the work page.
-No shuffle. Daily pick stays client-side and deterministic by local date (unchanged
-algorithm); the works-data JSON embed stays (minus now-unused fields if any).
-`<noscript>` shows a simple centered wordmark + links to Artists/Periods.
+No shuffle button. Daily pick stays client-side and deterministic by local date
+(unchanged algorithm).
+
+Scrolling continues the visit: below the daily room, the remaining 29 works render
+as further full-viewport rooms in a **random order shuffled on each visit** (client-
+side, Fisher–Yates), each with the same wall-label treatment — kicker shows the
+work's **period name**, title in italic display serif, artist + year, read link,
+whole background linking to the work page. Room images lazy-load (`loading="lazy"`)
+and fade in with the established 1.2s image fade. Gentle `scroll-snap-type: y
+proximity` on the home scroller guides each flick to the next painting without
+fighting the user. The walk ends with a short centered label — "You've walked the
+whole gallery" — linking to Artists and Periods. The works-data JSON embed carries
+`slug, title, artist, year, period, src` per entry. `<noscript>` shows a simple
+centered wordmark + links to Artists/Periods.
 
 ### Artwork page (`/works/<slug>`)
 1. **Dark room:** floating header; painting large on black with existing soft shadow;
