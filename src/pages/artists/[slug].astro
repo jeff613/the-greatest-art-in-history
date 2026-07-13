@@ -17,8 +17,8 @@ const works = (await getCollection('works', (w) => w.data.artist.id === artist.i
 );
 ---
 
-<Base title={`${artist.data.name} — The Greatest Art in History`}>
-  <div class="artist-head">
+<Base title={`${artist.data.name} — The Greatest Art in History`} dark>
+  <section class="artist-hero">
     <Image
       src={artist.data.portrait}
       widths={[400, 800]}
@@ -27,44 +27,63 @@ const works = (await getCollection('works', (w) => w.data.artist.id === artist.i
     />
     <div>
       <p class="kicker">{period.data.name} · {artist.data.birth}–{artist.data.death}</p>
-      <h1>{artist.data.name}</h1>
-      <p class="hook">{artist.data.hook}</p>
+      <h1 class="display">{artist.data.name}</h1>
+      <p class="artist-hook">{artist.data.hook}</p>
     </div>
+  </section>
+
+  <div class="reading-room">
+    <article class="prose">
+      <Content />
+    </article>
+
+    <section class="timeline prose">
+      <h2>Life in brief</h2>
+      <ul>
+        {artist.data.timeline.map((item) => (
+          <li><strong>{item.year}</strong> — {item.event}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="collection-band">
+      <p class="kicker">In the collection</p>
+      <div class="grid">
+        {works.map((work) => (
+          <ArtworkCard work={work} artistName={artist.data.name} />
+        ))}
+      </div>
+    </section>
   </div>
-
-  <article class="prose">
-    <Content />
-  </article>
-
-  <section class="timeline prose">
-    <h2>Life in brief</h2>
-    <ul>
-      {artist.data.timeline.map((item) => (
-        <li><strong>{item.year}</strong> — {item.event}</li>
-      ))}
-    </ul>
-  </section>
-
-  <section>
-    <div class="page-head"><h2>In the collection</h2></div>
-    <div class="grid">
-      {works.map((work) => (
-        <ArtworkCard work={work} artistName={artist.data.name} />
-      ))}
-    </div>
-  </section>
 </Base>
 
 <style>
-  .artist-head {
+  .artist-hero {
     display: flex;
     flex-wrap: wrap;
-    gap: 2.5rem;
-    align-items: end;
-    padding: 3.5rem clamp(1rem, 4vw, 3rem) 2rem;
+    gap: 3rem;
+    align-items: flex-end;
+    padding: 8rem var(--pad) 3.5rem;
   }
-  .artist-head :global(img) { width: 240px; height: auto; }
-  .hook { font-style: italic; color: var(--muted); font-size: 1.15rem; }
+  .artist-hero :global(img) {
+    width: min(260px, 60vw);
+    height: auto;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  }
+  .artist-hook {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    color: var(--muted-room);
+    max-width: 30rem;
+    margin: 0.4rem 0 0;
+  }
   .timeline ul { list-style: none; padding: 0; }
-  .timeline li { border-left: 1px solid var(--accent); padding-left: 1.25rem; margin-bottom: 0.9rem; }
+  .timeline li {
+    border-left: 1px solid var(--gilt);
+    padding-left: 1.25rem;
+    margin-bottom: 0.9rem;
+  }
+  .collection-band { padding-top: 3.5rem; }
+  .collection-band .kicker { text-align: center; }
 </style>
