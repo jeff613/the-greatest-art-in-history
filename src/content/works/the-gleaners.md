@@ -19,7 +19,7 @@ To understand why, you have to know what gleaning was. It was not a picturesque 
 
 The scandal was scale and dignity. A canvas this size was for gods, kings, and battles; Millet filled it with three monumental laboring bodies, painted with the gravity other artists reserved for saints. Nine years after the revolution of 1848, with the bourgeoisie still flinching at the word "socialism," that felt like a threat. Critics called the women ugly, pretentious, dangerous. Paul de Saint-Victor sneered that these gleaners posed as "the Three Fates of pauperism," and another writer saw behind them "the pikes of '93" — the Terror itself. Millet, who insisted he was painting the human condition rather than a manifesto, sold the picture for a modest 3,000 francs.
 
-The ending is pure irony. In 1889, at the sensational Secrétan auction, the once-reviled canvas was bought for 300,000 francs by Jeanne-Alexandrine Pommery, the widow who ran the great Champagne house — and she left it to the Louvre. The painting that had frightened the rich became a national treasure, donated by one of the richest women in France.
+The ending is pure irony. In 1889, at the sale of banker Ferdinand Bischoffsheim's collection, the once-reviled canvas was bought for 300,000 francs by Jeanne-Alexandrine Pommery, the widow who ran the great Champagne house — and she left it to the Louvre. The painting that had frightened the rich became a national treasure, donated by one of the richest women in France.
 
 ## The World Behind It
 
@@ -37,6 +37,6 @@ The Gleaners was the summit of a decade of studies — he had drawn and etched g
 
 - Gleaning was a legal right of the certified rural poor, permitted only after the harvest, between sunrise and sunset — the mounted steward in the painting's background is there to enforce the rules.
 - The critic Paul de Saint-Victor mocked the three women as posing like "the Three Fates of pauperism," and other reviewers linked the picture to the revolutionary Terror of 1793.
-- Millet sold the painting for about 3,000 francs; thirty-two years later, at the 1889 Secrétan sale, it fetched 300,000 — a hundredfold increase he never lived to see.
+- Millet sold the painting for about 3,000 francs; thirty-two years later, at the 1889 Bischoffsheim sale, it fetched 300,000 — a hundredfold increase he never lived to see.
 - Its 1889 buyer was Jeanne-Alexandrine Pommery, the Champagne widow, who bequeathed it to the Louvre; it moved to the Musée d'Orsay in 1986.
 - The composition inspired countless homages and parodies, and Agnès Varda built her acclaimed 2000 documentary The Gleaners and I around the painting.
