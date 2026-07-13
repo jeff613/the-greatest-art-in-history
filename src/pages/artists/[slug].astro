@@ -15,6 +15,8 @@ const { Content } = await render(artist);
 const works = (await getCollection('works', (w) => w.data.artist.id === artist.id)).sort(
   (a, b) => a.data.year.localeCompare(b.data.year)
 );
+const aspect = (w: (typeof works)[number]) => w.data.image.height / w.data.image.width;
+const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best));
 ---
 
 <Base title={`${artist.data.name} — The Greatest Art in History`} dark>
@@ -33,9 +35,22 @@ const works = (await getCollection('works', (w) => w.data.artist.id === artist.i
   </section>
 
   <div class="reading-room">
-    <article class="prose">
-      <Content />
-    </article>
+    <div class="bio-row">
+      <article class="prose">
+        <Content />
+      </article>
+      <a class="bio-art" href={`/works/${featured.id}/`}>
+        <Image
+          src={featured.data.image}
+          widths={[600, 1200]}
+          sizes="40vw"
+          alt={`${featured.data.title} by ${artist.data.name}`}
+        />
+        <p class="bio-art-caption">
+          <em>{featured.data.title}</em> · {featured.data.year}
+        </p>
+      </a>
+    </div>
 
     <section class="timeline prose">
       <h2>Life in brief</h2>
@@ -77,6 +92,35 @@ const works = (await getCollection('works', (w) => w.data.artist.id === artist.i
     color: var(--muted-room);
     max-width: 30rem;
     margin: 0.4rem 0 0;
+  }
+  .reading-room .prose {
+    margin: 0;
+    padding: 0 var(--pad);
+    max-width: calc(var(--measure) + 2 * var(--pad));
+  }
+  .bio-art { display: none; }
+  @media (min-width: 1150px) {
+    .bio-row {
+      display: grid;
+      grid-template-columns: minmax(0, calc(var(--measure) + 2 * var(--pad))) minmax(0, 1fr);
+      gap: 2rem;
+      align-items: start;
+      padding-right: var(--pad);
+    }
+    .bio-art {
+      display: block;
+      justify-self: start;
+      position: sticky;
+      top: 6rem;
+    }
+    .bio-art :global(img) { max-height: min(46rem, 78vh); width: auto; }
+    .bio-art-caption {
+      margin: 0.9rem 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+    }
+    .bio-art-caption em { font-family: var(--serif); font-size: 1rem; }
   }
   .timeline ul { list-style: none; padding: 0; }
   .timeline li {
