@@ -13,6 +13,7 @@ interface Props {
   bare?: boolean;
 }
 const { title = 'The Greatest Art in History', dark = false, bare = false } = Astro.props;
+const path = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -28,8 +29,8 @@ const { title = 'The Greatest Art in History', dark = false, bare = false } = As
     <header class="site-header">
       <a class="wordmark" href="/">The Greatest Art</a>
       <nav aria-label="Site">
-        <a class="nav-left" href="/artists/">Artists</a>
-        <a class="nav-right" href="/periods/">Periods</a>
+        <a class="nav-left" href="/artists/" aria-current={path.startsWith('/artists') ? 'page' : undefined}>Artists</a>
+        <a class="nav-right" href="/periods/" aria-current={path.startsWith('/periods') ? 'page' : undefined}>Periods</a>
       </nav>
     </header>
     <main><slot /></main>

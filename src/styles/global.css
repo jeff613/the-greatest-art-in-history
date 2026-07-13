@@ -82,6 +82,11 @@ body.dark .site-header { color: var(--chalk); }
   transition: opacity 0.4s ease;
 }
 .site-header .nav-left:hover, .site-header .nav-right:hover { opacity: 1; }
+.site-header a[aria-current='page'] {
+  opacity: 1;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.25em;
+}
 
 /* ---------- type roles ---------- */
 .kicker {
