@@ -6,7 +6,7 @@ year: "1563"
 medium: "Oil on oak panel"
 location: "Kunsthistorisches Museum, Vienna"
 image: "../../assets/art/the-tower-of-babel.jpg"
-imageSource: "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project.jpg"
+imageSource: "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_d._%C3%84.,_Kunsthistorisches_Museum_Wien,_Gem%C3%A4ldegalerie_-_Turmbau_zu_Babel_-_GG_1026_-_Kunsthistorisches_Museum.jpg"
 imageLicense: "Public domain"
 teaser: "A vast, doomed tower shaped like the Roman Colosseum, already crumbling as it climbs into the clouds above a busy sixteenth-century port."
 ---

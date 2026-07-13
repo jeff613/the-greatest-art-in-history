@@ -34,7 +34,7 @@ He could not have known how little time remained. Within four years he would be 
 ## Interesting Facts
 
 - The hunters' entire catch is one thin fox. Bruegel even shows the tracks of a hare that got away, quietly underlining what a poor day it has been.
-- It is one of a cycle of six panels representing the year, of which only five survive. The others hang mostly in Vienna alongside this one, with one in New York.
+- It is one of a cycle of six panels representing the year, of which only five survive: three in Vienna alongside this one, The Harvesters in New York's Met, and Haymaking in Prague's Lobkowicz Palace.
 - The mountains on the horizon are Alpine, not Flemish — memories of the crossing Bruegel made into Italy around 1552, imported into a Low Countries winter.
 - After Jonghelinck's fortunes collapsed, the paintings passed to the city of Antwerp, which in 1594 presented them to the Habsburg governor Archduke Ernst of Austria, carrying them into the imperial collection in Vienna.
 - The panel has become visual shorthand for winter itself, reproduced everywhere from Tarkovsky's films to postage stamps, and is often called the most famous snow scene ever painted.
