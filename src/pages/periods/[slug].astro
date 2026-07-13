@@ -19,7 +19,8 @@ const cards = await Promise.all(
   }))
 );
 cards.sort((a, b) => a.work.data.year.localeCompare(b.work.data.year));
-const featured = cards[0];
+const aspect = (c: (typeof cards)[number]) => c.work.data.image.height / c.work.data.image.width;
+const featured = cards.reduce((best, c) => (aspect(c) > aspect(best) ? c : best));
 ---
 
 <Base title={`${period.data.name} — The Greatest Art in History`}>
@@ -66,7 +67,8 @@ const featured = cards[0];
       align-items: start;
       padding-right: var(--pad);
     }
-    .intro-art { display: block; }
+    .intro-art { display: block; justify-self: start; }
+    .intro-art img { max-height: min(46rem, 78vh); width: auto; }
     .intro-art-caption {
       margin: 0.9rem 0 0;
       color: var(--muted);
