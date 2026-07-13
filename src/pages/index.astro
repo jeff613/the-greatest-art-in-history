@@ -128,6 +128,8 @@ const entries = await Promise.all(
     const dailyUrl = `/works/${daily.slug}/`;
     (document.getElementById('daily-link') as HTMLAnchorElement).href = dailyUrl;
     (document.getElementById('daily-read') as HTMLAnchorElement).href = dailyUrl;
+    document.getElementById('daily-link')!.setAttribute('aria-label', `Read the story of ${daily.title}`);
+    document.getElementById('daily-read')!.setAttribute('aria-label', `Read the story of ${daily.title}`);
 
     // Gallery walk: remaining works, shuffled fresh each visit.
     const walk = document.getElementById('gallery-walk')!;
@@ -152,6 +154,8 @@ const entries = await Promise.all(
       const url = `/works/${entry.slug}/`;
       (node.querySelector('.room-link') as HTMLAnchorElement).href = url;
       (node.querySelector('.room-read') as HTMLAnchorElement).href = url;
+      (node.querySelector('.room-link') as HTMLAnchorElement).setAttribute('aria-label', `Read the story of ${entry.title}`);
+      (node.querySelector('.room-read') as HTMLAnchorElement).setAttribute('aria-label', `Read the story of ${entry.title}`);
       walk.appendChild(node);
     }
 
