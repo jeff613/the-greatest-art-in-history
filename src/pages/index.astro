@@ -37,7 +37,7 @@ const entries = await Promise.all(
     </div>
   </section>
 
-  <script type="application/json" id="works-data" set:html={JSON.stringify(entries)} />
+  <script type="application/json" id="works-data" set:html={JSON.stringify(entries).replace(/</g, '\\u003c')} />
 </Base>
 
 <style>
