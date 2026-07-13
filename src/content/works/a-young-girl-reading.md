@@ -2,7 +2,7 @@
 title: "A Young Girl Reading"
 artist: fragonard
 period: rococo-neoclassicism
-year: "1776"
+year: "1769–1770"
 medium: "Oil on canvas"
 location: "National Gallery of Art, Washington"
 image: "../../assets/art/a-young-girl-reading.jpg"
@@ -13,7 +13,7 @@ teaser: "A girl absorbed in her book, painted with dazzling speed and calm. But 
 
 ## The Story
 
-After the swings and bolted bedrooms, here is a different Fragonard entirely: quiet, tender, and utterly still. A young woman sits in profile in a lemon-yellow dress, a small book held lightly in her fingers, her whole attention poured into the page. There is no wink to the viewer, no hidden lover in the bushes, no scandal — only a private moment of absorption, painted with such warm, buttery confidence that the picture feels dashed off in a single sitting. It belongs to a group of works Fragonard called *figures de fantaisie*, "fantasy figures": rapid, bravura studies of imagined characters rather than portraits of real, named people, brushed with an ease that looks almost careless and is in fact supremely controlled.
+Beside the swings and bolted bedrooms, here is a different Fragonard entirely: quiet, tender, and utterly still. A young woman sits in profile in a lemon-yellow dress, a small book held lightly in her fingers, her whole attention poured into the page. There is no wink to the viewer, no hidden lover in the bushes, no scandal — only a private moment of absorption, painted with such warm, buttery confidence that the picture feels dashed off in a single sitting. It belongs to a group of works Fragonard called *figures de fantaisie*, "fantasy figures": rapid, bravura studies of imagined characters rather than portraits of real, named people, brushed with an ease that looks almost careless and is in fact supremely controlled.
 
 But the calm surface hides a secret. When conservators X-rayed the canvas, they found another person underneath. Beneath the serene reader lies an earlier head — a woman turned outward, gazing directly at the viewer, wearing a feathered and beaded headdress. Fragonard had painted her first, facing us, and then, remarkably, let the picture dry for months before coming back to it. Only later did he paint out that bold, confronting face and replace it with the downcast profile we see now, softening the features, calming the gaze, and turning an outward challenge into inward quiet.
 
