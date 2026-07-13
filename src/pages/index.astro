@@ -9,106 +9,69 @@ const entries = await Promise.all(
     .sort((a, b) => a.id.localeCompare(b.id))
     .map(async (work) => {
       const artist = await getEntry(work.data.artist);
-      const hero = await getImage({ src: work.data.image, width: 1600, format: 'webp' });
+      const hero = await getImage({ src: work.data.image, width: 2400, format: 'webp' });
       return {
         slug: work.id,
         title: work.data.title,
         artist: artist.data.name,
         year: work.data.year,
-        teaser: work.data.teaser,
         src: hero.src,
       };
     })
 );
 ---
 
-<Base dark>
-  <section class="daily">
-    <p class="kicker">Artwork of the Day</p>
-    <a id="daily-link" href="#" class="daily-frame">
+<Base dark bare>
+  <section class="daily-hero">
+    <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of today's artwork">
       <img id="daily-img" alt="" />
+      <span class="scrim"></span>
     </a>
-    <h1 id="daily-title"></h1>
-    <p class="byline" id="daily-byline"></p>
-    <p class="teaser" id="daily-teaser"></p>
-    <div class="actions">
-      <a id="daily-read" class="button" href="#">Read the story →</a>
-      <button id="shuffle" class="button ghost" type="button">Surprise me</button>
+    <div class="wall-label">
+      <p class="kicker anim-rise" id="daily-kicker">Artwork of the Day</p>
+      <h1 class="display italic anim-rise" id="daily-title"></h1>
+      <p class="byline anim-rise-2" id="daily-byline"></p>
+      <a class="read-link anim-rise-2" id="daily-read" href="/artists/">Read the story →</a>
     </div>
+    <noscript>
+      <div class="noscript-home">
+        <p class="wordmark">The Greatest Art</p>
+        <p><a href="/artists/">Artists</a> · <a href="/periods/">Periods</a></p>
+      </div>
+    </noscript>
   </section>
 
   <script type="application/json" id="works-data" set:html={JSON.stringify(entries).replace(/</g, '\\u003c')} />
 </Base>
 
-<style>
-  .daily {
-    text-align: center;
-    padding: 2.5rem clamp(1rem, 4vw, 3rem) 5rem;
-  }
-  .daily-frame :global(img),
-  #daily-img {
-    max-height: 62vh;
-    width: auto;
-    max-width: 100%;
-    margin: 0 auto 2rem;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-  }
-  .byline { color: var(--muted); margin: 0 0 1rem; }
-  .teaser {
-    font-family: var(--serif);
-    font-size: 1.3rem;
-    font-style: italic;
-    max-width: 34rem;
-    margin: 0 auto 2rem;
-  }
-  .actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-</style>
-
 <script>
-  type Entry = {
-    slug: string;
-    title: string;
-    artist: string;
-    year: string;
-    teaser: string;
-    src: string;
-  };
-  const data: Entry[] = JSON.parse(
-    document.getElementById('works-data')!.textContent!
-  );
+  type Entry = { slug: string; title: string; artist: string; year: string; src: string };
 
-  function dayIndex(): number {
+  function initDaily(): void {
+    const dataEl = document.getElementById('works-data');
+    if (!dataEl) return; // navigated to a non-home page
+    const data: Entry[] = JSON.parse(dataEl.textContent!);
+
     const now = new Date();
     const key = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
     let hash = 0;
     for (const ch of key) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-    return hash % data.length;
-  }
+    const entry = data[hash % data.length];
 
-  let current = dayIndex();
-
-  function show(i: number): void {
-    const entry = data[i];
     const img = document.getElementById('daily-img') as HTMLImageElement;
+    img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
     img.src = entry.src;
     img.alt = `${entry.title} by ${entry.artist}`;
+    if (img.complete) img.classList.add('is-loaded');
+
+    const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    document.getElementById('daily-kicker')!.textContent = `Artwork of the Day — ${dateLabel}`;
     document.getElementById('daily-title')!.textContent = entry.title;
     document.getElementById('daily-byline')!.textContent = `${entry.artist}, ${entry.year}`;
-    document.getElementById('daily-teaser')!.textContent = entry.teaser;
     const url = `/works/${entry.slug}/`;
     (document.getElementById('daily-link') as HTMLAnchorElement).href = url;
     (document.getElementById('daily-read') as HTMLAnchorElement).href = url;
   }
 
-  show(current);
-
-  document.getElementById('shuffle')!.addEventListener('click', () => {
-    if (data.length < 2) return;
-    let next: number;
-    do {
-      next = Math.floor(Math.random() * data.length);
-    } while (next === current);
-    current = next;
-    show(next);
-  });
+  document.addEventListener('astro:page-load', initDaily);
 </script>
