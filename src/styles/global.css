@@ -93,7 +93,7 @@ body.dark .site-header { color: var(--chalk); }
   margin: 0 0 0.9rem;
 }
 body.dark .kicker { color: var(--gilt-room); }
-.reading-room .kicker { color: var(--gilt); }
+body.dark .reading-room .kicker { color: var(--gilt); }
 
 .display {
   font-family: var(--serif);
