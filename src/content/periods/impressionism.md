@@ -1,6 +1,6 @@
 ---
 name: "Impressionism"
-order: 4
+order: 7
 years: "c. 1860–1890"
 ---
 

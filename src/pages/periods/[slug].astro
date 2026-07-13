@@ -20,7 +20,9 @@ const cards = await Promise.all(
 );
 cards.sort((a, b) => a.work.data.year.localeCompare(b.work.data.year));
 const aspect = (c: (typeof cards)[number]) => c.work.data.image.height / c.work.data.image.width;
-const featured = cards.reduce((best, c) => (aspect(c) > aspect(best) ? c : best));
+const featured = cards.length
+  ? cards.reduce((best, c) => (aspect(c) > aspect(best) ? c : best))
+  : null;
 ---
 
 <Base title={`${period.data.name} — The Greatest Art in History`}>
@@ -32,17 +34,19 @@ const featured = cards.reduce((best, c) => (aspect(c) > aspect(best) ? c : best)
     <article class="prose lede intro">
       <Content />
     </article>
-    <a class="intro-art" href={`/works/${featured.work.id}/`}>
-      <Image
-        src={featured.work.data.image}
-        widths={[600, 1200]}
-        sizes="40vw"
-        alt={`${featured.work.data.title} by ${featured.artistName}`}
-      />
-      <p class="intro-art-caption">
-        <em>{featured.work.data.title}</em> · {featured.artistName}, {featured.work.data.year}
-      </p>
-    </a>
+    {featured && (
+      <a class="intro-art" href={`/works/${featured.work.id}/`}>
+        <Image
+          src={featured.work.data.image}
+          widths={[600, 1200]}
+          sizes="40vw"
+          alt={`${featured.work.data.title} by ${featured.artistName}`}
+        />
+        <p class="intro-art-caption">
+          <em>{featured.work.data.title}</em> · {featured.artistName}, {featured.work.data.year}
+        </p>
+      </a>
+    )}
   </div>
   <div class="grid">
     {cards.map(({ work, artistName }) => (

@@ -163,13 +163,15 @@ const entries = await Promise.all(
     if (walk.childElementCount > 0) return; // already built (defensive)
     const template = document.getElementById('room-template') as HTMLTemplateElement;
 
+    const WALK_SIZE = 24;
     const rest = data.filter((_, i) => i !== dailyIndex);
     for (let i = rest.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [rest[i], rest[j]] = [rest[j], rest[i]];
     }
+    const rooms = rest.slice(0, WALK_SIZE);
 
-    for (const entry of rest) {
+    for (const entry of rooms) {
       const node = template.content.cloneNode(true) as DocumentFragment;
       const img = node.querySelector('.room-img') as HTMLImageElement;
       img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });

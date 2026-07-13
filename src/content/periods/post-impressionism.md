@@ -1,6 +1,6 @@
 ---
 name: "Post-Impressionism"
-order: 5
+order: 8
 years: "c. 1885–1910"
 ---
 

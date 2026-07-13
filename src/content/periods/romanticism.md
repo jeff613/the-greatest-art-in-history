@@ -1,6 +1,6 @@
 ---
 name: "Romanticism"
-order: 3
+order: 5
 years: "c. 1780–1850"
 ---
 
