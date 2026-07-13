@@ -38,6 +38,6 @@ The commission for Napoleon Crossing the Alps marked the beginning of a partners
 - Napoleon refused to pose, telling David that a portrait needed to capture a great man's genius, not his exact likeness, and asked only to be shown "calm on a fiery horse."
 - He actually crossed the Alps on a mule, wrapped against the cold and led by a local guide — a far cry from the rearing stallion in the painting.
 - David painted five versions between 1801 and 1805; the earliest now hangs at Malmaison, and the others are in Berlin, Vienna, and Versailles.
-- The names BONAPARTE, HANNIBAL, and CAROLVS MAGNVS (Charlemagne) are carved into the rocks at the horse's feet, ranking Napoleon with the great Alpine conquerors of history.
+- The names BONAPARTE, HANNIBAL, and KAROLVS MAGNVS (Charlemagne) are carved into the rocks at the horse's feet, ranking Napoleon with the great Alpine conquerors of history.
 - In 1850 the artist Paul Delaroche painted a deliberately truthful counter-version, showing a cold, weary Napoleon slumped on a plodding mule.
 - The Malmaison version was first commissioned not by Napoleon but by the King of Spain, as a diplomatic gift celebrating the new Franco-Spanish friendship.

@@ -8,7 +8,7 @@ location: "Musée d'Orsay, Paris"
 image: "../../assets/art/the-tub.jpg"
 imageSource: "https://commons.wikimedia.org/wiki/File:Edgar_Germain_Hilaire_Degas_031.jpg"
 imageLicense: "Public domain"
-teaser: "A naked woman crouched in a basin, seen — in the artist's own words — as if through a keyhole."
+teaser: "A naked woman crouched in a basin, seen — as the artist reportedly put it — as if through a keyhole."
 ---
 
 ## The Story
