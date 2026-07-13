@@ -35,6 +35,7 @@ const entries = await Promise.all(
       <p class="byline anim-rise-2" id="daily-byline"></p>
       <a class="read-link anim-rise-2" id="daily-read" href="/artists/">Read the story →</a>
     </div>
+    <div class="scroll-cue anim-rise-2" aria-hidden="true"><span></span></div>
     <noscript>
       <div class="noscript-home">
         <p class="wordmark">The Greatest Art</p>
@@ -69,8 +70,34 @@ const entries = await Promise.all(
 </Base>
 
 <style>
-  :global(html) { scroll-snap-type: y proximity; }
+  :global(html) { scroll-snap-type: y mandatory; }
+  :global(.site-header) { position: fixed; }
   .daily-hero { scroll-snap-align: start; }
+  .scroll-cue {
+    position: absolute;
+    bottom: 1.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 3rem;
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .scroll-cue span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgb(255 255 255 / 0.65);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-cue span { animation: cue-drop 2.8s ease-in-out infinite; }
+  }
+  @keyframes cue-drop {
+    0% { transform: translateY(-100%); }
+    55% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+  }
   :global(#gallery-walk .room) {
     position: relative;
     height: 100svh;
