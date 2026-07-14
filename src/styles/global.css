@@ -230,10 +230,10 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
 .site-footer p { margin: 0; }
 
 /* ---------- home: full-bleed daily artwork ---------- */
-/* Rooms fill the LARGE viewport so nothing peeks through iOS Safari's
-   translucent toolbar; captions pin within the SMALL viewport so they
-   stay visible above it. */
-.daily-hero { position: relative; height: 100vh; height: 100lvh; }
+/* Rooms fill the home walk-scroller (100dvh container scroll — see
+   index.astro); captions pin within the SMALL viewport so they stay
+   visible above iOS Safari's toolbar. */
+.daily-hero { position: relative; height: 100vh; height: 100dvh; }
 .daily-bg { position: absolute; inset: 0; display: block; cursor: pointer; }
 .daily-bg img { width: 100%; height: 100%; object-fit: cover; }
 .scrim {
