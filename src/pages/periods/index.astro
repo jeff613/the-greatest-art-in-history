@@ -15,11 +15,11 @@ for (const w of works) {
 // Timeline: periods hang from the axis as large named cameos of their signature
 // work; extra representative works (small cameos, year-labelled, linking to the
 // work) fill the sparser centuries. Side/tier are hand-balanced for spacing.
-const TIMELINE_CFG: { work: string; period?: string; below?: boolean; far?: boolean }[] = [
+const TIMELINE_CFG: { work: string; period?: string; below?: boolean; far?: boolean; lowered?: boolean }[] = [
   { work: 'ognissanti-madonna', period: 'gothic-proto-renaissance' },
   { work: 'the-arnolfini-portrait', period: 'northern-renaissance' },
   { work: 'primavera', below: true, far: true },
-  { work: 'mona-lisa', period: 'renaissance', below: true },
+  { work: 'mona-lisa', period: 'renaissance', below: true, lowered: true },
   { work: 'melencolia-i', far: true },
   { work: 'the-last-judgment', below: true, far: true },
   { work: 'hunters-in-the-snow' },
@@ -31,7 +31,7 @@ const TIMELINE_CFG: { work: string; period?: string; below?: boolean; far?: bool
   { work: 'the-gleaners', period: 'realism', far: true },
   { work: 'impression-sunrise', period: 'impressionism', below: true, far: true },
   { work: 'the-starry-night', period: 'post-impressionism' },
-  { work: 'les-demoiselles-davignon', period: 'early-modernism', below: true },
+  { work: 'les-demoiselles-davignon', period: 'early-modernism', below: true, lowered: true },
 ];
 const SPAN_START = 1280;
 const SPAN_END = 1940;
@@ -49,6 +49,7 @@ const timeline = await Promise.all(
       pct: ((workYear - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
       below: !!cfg.below,
       far: !!cfg.far,
+      lowered: !!cfg.lowered,
     };
   })
 );
@@ -93,9 +94,9 @@ const EVENTS: { year: number; name: string; display?: string; below?: boolean; l
           </span>
         </span>
       ))}
-      {timeline.map(({ work, period, img, year, pct, below, far }, i) => (
+      {timeline.map(({ work, period, img, year, pct, below, far, lowered }, i) => (
         <a
-          class:list={['medallion', { below, far, secondary: !period }]}
+          class:list={['medallion', { below, far, lowered, secondary: !period }]}
           style={`left: ${pct}%; animation-delay: ${0.15 + i * 0.06}s`}
           href={period ? `/periods/${period.id}/` : `/works/${work.id}/`}
           aria-label={period ? period.data.name : `${work.data.title}, ${year}`}
@@ -248,6 +249,7 @@ const EVENTS: { year: number; name: string; display?: string; below?: boolean; l
     background: var(--gilt);
   }
   .medallion.far .stem { height: 150px; }
+  .medallion.lowered .stem { height: 34px; }
   .medallion img {
     width: 78px;
     height: 78px;
@@ -263,7 +265,7 @@ const EVENTS: { year: number; name: string; display?: string; below?: boolean; l
   }
   .medallion .tl-name {
     margin: 0.55rem 0;
-    max-width: 8.5rem;
+    max-width: 10rem;
     font-family: var(--sans);
     font-size: 0.6rem;
     text-transform: uppercase;
