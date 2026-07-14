@@ -55,6 +55,7 @@ const timeline = await Promise.all(
 const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
   year: y,
   pct: ((y - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
+  nudge: y === 1500 || y === 1900, // cameos at 1503/1907 sit on these labels
 }));
 // A few historical anchors for orientation — hand-placed (side) to clear the stems.
 const EVENTS: { year: number; name: string; display?: string; below?: boolean; leftward?: boolean; snug?: boolean }[] = [
@@ -78,7 +79,7 @@ const EVENTS: { year: number; name: string; display?: string; below?: boolean; l
     <div class="timeline">
       <span class="axis" aria-hidden="true"></span>
       {ticks.map((t) => (
-        <span class="tick" style={`left: ${t.pct}%`} aria-hidden="true">
+        <span class:list={['tick', { nudge: t.nudge }]} style={`left: ${t.pct}%`} aria-hidden="true">
           <i></i>
           <em>{t.year}</em>
         </span>
@@ -155,15 +156,19 @@ const EVENTS: { year: number; name: string; display?: string; below?: boolean; l
     background: var(--ink);
     opacity: 0.45;
   }
+  .tick { z-index: 2; }
   .tick em {
     display: block;
     margin-top: 0.3rem;
+    padding: 0 0.3rem;
     font-style: normal;
     font-family: var(--sans);
     font-size: 0.62rem;
     letter-spacing: 0.12em;
     color: var(--muted);
+    background: var(--paper);
   }
+  .tick.nudge em { transform: translateX(-1.2rem); }
   .event {
     position: absolute;
     top: 50%;
