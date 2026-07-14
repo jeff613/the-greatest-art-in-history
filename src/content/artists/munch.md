@@ -4,7 +4,7 @@ birth: 1863
 death: 1944
 period: symbolism-fin-de-siecle
 portrait: "../../assets/portraits/munch.jpg"
-portraitSource: "https://commons.wikimedia.org/wiki/File:Edvard_Munch_-_Edvard_Munch_at_the_Beach_in_Warnem%C3%BCnde_-_Google_Art_Project.jpg"
+portraitSource: "https://commons.wikimedia.org/wiki/File:Edvard_Munch_-_Self-Portrait_with_Brushes_-_Google_Art_Project.jpg"
 portraitLicense: "Public domain"
 hook: "Illness, madness and death were his family — so he painted them until they let him live."
 timeline:
