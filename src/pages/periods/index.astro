@@ -1,5 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 
 const periods = (await getCollection('periods')).sort(
@@ -10,11 +11,68 @@ const countByPeriod = new Map<string, number>();
 for (const w of works) {
   countByPeriod.set(w.data.period.id, (countByPeriod.get(w.data.period.id) ?? 0) + 1);
 }
+
+// Timeline: each period hangs from the axis as a medallion of its signature work.
+const MEDALLION_WORK: Record<string, string> = {
+  'gothic-proto-renaissance': 'ognissanti-madonna',
+  renaissance: 'mona-lisa',
+  'northern-renaissance': 'the-arnolfini-portrait',
+  baroque: 'girl-with-a-pearl-earring',
+  'rococo-neoclassicism': 'the-swing',
+  romanticism: 'liberty-leading-the-people',
+  realism: 'the-gleaners',
+  impressionism: 'impression-sunrise',
+  'post-impressionism': 'the-starry-night',
+  'early-modernism': 'les-demoiselles-davignon',
+};
+const SPAN_START = 1280;
+const SPAN_END = 1940;
+const timeline = await Promise.all(
+  periods.map(async (period, i) => {
+    const slug = MEDALLION_WORK[period.id] ?? works.find((w) => w.data.period.id === period.id)?.id;
+    const work = await getEntry('works', slug!);
+    const img = await getImage({ src: work!.data.image, width: 320, height: 320, fit: 'cover', format: 'webp' });
+    const startYear = parseInt(period.data.years.match(/\d{4}/)![0], 10);
+    return {
+      period,
+      img,
+      pct: ((startYear - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
+      below: i % 2 === 1,
+      far: (i >> 1) % 2 === 1,
+    };
+  })
+);
+const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
+  year: y,
+  pct: ((y - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
+}));
 ---
 
 <Base title="Periods — The Greatest Art in History">
   <div class="page-head">
     <h1 class="display">Six hundred years, ten revolutions.</h1>
+  </div>
+  <div class="timeline-scroll">
+    <div class="timeline">
+      <span class="axis" aria-hidden="true"></span>
+      {ticks.map((t) => (
+        <span class="tick" style={`left: ${t.pct}%`} aria-hidden="true">
+          <i></i>
+          <em>{t.year}</em>
+        </span>
+      ))}
+      {timeline.map(({ period, img, pct, below, far }, i) => (
+        <a
+          class:list={['medallion', { below, far }]}
+          style={`left: ${pct}%; animation-delay: ${0.15 + i * 0.08}s`}
+          href={`/periods/${period.id}/`}
+        >
+          <span class="stem" aria-hidden="true"></span>
+          <img src={img.src} alt="" width="160" height="160" loading="eager" decoding="async" />
+          <span class="tl-name">{period.data.name}</span>
+        </a>
+      ))}
+    </div>
   </div>
   <ol class="period-list">
     {periods.map((period) => (
@@ -30,6 +88,113 @@ for (const w of works) {
 </Base>
 
 <style>
+  /* ---------- the timeline ---------- */
+  .timeline-scroll {
+    overflow-x: auto;
+    padding: 0 var(--pad);
+    scrollbar-width: thin;
+  }
+  .timeline {
+    position: relative;
+    height: 25rem;
+    min-width: 58rem;
+    margin: 0.5rem 1.5rem 1.5rem;
+  }
+  .axis {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--ink);
+    opacity: 0.45;
+  }
+  .tick {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .tick i {
+    display: block;
+    width: 1px;
+    height: 7px;
+    margin: 0 auto;
+    background: var(--ink);
+    opacity: 0.45;
+  }
+  .tick em {
+    display: block;
+    margin-top: 0.3rem;
+    font-style: normal;
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+  .medallion {
+    position: absolute;
+    bottom: 50%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    transform: translateX(-50%);
+  }
+  .medallion.below {
+    bottom: auto;
+    top: 50%;
+    flex-direction: column;
+  }
+  .medallion::before {
+    content: '';
+    position: absolute;
+    left: calc(50% - 2.5px);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gilt);
+  }
+  .medallion:not(.below)::before { bottom: -2.5px; }
+  .medallion.below::before { top: -2.5px; }
+  .stem {
+    width: 1px;
+    height: 26px;
+    background: var(--gilt);
+  }
+  .medallion.far .stem { height: 64px; }
+  .medallion.below .stem { margin-top: 20px; }
+  .medallion img {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--gilt);
+    padding: 3px;
+    background: var(--paper);
+    transition: filter 0.4s ease;
+  }
+  .medallion .tl-name {
+    margin: 0.55rem 0;
+    max-width: 8.5rem;
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    line-height: 1.6;
+    text-align: center;
+    color: var(--ink);
+    transition: color 0.4s ease;
+  }
+  .medallion:hover img { filter: brightness(1.06); }
+  .medallion:hover .tl-name { color: var(--gilt); }
+  @media (prefers-reduced-motion: no-preference) {
+    .medallion { animation: tl-rise 0.8s ease-out both; }
+  }
+  @keyframes tl-rise {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to { opacity: 1; transform: translateX(-50%); }
+  }
+
   .period-list {
     list-style: none;
     margin: 0;
