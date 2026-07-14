@@ -6,7 +6,7 @@ music:
   - title: "Pavane pour une infante défunte"
     composer: "Maurice Ravel"
     composed: "1899"
-    performer: "David Hernando Vitores & Kayoko Morimoto (Wasei Dúo)"
+    performer: "Wasei Dúo — David Hernando Vitores, saxophone; Kayoko Morimoto, piano"
     source: "Wikimedia Commons"
     sourceUrl: "https://commons.wikimedia.org/wiki/File:Maurice_Ravel_-_Pavane_pour_une_infante_d%C3%A9funte_-_David_Hernando_Vitores_-_Kayoko_Morimoto_(Wasei_Duo).oga"
     license: "CC BY-SA 4.0"
