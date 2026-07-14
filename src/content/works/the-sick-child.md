@@ -13,7 +13,7 @@ teaser: "The deathbed of the sister he watched die — scraped and scratched raw
 
 ## The Story
 
-A red-haired girl props herself against a great white pillow, her face already turned toward something the grieving woman beside her cannot see. The woman's head is bowed, her hand clasped in the child's, unable to look up. There is almost nothing else — a glass on a table, a shrouded window — and that emptiness is the point. This is Edvard Munch painting the most unbearable memory of his life: the deathbed of his sister Sophie, who died of tuberculosis in 1877 at fifteen, while nine-year-old Edvard looked on. Their mother had died of the same disease years before. Death by consumption was the weather of his childhood.
+A red-haired girl props herself against a great white pillow, her face already turned toward something the grieving woman beside her cannot see. The woman's head is bowed, her hand clasped in the child's, unable to look up. There is almost nothing else — a glass on a table, a shrouded window — and that emptiness is the point. This is Edvard Munch painting the most unbearable memory of his life: the deathbed of his sister Sophie, who died of tuberculosis in 1877 at fifteen, while thirteen-year-old Edvard looked on. Their mother had died of the same disease years before. Death by consumption was the weather of his childhood.
 
 Munch did not paint what a camera would have seen; he painted what grief had done to the memory. He built the picture up and then attacked it, scraping the paint back with a knife, scratching lines into the wet surface, letting drips run like tears down the canvas so that the whole image seems to be dissolving even as it forms. He worked on it for a year, calling it a struggle to recover a first, true impression. "I don't paint what I see," he said, "but what I saw." He came to regard it as the hinge of his whole career: "With The Sick Child I broke new ground — it was a breakthrough in my art. Most of what I did later was born in this picture."
 
@@ -33,7 +33,7 @@ The hostile reception wounded him but did not deter him; if anything it confirme
 
 ## Interesting Facts
 
-- The dying girl is a memory of Munch's sister Sophie, who died of tuberculosis at fifteen in 1877, watched by the nine-year-old artist.
+- The dying girl is a memory of Munch's sister Sophie, who died of tuberculosis at fifteen in 1877, watched by the thirteen-year-old artist.
 - Munch scraped, scratched, and let the paint run for a year, chasing not what he saw but what he remembered seeing.
 - Shown as *Study* in 1886, it was jeered by the public and attacked by critics as an unfinished, botched sketch.
 - The critic Andreas Aubert conceded Munch's genius but warned it was "in danger of going to the dogs."
