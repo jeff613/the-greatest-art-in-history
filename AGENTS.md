@@ -115,6 +115,12 @@ Image upgrades wanted: witches-sabbath.jpg (soft scan), botticelli.jpg portrait
 (halftone pattern). Minor prose nits are logged in `.superpowers/sdd/progress.md`
 (gitignored scratch — local only).
 
+**Mobile compatibility pass (Jeff, 2026-07-14):** the home walk scrolls inside a
+fixed 100dvh container as a workaround for iOS Safari toolbar-resize snap drift
+(see index.astro comments). Jeff accepted it as a workaround; a proper mobile
+audit is wanted later — walk scroll feel, toolbar behavior, works/artists pages
+on small screens, the periods timeline horizontal scroll on touch.
+
 ## Multiple agents work this repo
 
 Jeff runs parallel agent sessions; their worktrees live under
