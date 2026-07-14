@@ -12,33 +12,44 @@ for (const w of works) {
   countByPeriod.set(w.data.period.id, (countByPeriod.get(w.data.period.id) ?? 0) + 1);
 }
 
-// Timeline: each period hangs from the axis as a medallion of its signature work.
-const MEDALLION_WORK: Record<string, string> = {
-  'gothic-proto-renaissance': 'ognissanti-madonna',
-  renaissance: 'mona-lisa',
-  'northern-renaissance': 'the-arnolfini-portrait',
-  baroque: 'girl-with-a-pearl-earring',
-  'rococo-neoclassicism': 'the-swing',
-  romanticism: 'liberty-leading-the-people',
-  realism: 'the-gleaners',
-  impressionism: 'impression-sunrise',
-  'post-impressionism': 'the-starry-night',
-  'early-modernism': 'les-demoiselles-davignon',
-};
+// Timeline: periods hang from the axis as large named cameos of their signature
+// work; extra representative works (small cameos, year-labelled, linking to the
+// work) fill the sparser centuries. Side/tier are hand-balanced for spacing.
+const TIMELINE_CFG: { work: string; period?: string; below?: boolean; far?: boolean }[] = [
+  { work: 'ognissanti-madonna', period: 'gothic-proto-renaissance' },
+  { work: 'the-arnolfini-portrait', period: 'northern-renaissance' },
+  { work: 'primavera', below: true, far: true },
+  { work: 'mona-lisa', period: 'renaissance', below: true },
+  { work: 'melencolia-i', far: true },
+  { work: 'the-last-judgment', below: true, far: true },
+  { work: 'hunters-in-the-snow' },
+  { work: 'the-calling-of-saint-matthew', below: true },
+  { work: 'the-night-watch', below: true, far: true },
+  { work: 'girl-with-a-pearl-earring', period: 'baroque', below: true },
+  { work: 'the-swing', period: 'rococo-neoclassicism' },
+  { work: 'the-death-of-marat', far: true },
+  { work: 'liberty-leading-the-people', period: 'romanticism', below: true },
+  { work: 'the-gleaners', period: 'realism', far: true },
+  { work: 'impression-sunrise', period: 'impressionism', below: true, far: true },
+  { work: 'the-starry-night', period: 'post-impressionism' },
+  { work: 'les-demoiselles-davignon', period: 'early-modernism', below: true },
+];
 const SPAN_START = 1280;
 const SPAN_END = 1940;
 const timeline = await Promise.all(
-  periods.map(async (period, i) => {
-    const slug = MEDALLION_WORK[period.id] ?? works.find((w) => w.data.period.id === period.id)?.id;
-    const work = await getEntry('works', slug!);
+  TIMELINE_CFG.map(async (cfg) => {
+    const work = await getEntry('works', cfg.work);
+    const period = cfg.period ? periods.find((p) => p.id === cfg.period) : undefined;
     const img = await getImage({ src: work!.data.image, width: 320, height: 320, fit: 'cover', format: 'webp' });
     const workYear = parseInt(work!.data.year.match(/\d{4}/)![0], 10);
     return {
+      work: work!,
       period,
       img,
+      year: workYear,
       pct: ((workYear - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
-      below: i % 2 === 1,
-      far: (i >> 1) % 2 === 1,
+      below: !!cfg.below,
+      far: !!cfg.far,
     };
   })
 );
@@ -61,15 +72,16 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
           <em>{t.year}</em>
         </span>
       ))}
-      {timeline.map(({ period, img, pct, below, far }, i) => (
+      {timeline.map(({ work, period, img, year, pct, below, far }, i) => (
         <a
-          class:list={['medallion', { below, far }]}
-          style={`left: ${pct}%; animation-delay: ${0.15 + i * 0.08}s`}
-          href={`/periods/${period.id}/`}
+          class:list={['medallion', { below, far, secondary: !period }]}
+          style={`left: ${pct}%; animation-delay: ${0.15 + i * 0.06}s`}
+          href={period ? `/periods/${period.id}/` : `/works/${work.id}/`}
+          aria-label={period ? period.data.name : `${work.data.title}, ${year}`}
         >
           <span class="stem" aria-hidden="true"></span>
           <img src={img.src} alt="" width="160" height="160" loading="eager" decoding="async" />
-          <span class="tl-name">{period.data.name}</span>
+          <span class="tl-name">{period ? period.data.name : String(year)}</span>
         </a>
       ))}
     </div>
@@ -187,6 +199,17 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
   }
   .medallion:hover img { filter: brightness(1.06); }
   .medallion:hover .tl-name { color: var(--gilt); }
+  .medallion.secondary img {
+    width: 54px;
+    height: 54px;
+    padding: 2px;
+  }
+  .medallion.secondary .tl-name {
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: 0.4rem 0;
+  }
   @media (prefers-reduced-motion: no-preference) {
     .medallion { animation: tl-rise 0.8s ease-out both; }
   }
