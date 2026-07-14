@@ -1,6 +1,6 @@
 ---
 name: "Baroque & Dutch Golden Age"
-order: 3
+order: 4
 years: "c. 1600–1700"
 ---
 

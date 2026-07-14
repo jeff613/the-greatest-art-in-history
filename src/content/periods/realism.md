@@ -1,6 +1,6 @@
 ---
 name: "Realism"
-order: 6
+order: 7
 years: "c. 1840–1880"
 ---
 

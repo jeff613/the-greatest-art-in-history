@@ -1,6 +1,6 @@
 ---
 name: "Rococo & Neoclassicism"
-order: 4
+order: 5
 years: "c. 1700–1820"
 ---
 

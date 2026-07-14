@@ -1,6 +1,6 @@
 ---
 name: "Northern Renaissance"
-order: 2
+order: 3
 years: "c. 1420–1570"
 ---
 

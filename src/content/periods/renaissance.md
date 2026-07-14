@@ -1,6 +1,6 @@
 ---
 name: "Renaissance"
-order: 1
+order: 2
 years: "c. 1400–1600"
 ---
 
