@@ -6,9 +6,10 @@ Astro 7 static site, local-only today, public deploy planned eventually
 (an app may follow). **Product vision and principles: `PRD.md`** — read it
 before proposing features.
 
-**Current state (2026-07-13):** 10 periods · 33 artists · 112 works,
-c. 1290–1929 (Giotto → Kandinsky). 158 built pages. Everything is on `main`;
-no remote configured.
+**Current state (2026-07-14):** 10 periods · 33 artists · 112 works,
+c. 1290–1929 (Giotto → Kandinsky). 158 built pages. Every period page carries
+an ambient period-matched classical track (period music, merged 2026-07-14).
+Everything is on `main`; no remote configured.
 
 ## Development
 
@@ -33,8 +34,13 @@ styling guides as needed).
 
 ## Architecture map
 
-- `src/content.config.ts` — collections schema (periods/artists/works). **Frozen:
-  do not modify** without explicit direction; everything depends on it.
+- `src/content.config.ts` — collections schema (periods/artists/works, plus the
+  optional per-period `music` array). **Frozen: do not modify** without explicit
+  direction; everything depends on it.
+- `public/audio/<period-slug>.mp3` + `src/components/PeriodMusic.astro` — the
+  period-music player (one ambient track per period, ~34MB total). Authoring
+  rules in TEMPLATE.md ("Period music"); licensing audit in
+  `docs/superpowers/2026-07-14-period-music-licensing-audit.md`.
 - `src/content/{periods,artists,works}/*.md` — all content. `src/content/TEMPLATE.md`
   is the authoring guide (frontmatter shapes, section rules, image sourcing,
   licensing).
