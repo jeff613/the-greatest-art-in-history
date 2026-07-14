@@ -98,8 +98,9 @@ under `prefers-reduced-motion`. All page scripts init via `astro:page-load`
   Maestà-detail stand-in; the bios disclose this).
 - `periods/[slug].astro` guards against zero-work periods (needed when a new
   period lands before its artists).
-- The periods ledger headline ("Six hundred years, ten revolutions.") is
-  hardcoded in `src/pages/periods/index.astro` — update it when periods change.
+- Two hardcoded count headlines must be updated when the collection changes:
+  `src/pages/periods/index.astro` ("Six hundred years, ten revolutions.") and
+  `src/pages/artists/index.astro` ("Thirty-three lives that changed how we see.").
 - Jeff likes round numbers: 11 periods were distilled to 10 by merging
   Symbolism & Fin de Siècle into Post-Impressionism.
 
