@@ -107,7 +107,7 @@ under `prefers-reduced-motion`. All page scripts init via `astro:page-load`
 
 Pre-deploy checklist: `site` in astro.config, meta/OG/robots/sitemap, lightbox
 rendition cap (`getImage` with no width re-encodes 8000px masters), BASE_URL
-threading, Picasso EU caveat. baroque.mp3 is PD-US only (US-government-work
+threading, Picasso EU caveat. baroque.mp3 and early-modernism.mp3 are PD-US only (US-government-work
 doctrine — same EU-caveat shape as the Picasso works); northern-renaissance.mp3's
 Commons page has a pending license review (CC BY 3.0 confirmed at its Free
 Music Archive origin — re-check before deploy). Wait-listed artists: Gauguin, Seurat, El Greco,

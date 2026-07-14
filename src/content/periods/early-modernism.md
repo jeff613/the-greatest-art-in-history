@@ -3,12 +3,12 @@ name: "Early Modernism"
 order: 10
 years: "c. 1905–1929"
 music:
-  - title: "The Crown of India Suite, Op. 66 — IV. Intermezzo"
-    composer: "Edward Elgar"
-    composed: "1912"
-    performer: "United States Marine Band (\"The President's Own\"), cond. Col. Michael J. Colburn — concert-band transcription by Frank Winterbottom (c. 1913) of a work originally scored for orchestra with solo violin"
+  - title: "The Planets, Op. 32 — II. Venus, the Bringer of Peace"
+    composer: "Gustav Holst"
+    composed: "1914–16"
+    performer: "U.S. Air Force Heritage of America Band — concert-band transcription by Merlin Patterson of the original orchestral score, from the 1998 CD \"Frontiers\""
     source: "Wikimedia Commons"
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:The_Crown_of_India_Suite,_4._Intermezzo_-_U.S._Marine_Band.ogg"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Holst-_venus.ogg"
     license: "Public domain (U.S. government work)"
     file: "/audio/early-modernism.mp3"
 ---
