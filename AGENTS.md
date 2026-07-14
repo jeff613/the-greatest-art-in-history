@@ -115,6 +115,15 @@ Image upgrades wanted: witches-sabbath.jpg (soft scan), botticelli.jpg portrait
 (halftone pattern). Minor prose nits are logged in `.superpowers/sdd/progress.md`
 (gitignored scratch — local only).
 
+## Multiple agents work this repo
+
+Jeff runs parallel agent sessions; their worktrees live under
+`.claude/worktrees/` (gitignored). Rules of coexistence: never touch another
+session's worktree; prefer explicit path staging over `git add -A` at the repo
+root; expect `main` to have moved since your session started (pull the latest
+state before branching or merging); surface — don't resolve — anything
+unexpected you find in the tree.
+
 ## How content gets built here
 
 Large batches run as subagent-driven development: spec in `docs/superpowers/specs`
