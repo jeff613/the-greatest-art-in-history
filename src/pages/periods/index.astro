@@ -23,7 +23,6 @@ const TIMELINE_CFG: { work: string; period?: string; below?: boolean; far?: bool
   { work: 'melencolia-i', far: true },
   { work: 'the-last-judgment', below: true, far: true },
   { work: 'hunters-in-the-snow' },
-  { work: 'david-with-the-head-of-goliath', below: true },
   { work: 'the-night-watch', below: true, far: true },
   { work: 'girl-with-a-pearl-earring', period: 'baroque', below: true },
   { work: 'the-swing', period: 'rococo-neoclassicism' },
@@ -58,13 +57,13 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
   pct: ((y - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
 }));
 // A few historical anchors for orientation — hand-placed (side) to clear the stems.
-const EVENTS = [
+const EVENTS: { year: number; name: string; display?: string; below?: boolean; leftward?: boolean; snug?: boolean }[] = [
   { year: 1347, name: 'The Black Death' },
   { year: 1450, name: 'Gutenberg', below: true },
   { year: 1492, name: 'Columbus' },
-  { year: 1789, name: 'The French Revolution', below: true },
+  { year: 1789, name: 'The French Revolution', below: true, leftward: true },
   { year: 1826, name: 'Photography' },
-  { year: 1914, name: 'The Great War' },
+  { year: 1916, display: '1914–18', name: 'The Great War', snug: true },
 ].map((e) => ({ ...e, pct: ((e.year - SPAN_START) / (SPAN_END - SPAN_START)) * 100 }));
 ---
 
@@ -82,10 +81,10 @@ const EVENTS = [
         </span>
       ))}
       {EVENTS.map((e) => (
-        <span class:list={['event', { below: e.below }]} style={`left: ${e.pct}%`}>
+        <span class:list={['event', { below: e.below, leftward: e.leftward, snug: e.snug }]} style={`left: ${e.pct}%`}>
           <i aria-hidden="true"></i>
           <span class="ev-label">
-            <span class="ev-year">{e.year}</span>
+            <span class="ev-year">{e.display ?? e.year}</span>
             <span class="ev-name">{e.name}</span>
           </span>
         </span>
@@ -99,7 +98,7 @@ const EVENTS = [
         >
           <span class="stem" aria-hidden="true"></span>
           <img src={img.src} alt="" width="160" height="160" loading="eager" decoding="async" />
-          <span class="tl-name">{period ? period.data.name : String(year)}</span>
+          <span class="tl-name">{period ? period.data.name : work.data.title}</span>
         </a>
       ))}
     </div>
@@ -189,6 +188,13 @@ const EVENTS = [
     bottom: auto;
     top: 28px;
   }
+  .event.leftward .ev-label {
+    left: auto;
+    right: 10px;
+    transform: none;
+    text-align: right;
+  }
+  .event.snug .ev-label { bottom: 3px; }
   .ev-year {
     display: block;
     font-family: var(--sans);
@@ -271,6 +277,7 @@ const EVENTS = [
     letter-spacing: 0.1em;
     color: var(--muted);
     margin: 0.4rem 0;
+    max-width: 7rem;
   }
   @media (prefers-reduced-motion: no-preference) {
     .medallion { animation: tl-rise 0.8s ease-out both; }
