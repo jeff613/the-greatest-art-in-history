@@ -20,7 +20,11 @@ astro dev --background
 ```
 
 Manage with `astro dev stop|status|logs`. The preview server (serves `dist/`)
-usually runs at http://localhost:4322.
+usually runs at http://localhost:4322. Jeff browses the dev server over
+Tailscale (http://100.75.239.52:4321). After merging changes to
+`content.config.ts` or collection schemas from another branch/session, the
+running dev server serves STALE content-layer data — restart it with a cache
+clear: `astro dev stop && rm -rf .astro && astro dev --background`.
 
 Gates that must stay green after ANY content change:
 
