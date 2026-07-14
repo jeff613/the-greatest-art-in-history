@@ -3,7 +3,8 @@
 A personal virtual museum: Jeff and friends learn the great artists through
 **stories** — history and the artist's human moment, never technique lectures.
 Astro 7 static site, local-only today, public deploy planned eventually
-(an app may follow).
+(an app may follow). **Product vision and principles: `PRD.md`** — read it
+before proposing features.
 
 **Current state (2026-07-13):** 10 periods · 33 artists · 112 works,
 c. 1290–1929 (Giotto → Kandinsky). 158 built pages. Everything is on `main`;
