@@ -1,7 +1,7 @@
 ---
 title: "Madonna"
 artist: munch
-period: symbolism-fin-de-siecle
+period: post-impressionism
 year: "1894–1895"
 medium: "Oil on canvas"
 location: "Munch Museum, Oslo"

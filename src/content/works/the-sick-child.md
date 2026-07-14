@@ -1,7 +1,7 @@
 ---
 title: "The Sick Child"
 artist: munch
-period: symbolism-fin-de-siecle
+period: post-impressionism
 year: "1885–1886"
 medium: "Oil on canvas"
 location: "National Museum, Oslo"

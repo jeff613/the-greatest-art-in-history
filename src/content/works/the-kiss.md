@@ -1,7 +1,7 @@
 ---
 title: "The Kiss"
 artist: klimt
-period: symbolism-fin-de-siecle
+period: post-impressionism
 year: "1907–1908"
 medium: "Oil and gold leaf on canvas"
 location: "Österreichische Galerie Belvedere, Vienna"

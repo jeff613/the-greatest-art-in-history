@@ -1,7 +1,7 @@
 ---
 title: "The Scream"
 artist: munch
-period: symbolism-fin-de-siecle
+period: post-impressionism
 year: "1893"
 medium: "Tempera and crayon on cardboard"
 location: "National Museum, Oslo"

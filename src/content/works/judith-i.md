@@ -1,7 +1,7 @@
 ---
 title: "Judith I"
 artist: klimt
-period: symbolism-fin-de-siecle
+period: post-impressionism
 year: "1901"
 medium: "Oil and gold leaf on canvas"
 location: "Österreichische Galerie Belvedere, Vienna"

@@ -2,7 +2,7 @@
 name: "Gustav Klimt"
 birth: 1862
 death: 1918
-period: symbolism-fin-de-siecle
+period: post-impressionism
 portrait: "../../assets/portraits/klimt.jpg"
 portraitSource: "https://commons.wikimedia.org/wiki/File:Gustav_Klimt_2012_Pressefoto09.jpg"
 portraitLicense: "Public domain"

@@ -1,7 +1,7 @@
 ---
 title: "Portrait of Adele Bloch-Bauer I"
 artist: klimt
-period: symbolism-fin-de-siecle
+period: post-impressionism
 year: "1907"
 medium: "Oil, silver and gold on canvas"
 location: "Neue Galerie, New York"

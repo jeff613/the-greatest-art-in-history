@@ -1,6 +1,6 @@
 ---
 name: "Early Modernism"
-order: 11
+order: 10
 years: "c. 1905–1929"
 ---
 

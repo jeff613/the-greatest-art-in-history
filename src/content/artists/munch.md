@@ -2,7 +2,7 @@
 name: "Edvard Munch"
 birth: 1863
 death: 1944
-period: symbolism-fin-de-siecle
+period: post-impressionism
 portrait: "../../assets/portraits/munch.jpg"
 portraitSource: "https://commons.wikimedia.org/wiki/File:Edvard_Munch_-_Self-Portrait_with_Brushes_-_Google_Art_Project.jpg"
 portraitLicense: "Public domain"
