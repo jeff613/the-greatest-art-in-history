@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
+import PeriodMusic from '../../components/PeriodMusic.astro';
 
 export async function getStaticPaths() {
   const periods = await getCollection('periods');
@@ -23,12 +24,14 @@ const aspect = (c: (typeof cards)[number]) => c.work.data.image.height / c.work.
 const featured = cards.length
   ? cards.reduce((best, c) => (aspect(c) > aspect(best) ? c : best))
   : null;
+const track = period.data.music?.[0];
 ---
 
 <Base title={`${period.data.name} — The Greatest Art in History`}>
   <div class="page-head">
     <p class="kicker">{period.data.years}</p>
     <h1 class="display">{period.data.name}</h1>
+    {track && <PeriodMusic track={track} />}
   </div>
   <div class="intro-row">
     <article class="prose lede intro">

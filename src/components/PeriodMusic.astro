@@ -1,0 +1,108 @@
+---
+interface Props {
+  track: {
+    title: string;
+    composer: string;
+    composed: string;
+    performer: string;
+    source: string;
+    sourceUrl: string;
+    license: string;
+    file: string;
+  };
+}
+const { track } = Astro.props;
+---
+
+<div class="period-music">
+  <button
+    class="music-toggle"
+    type="button"
+    aria-pressed="false"
+    aria-label={`Play ${track.title} by ${track.composer}`}
+  >
+    <span class="music-glyph" aria-hidden="true">♪</span>
+    <span class="music-state">Listen</span>
+  </button>
+  <p class="music-credit">
+    {track.composer} — <em>{track.title}</em>, {track.composed} ·{' '}
+    {track.performer} · <a href={track.sourceUrl}>{track.source}</a>
+  </p>
+  <audio preload="none" loop src={track.file}></audio>
+</div>
+
+<style>
+  .period-music {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    margin-top: 1.1rem;
+  }
+  .music-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: none;
+    border: 1px solid var(--gilt);
+    border-radius: 999px;
+    padding: 0.32rem 0.95rem;
+    color: var(--gilt);
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .music-toggle:hover {
+    background: rgba(138, 109, 59, 0.09);
+  }
+  .music-credit {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+  }
+  .music-credit em {
+    font-family: var(--serif);
+    font-size: 1rem;
+  }
+  .music-credit a {
+    border-bottom: 1px solid var(--gilt);
+  }
+  @media (max-width: 640px) {
+    .period-music {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  function initPeriodMusic(): void {
+    const root = document.querySelector<HTMLElement>('.period-music');
+    if (!root) return;
+    const button = root.querySelector<HTMLButtonElement>('.music-toggle');
+    const state = root.querySelector<HTMLElement>('.music-state');
+    const audio = root.querySelector<HTMLAudioElement>('audio');
+    if (!button || !state || !audio) return;
+    const playLabel = button.getAttribute('aria-label') ?? 'Play';
+    audio.volume = 0.7;
+    button.addEventListener('click', () => {
+      if (audio.paused) void audio.play();
+      else audio.pause();
+    });
+    const sync = (): void => {
+      const playing = !audio.paused;
+      button.setAttribute('aria-pressed', String(playing));
+      button.setAttribute('aria-label', playing ? 'Pause the music' : playLabel);
+      state.textContent = playing ? 'Pause' : 'Listen';
+    };
+    audio.addEventListener('play', sync);
+    audio.addEventListener('pause', sync);
+  }
+  document.addEventListener('astro:page-load', initPeriodMusic);
+  // View transitions keep the old page's DOM alive during swap — stop sound explicitly.
+  document.addEventListener('astro:before-swap', () => {
+    document.querySelector<HTMLAudioElement>('.period-music audio')?.pause();
+  });
+</script>
