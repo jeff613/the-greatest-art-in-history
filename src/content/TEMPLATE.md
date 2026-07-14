@@ -85,3 +85,31 @@ After adding content, run: npm run check && npm run build
   `"Public domain in the US (published before 1930); may remain under copyright in the EU"`.
   The same wording applies to any photograph whose photographer died after
   1955 (e.g. the Coburn photo of Matisse).
+
+## Period music
+
+Each period file carries one ambient track in `music:` (a list, one entry).
+Example, from `renaissance.md`:
+
+    music:
+      - title: "Missa Papae Marcelli — I. Kyrie"
+        composer: "Giovanni Pierluigi da Palestrina"
+        composed: "c. 1562"
+        performer: "European Archive Music"
+        source: "Wikimedia Commons (via Musopen)"
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Missa_Papae_Marcelli_-_I._Kyrie.flac"
+        license: "CC0"
+        file: "/audio/renaissance.mp3"
+
+Rules:
+
+- The license must cover the RECORDING, not just the underlying composition —
+  public domain and CC0/CC BY/CC BY-SA only. Verify on the source page itself,
+  and for re-uploads cross-check the file's embedded metadata against what the
+  page claims.
+- Human performances only — no MIDI or synthesized renderings.
+- Ambient gate: loudness range ≤ 12 LU, checked with `ffmpeg -af ebur128`.
+- Duration ≥ 2 minutes.
+- Encode with `ffmpeg -codec:a libmp3lame -q:a 4` to
+  `public/audio/<period-slug>.mp3`, ≤ 10 MB.
+- `sourceUrl` must be the exact page for the file actually used.
