@@ -3,13 +3,13 @@ name: "Early Modernism"
 order: 10
 years: "c. 1905–1929"
 music:
-  - title: "Pavane pour une infante défunte"
-    composer: "Maurice Ravel"
-    composed: "1899"
-    performer: "Wasei Dúo — David Hernando Vitores, saxophone; Kayoko Morimoto, piano"
+  - title: "The Crown of India Suite, Op. 66 — IV. Intermezzo"
+    composer: "Edward Elgar"
+    composed: "1912"
+    performer: "United States Marine Band (\"The President's Own\"), cond. Col. Michael J. Colburn — concert-band transcription by Frank Winterbottom (c. 1913) of a work originally scored for orchestra with solo violin"
     source: "Wikimedia Commons"
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Maurice_Ravel_-_Pavane_pour_une_infante_d%C3%A9funte_-_David_Hernando_Vitores_-_Kayoko_Morimoto_(Wasei_Duo).oga"
-    license: "CC BY-SA 4.0"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:The_Crown_of_India_Suite,_4._Intermezzo_-_U.S._Marine_Band.ogg"
+    license: "Public domain (U.S. government work)"
     file: "/audio/early-modernism.mp3"
 ---
 
