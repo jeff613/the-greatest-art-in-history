@@ -55,3 +55,33 @@ Portrait in `src/assets/portraits/<slug>.jpg` (min 800px long edge).
     Life story as narrative, 300–500 words. Not a Wikipedia dump.
 
 After adding content, run: npm run check && npm run build
+
+## Image sourcing procedure
+
+1. Find the work on Wikimedia Commons; prefer files from museum open-access
+   programs (Google Art Project, Rijksmuseum, Met, NGA, Getty, Prado, AIC) —
+   usually the largest scan. Museum sites with direct open-access downloads
+   (NGA, AIC, Getty, Rijksmuseum, Mauritshuis) are equally good.
+2. Download the ORIGINAL file (upload.wikimedia.org link), not a thumbnail:
+   `curl -L -o src/assets/art/<slug>.jpg "<original-url>"`.
+3. Verify: `sips -g pixelWidth -g pixelHeight <file>` → artwork long edge
+   ≥2500px, portrait ≥800px. No upscales, no watermarks, no photographed
+   frames (crop them out with `sips -c H W` if unavoidable).
+4. `imageSource` must be the page for the file ACTUALLY used. If you
+   substitute a different scan or work, update it to match.
+5. If a work cannot meet the floor from any source, substitute another famous
+   work by the same artist that can, and say so in the commit message.
+6. Downscaling an enormous master (80MB+) to ~6000px long edge is fine;
+   keep well above the floor.
+
+## Licensing rules
+
+- Default: public-domain works (artist dead 70+ years) → `imageLicense:
+  "Public domain"` or the museum's CC0 wording.
+- **Nothing dated 1930 or later, anywhere in the collection** (US
+  public-domain line; also Jeff's taste boundary).
+- Artists dead less than 70 years (currently only Picasso, d. 1973): pre-1930
+  works are US-PD only. Use exactly:
+  `"Public domain in the US (published before 1930); may remain under copyright in the EU"`.
+  The same wording applies to any photograph whose photographer died after
+  1955 (e.g. the Coburn photo of Matisse).
