@@ -57,6 +57,15 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
   year: y,
   pct: ((y - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
 }));
+// A few historical anchors for orientation — hand-placed (side) to clear the stems.
+const EVENTS = [
+  { year: 1347, name: 'The Black Death' },
+  { year: 1450, name: 'Gutenberg', below: true },
+  { year: 1492, name: 'Columbus' },
+  { year: 1789, name: 'The French Revolution', below: true },
+  { year: 1826, name: 'Photography' },
+  { year: 1914, name: 'The Great War' },
+].map((e) => ({ ...e, pct: ((e.year - SPAN_START) / (SPAN_END - SPAN_START)) * 100 }));
 ---
 
 <Base title="Periods — The Greatest Art in History">
@@ -70,6 +79,15 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
         <span class="tick" style={`left: ${t.pct}%`} aria-hidden="true">
           <i></i>
           <em>{t.year}</em>
+        </span>
+      ))}
+      {EVENTS.map((e) => (
+        <span class:list={['event', { below: e.below }]} style={`left: ${e.pct}%`}>
+          <i aria-hidden="true"></i>
+          <span class="ev-label">
+            <span class="ev-year">{e.year}</span>
+            <span class="ev-name">{e.name}</span>
+          </span>
         </span>
       ))}
       {timeline.map(({ work, period, img, year, pct, below, far }, i) => (
@@ -143,6 +161,48 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
     font-size: 0.62rem;
     letter-spacing: 0.12em;
     color: var(--muted);
+  }
+  .event {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+  }
+  .event i {
+    position: absolute;
+    top: -2.5px;
+    left: calc(50% - 2.5px);
+    width: 5px;
+    height: 5px;
+    background: var(--ink);
+    opacity: 0.55;
+    transform: rotate(45deg);
+  }
+  .ev-label {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    width: max-content;
+    text-align: center;
+  }
+  .event.below .ev-label {
+    bottom: auto;
+    top: 28px;
+  }
+  .ev-year {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+  .ev-name {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.74rem;
+    color: var(--ink);
+    opacity: 0.65;
   }
   .medallion {
     position: absolute;
