@@ -32,11 +32,11 @@ const timeline = await Promise.all(
     const slug = MEDALLION_WORK[period.id] ?? works.find((w) => w.data.period.id === period.id)?.id;
     const work = await getEntry('works', slug!);
     const img = await getImage({ src: work!.data.image, width: 320, height: 320, fit: 'cover', format: 'webp' });
-    const startYear = parseInt(period.data.years.match(/\d{4}/)![0], 10);
+    const workYear = parseInt(work!.data.year.match(/\d{4}/)![0], 10);
     return {
       period,
       img,
-      pct: ((startYear - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
+      pct: ((workYear - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
       below: i % 2 === 1,
       far: (i >> 1) % 2 === 1,
     };
@@ -96,8 +96,8 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
   }
   .timeline {
     position: relative;
-    height: 25rem;
-    min-width: 58rem;
+    height: 29rem;
+    min-width: 66rem;
     margin: 0.5rem 1.5rem 1.5rem;
   }
   .axis {
@@ -158,10 +158,10 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
   .medallion.below::before { top: -2.5px; }
   .stem {
     width: 1px;
-    height: 26px;
+    height: 22px;
     background: var(--gilt);
   }
-  .medallion.far .stem { height: 64px; }
+  .medallion.far .stem { height: 84px; }
   .medallion.below .stem { margin-top: 20px; }
   .medallion img {
     width: 78px;
