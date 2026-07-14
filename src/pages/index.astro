@@ -24,6 +24,7 @@ const entries = await Promise.all(
 ---
 
 <Base dark bare>
+  <div class="walk-scroller">
   <section class="daily-hero">
     <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of today's artwork">
       <img id="daily-img" alt="" />
@@ -38,7 +39,7 @@ const entries = await Promise.all(
     <div class="scroll-cue anim-rise-2" aria-hidden="true"><span></span></div>
     <noscript>
       <div class="noscript-home">
-        <p class="wordmark">The Greatest Art</p>
+        <p class="wordmark">The Greatest</p>
         <p><a href="/artists/">Artists</a> · <a href="/periods/">Periods</a></p>
       </div>
     </noscript>
@@ -67,15 +68,24 @@ const entries = await Promise.all(
   </section>
 
   <script type="application/json" id="works-data" set:html={JSON.stringify(entries).replace(/</g, '\\u003c')} />
+  </div>
 </Base>
 
 <style>
-  :global(html) { scroll-snap-type: y mandatory; }
+  /* The walk scrolls inside a fixed-height container, not the document:
+     iOS Safari's collapsing toolbar can't change the scrollport mid-scroll,
+     so snap positions never drift and no neighboring room peeks through. */
+  :global(html), :global(body) { height: 100%; overflow: hidden; }
+  .walk-scroller {
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+  }
   :global(.site-header) { position: fixed; }
   .daily-hero { scroll-snap-align: start; }
   .scroll-cue {
     position: absolute;
-    bottom: 1.4rem;
+    top: calc(100svh - 4.4rem); /* 1.4rem margin + own 3rem height above the small viewport's bottom */
     left: 50%;
     transform: translateX(-50%);
     width: 1px;
@@ -100,7 +110,7 @@ const entries = await Promise.all(
   }
   :global(#gallery-walk .room) {
     position: relative;
-    height: 100svh;
+    height: 100dvh;
     scroll-snap-align: start;
   }
   :global(#gallery-walk .room-img) { opacity: 1; }

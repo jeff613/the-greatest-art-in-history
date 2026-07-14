@@ -98,8 +98,9 @@ under `prefers-reduced-motion`. All page scripts init via `astro:page-load`
   Maestà-detail stand-in; the bios disclose this).
 - `periods/[slug].astro` guards against zero-work periods (needed when a new
   period lands before its artists).
-- The periods ledger headline ("Six hundred years, ten revolutions.") is
-  hardcoded in `src/pages/periods/index.astro` — update it when periods change.
+- Two hardcoded count headlines must be updated when the collection changes:
+  `src/pages/periods/index.astro` ("Six hundred years, ten revolutions.") and
+  `src/pages/artists/index.astro` ("Thirty-three lives that changed how we see.").
 - Jeff likes round numbers: 11 periods were distilled to 10 by merging
   Symbolism & Fin de Siècle into Post-Impressionism.
 
@@ -116,6 +117,21 @@ Nighthawks, Rockwell, Hockney) blocked by copyright until their terms lapse.
 Image upgrades wanted: witches-sabbath.jpg (soft scan), botticelli.jpg portrait
 (halftone pattern). Minor prose nits are logged in `.superpowers/sdd/progress.md`
 (gitignored scratch — local only).
+
+**Mobile compatibility pass (Jeff, 2026-07-14):** the home walk scrolls inside a
+fixed 100dvh container as a workaround for iOS Safari toolbar-resize snap drift
+(see index.astro comments). Jeff accepted it as a workaround; a proper mobile
+audit is wanted later — walk scroll feel, toolbar behavior, works/artists pages
+on small screens, the periods timeline horizontal scroll on touch.
+
+## Multiple agents work this repo
+
+Jeff runs parallel agent sessions; their worktrees live under
+`.claude/worktrees/` (gitignored). Rules of coexistence: never touch another
+session's worktree; prefer explicit path staging over `git add -A` at the repo
+root; expect `main` to have moved since your session started (pull the latest
+state before branching or merging); surface — don't resolve — anything
+unexpected you find in the tree.
 
 ## How content gets built here
 

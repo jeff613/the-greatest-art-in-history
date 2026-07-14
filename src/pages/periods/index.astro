@@ -1,5 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 
 const periods = (await getCollection('periods')).sort(
@@ -10,11 +11,103 @@ const countByPeriod = new Map<string, number>();
 for (const w of works) {
   countByPeriod.set(w.data.period.id, (countByPeriod.get(w.data.period.id) ?? 0) + 1);
 }
+
+// Timeline: periods hang from the axis as large named cameos of their signature
+// work; extra representative works (small cameos, year-labelled, linking to the
+// work) fill the sparser centuries. Side/tier are hand-balanced for spacing.
+const TIMELINE_CFG: { work: string; period?: string; below?: boolean; far?: boolean; mid?: boolean; lowered?: boolean }[] = [
+  { work: 'ognissanti-madonna', period: 'gothic-proto-renaissance' },
+  { work: 'the-arnolfini-portrait', period: 'northern-renaissance' },
+  { work: 'primavera', below: true, far: true },
+  { work: 'mona-lisa', period: 'renaissance', below: true, lowered: true },
+  { work: 'melencolia-i', far: true },
+  { work: 'the-last-judgment', below: true, far: true },
+  { work: 'hunters-in-the-snow', mid: true },
+  { work: 'the-night-watch', below: true },
+  { work: 'girl-with-a-pearl-earring', period: 'baroque' },
+  { work: 'the-swing', period: 'rococo-neoclassicism' },
+  { work: 'the-death-of-marat', far: true },
+  { work: 'liberty-leading-the-people', period: 'romanticism', below: true },
+  { work: 'the-gleaners', period: 'realism', far: true },
+  { work: 'impression-sunrise', period: 'impressionism', below: true, far: true },
+  { work: 'the-starry-night', period: 'post-impressionism' },
+  { work: 'les-demoiselles-davignon', period: 'early-modernism', below: true, lowered: true },
+];
+const SPAN_START = 1280;
+const SPAN_END = 1940;
+const timeline = await Promise.all(
+  TIMELINE_CFG.map(async (cfg) => {
+    const work = await getEntry('works', cfg.work);
+    const period = cfg.period ? periods.find((p) => p.id === cfg.period) : undefined;
+    const img = await getImage({ src: work!.data.image, width: 320, height: 320, fit: 'cover', format: 'webp' });
+    const workYear = parseInt(work!.data.year.match(/\d{4}/)![0], 10);
+    return {
+      work: work!,
+      period,
+      img,
+      year: workYear,
+      pct: ((workYear - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
+      below: !!cfg.below,
+      far: !!cfg.far,
+      mid: !!cfg.mid,
+      lowered: !!cfg.lowered,
+    };
+  })
+);
+const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
+  year: y,
+  pct: ((y - SPAN_START) / (SPAN_END - SPAN_START)) * 100,
+  nudge: y === 1500 || y === 1900, // cameos at 1503/1907 sit on these labels
+}));
+// A few historical anchors for orientation — hand-placed (side) to clear the stems.
+const EVENTS: { year: number; name: string; display?: string; below?: boolean; leftward?: boolean; snug?: boolean }[] = [
+  { year: 1347, name: 'The Black Death' },
+  { year: 1450, name: 'Gutenberg', below: true },
+  { year: 1492, name: 'Columbus' },
+  { year: 1543, name: 'Copernicus' },
+  { year: 1609, name: 'Galileo' },
+  { year: 1687, name: 'Newton', below: true },
+  { year: 1789, name: 'The French Revolution', below: true, leftward: true },
+  { year: 1826, name: 'Photography' },
+  { year: 1916, display: '1914–18', name: 'The Great War', snug: true },
+].map((e) => ({ ...e, pct: ((e.year - SPAN_START) / (SPAN_END - SPAN_START)) * 100 }));
 ---
 
 <Base title="Periods — The Greatest Art in History">
   <div class="page-head">
     <h1 class="display">Six hundred years, ten revolutions.</h1>
+  </div>
+  <div class="timeline-scroll">
+    <div class="timeline">
+      <span class="axis" aria-hidden="true"></span>
+      {ticks.map((t) => (
+        <span class:list={['tick', { nudge: t.nudge }]} style={`left: ${t.pct}%`} aria-hidden="true">
+          <i></i>
+          <em>{t.year}</em>
+        </span>
+      ))}
+      {EVENTS.map((e) => (
+        <span class:list={['event', { below: e.below, leftward: e.leftward, snug: e.snug }]} style={`left: ${e.pct}%`}>
+          <i aria-hidden="true"></i>
+          <span class="ev-label">
+            <span class="ev-year">{e.display ?? e.year}</span>
+            <span class="ev-name">{e.name}</span>
+          </span>
+        </span>
+      ))}
+      {timeline.map(({ work, period, img, year, pct, below, far, mid, lowered }, i) => (
+        <a
+          class:list={['medallion', { below, far, mid, lowered, secondary: !period }]}
+          style={`left: ${pct}%; animation-delay: ${0.15 + i * 0.06}s`}
+          href={period ? `/periods/${period.id}/` : `/works/${work.id}/`}
+          aria-label={period ? period.data.name : `${work.data.title}, ${year}`}
+        >
+          <span class="stem" aria-hidden="true"></span>
+          <img src={img.src} alt="" width="160" height="160" loading="eager" decoding="async" />
+          <span class="tl-name">{period ? period.data.name : work.data.title}</span>
+        </a>
+      ))}
+    </div>
   </div>
   <ol class="period-list">
     {periods.map((period) => (
@@ -30,6 +123,182 @@ for (const w of works) {
 </Base>
 
 <style>
+  /* ---------- the timeline ---------- */
+  .timeline-scroll {
+    overflow-x: auto;
+    padding: 0 var(--pad);
+    scrollbar-width: thin;
+  }
+  .timeline {
+    position: relative;
+    height: 37rem;
+    min-width: 66rem;
+    margin: 0.5rem 1.5rem 1rem;
+  }
+  .axis {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--ink);
+    opacity: 0.45;
+  }
+  .tick {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .tick i {
+    display: block;
+    width: 1px;
+    height: 7px;
+    margin: 0 auto;
+    background: var(--ink);
+    opacity: 0.45;
+  }
+  .tick { z-index: 2; }
+  .tick em {
+    display: block;
+    margin-top: 0.3rem;
+    padding: 0 0.3rem;
+    font-style: normal;
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    background: var(--paper);
+  }
+  .tick.nudge em { transform: translateX(-1.2rem); }
+  .event {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+  }
+  .event i {
+    position: absolute;
+    top: -2.5px;
+    left: calc(50% - 2.5px);
+    width: 5px;
+    height: 5px;
+    background: var(--ink);
+    opacity: 0.55;
+    transform: rotate(45deg);
+  }
+  .ev-label {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    width: max-content;
+    text-align: center;
+  }
+  .event.below .ev-label {
+    bottom: auto;
+    top: 28px;
+  }
+  .event.leftward .ev-label {
+    left: auto;
+    right: 10px;
+    transform: none;
+    text-align: right;
+  }
+  .event.snug .ev-label { bottom: 3px; }
+  .ev-year {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+  .ev-name {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.74rem;
+    color: var(--ink);
+    opacity: 0.65;
+  }
+  .medallion {
+    position: absolute;
+    bottom: 50%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    transform: translateX(-50%);
+  }
+  .medallion.below {
+    bottom: auto;
+    top: 50%;
+    flex-direction: column;
+  }
+  .medallion::before {
+    content: '';
+    position: absolute;
+    left: calc(50% - 2.5px);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gilt);
+  }
+  .medallion:not(.below)::before { bottom: -2.5px; }
+  .medallion.below::before { top: -2.5px; }
+  .stem {
+    width: 1px;
+    height: 22px;
+    background: var(--gilt);
+  }
+  .medallion.far .stem { height: 150px; }
+  .medallion.mid .stem { height: 56px; }
+  .medallion.lowered .stem { height: 34px; }
+  .medallion img {
+    width: 78px;
+    height: 78px;
+    aspect-ratio: 1 / 1;
+    max-width: none;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--gilt);
+    padding: 3px;
+    background: var(--paper);
+    transition: filter 0.4s ease;
+  }
+  .medallion .tl-name {
+    margin: 0.55rem 0;
+    max-width: 10rem;
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    line-height: 1.6;
+    text-align: center;
+    color: var(--ink);
+    transition: color 0.4s ease;
+  }
+  .medallion:hover img { filter: brightness(1.06); }
+  .medallion:hover .tl-name { color: var(--gilt); }
+  .medallion.secondary img {
+    width: 54px;
+    height: 54px;
+    padding: 2px;
+  }
+  .medallion.secondary .tl-name {
+    font-size: 0.56rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: 0.4rem 0;
+    max-width: 7rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .medallion { animation: tl-rise 0.8s ease-out both; }
+  }
+  @keyframes tl-rise {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to { opacity: 1; transform: translateX(-50%); }
+  }
+
   .period-list {
     list-style: none;
     margin: 0;
