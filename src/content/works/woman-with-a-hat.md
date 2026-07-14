@@ -34,4 +34,4 @@ Matisse in 1905 was not a young firebrand but a cautious, anxious man of thirty-
 - Some accounts claim outraged visitors tried to scratch the paint off the canvas; the tale is often repeated but hard to verify.
 - Leo and Gertrude Stein bought the painting for roughly 500 francs, a purchase that rescued Matisse's morale and pulled him into their famous salon.
 - In the Steins' apartment the picture hung near works they were also acquiring by the young Picasso, seeding the two artists' lifelong rivalry.
-- Elise S. Haas bequeathed the painting to the San Francisco Museum of Modern Art in 1990, where it hangs today.
+- Elise S. Haas bequeathed the painting to the San Francisco Museum of Modern Art in 1991, where it hangs today.
