@@ -75,7 +75,7 @@ const entries = await Promise.all(
   .daily-hero { scroll-snap-align: start; }
   .scroll-cue {
     position: absolute;
-    bottom: 1.4rem;
+    top: calc(100svh - 4.4rem); /* 1.4rem margin + own 3rem height above the small viewport's bottom */
     left: 50%;
     transform: translateX(-50%);
     width: 1px;
@@ -100,7 +100,8 @@ const entries = await Promise.all(
   }
   :global(#gallery-walk .room) {
     position: relative;
-    height: 100svh;
+    height: 100vh;
+    height: 100lvh;
     scroll-snap-align: start;
   }
   :global(#gallery-walk .room-img) { opacity: 1; }

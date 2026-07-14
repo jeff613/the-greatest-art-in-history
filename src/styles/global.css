@@ -230,7 +230,10 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
 .site-footer p { margin: 0; }
 
 /* ---------- home: full-bleed daily artwork ---------- */
-.daily-hero { position: relative; height: 100svh; }
+/* Rooms fill the LARGE viewport so nothing peeks through iOS Safari's
+   translucent toolbar; captions pin within the SMALL viewport so they
+   stay visible above it. */
+.daily-hero { position: relative; height: 100vh; height: 100lvh; }
 .daily-bg { position: absolute; inset: 0; display: block; cursor: pointer; }
 .daily-bg img { width: 100%; height: 100%; object-fit: cover; }
 .scrim {
@@ -244,7 +247,8 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
 .wall-label {
   position: absolute;
   left: var(--pad);
-  bottom: clamp(2rem, 7vh, 4.5rem);
+  top: calc(100svh - clamp(2rem, 7vh, 4.5rem));
+  transform: translateY(-100%);
   z-index: 2;
   max-width: min(46rem, 88vw);
   color: var(--chalk);
