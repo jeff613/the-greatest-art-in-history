@@ -3,13 +3,13 @@ name: "Rococo & Neoclassicism"
 order: 5
 years: "c. 1700–1820"
 music:
-  - title: "Piano Sonata No. 11 in A major, K. 331: I. Andante grazioso (Theme and Variation 1)"
-    composer: "Wolfgang Amadeus Mozart"
-    composed: "1783"
-    performer: "Bernd Krueger (piano-midi.de)"
+  - title: "Keyboard Sonata (Divertimento) in A-flat major, Hob. XVI:46: II. Adagio"
+    composer: "Joseph Haydn"
+    composed: "c. 1767–70"
+    performer: "Ivan Ilić"
     source: "Wikimedia Commons"
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Mozart_-_Piano_Sonata_No._11_in_A_major_-_I._Andante_grazioso.ogg"
-    license: "CC BY-SA 3.0 Germany"
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:Ivan_Ili%C4%87_-_Haydn's_Keyboard_Sonata_No._46_(Divertimento)_in_A-flat_major,_Hob.XVI-46_-_II._Adagio.ogg"
+    license: "CC BY 3.0"
     file: "/audio/rococo-neoclassicism.mp3"
 ---
 
