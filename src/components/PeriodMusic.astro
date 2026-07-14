@@ -12,6 +12,15 @@ interface Props {
   };
 }
 const { track } = Astro.props;
+
+const DEEDS: Record<string, string> = {
+  'CC BY 3.0': 'https://creativecommons.org/licenses/by/3.0/',
+  'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/',
+  'CC BY-SA 3.0': 'https://creativecommons.org/licenses/by-sa/3.0/',
+  'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
+  'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/',
+};
+const deed = DEEDS[track.license];
 ---
 
 <div class="period-music">
@@ -26,7 +35,8 @@ const { track } = Astro.props;
   </button>
   <p class="music-credit">
     {track.composer} — <em>{track.title}</em>, {track.composed} ·{' '}
-    {track.performer} · <a href={track.sourceUrl}>{track.source}</a>
+    {track.performer} · <a href={track.sourceUrl}>{track.source}</a> ·{' '}
+    {deed ? <a href={deed}>{track.license}</a> : track.license}
   </p>
   <audio preload="none" loop src={track.file}></audio>
 </div>
@@ -88,7 +98,7 @@ const { track } = Astro.props;
     const playLabel = button.getAttribute('aria-label') ?? 'Play';
     audio.volume = 0.7;
     button.addEventListener('click', () => {
-      if (audio.paused) void audio.play();
+      if (audio.paused) audio.play().catch(() => {});
       else audio.pause();
     });
     const sync = (): void => {
