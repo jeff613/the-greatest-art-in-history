@@ -7,6 +7,20 @@ const periods = defineCollection({
     name: z.string(),
     order: z.number().int(),
     years: z.string(),
+    music: z
+      .array(
+        z.object({
+          title: z.string(),
+          composer: z.string(),
+          composed: z.string(),
+          performer: z.string(),
+          source: z.string(),
+          sourceUrl: z.string().url(),
+          license: z.string(),
+          file: z.string(),
+        })
+      )
+      .optional(),
   }),
 });
 
