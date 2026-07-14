@@ -17,7 +17,7 @@ Set *Composition VIII* beside *Composition VII* and it is hard to believe the sa
 
 The shift came out of Kandinsky's new home. After the First World War drove him back to Russia, and the upheavals there stripped him of his property and his standing, he returned to Germany in 1921 and, in 1922, joined the Bauhaus, the radical school of art and design founded by the architect Walter Gropius. There, surrounded by teachers who believed art and engineering should fuse into a new visual language for the modern world, Kandinsky's own painting grew disciplined and precise. Point, line, and plane became his vocabulary; the geometry he had once buried beneath emotion now stood proudly on the surface. He painted *Composition VIII* in July 1923, and regarded it as a high point of his post-war years.
 
-Its afterlife made it a cornerstone of an American institution. In 1930 the mining magnate Solomon R. Guggenheim, guided by his adviser Hilla Rebay, travelled to the Bauhaus — by then relocated to Dessau — to meet Kandinsky, and bought *Composition VIII* directly from the artist. It became one of the anchors of Guggenheim's astonishing Kandinsky collection and, eventually, of the spiralling Frank Lloyd Wright museum on Fifth Avenue built to house it. The picture that Kandinsky made to declare a new, ordered vision of art now hangs at the heart of one of the world's most famous galleries.
+Its afterlife made it a cornerstone of an American institution. In 1929 the mining magnate Solomon R. Guggenheim, guided by his adviser Hilla Rebay, travelled to the Bauhaus — by then relocated to Dessau — to meet Kandinsky, and bought *Composition VIII* directly from the artist. It became one of the anchors of Guggenheim's astonishing Kandinsky collection and, eventually, of the spiralling Frank Lloyd Wright museum on Fifth Avenue built to house it. The picture that Kandinsky made to declare a new, ordered vision of art now hangs at the heart of one of the world's most famous galleries.
 
 ## The World Behind It
 
@@ -36,6 +36,6 @@ This was the beginning of his long, disciplined late maturity. The passionate, a
 - *Composition VIII* is the cool, geometric answer to the fiery chaos of *Composition VII*, painted ten years and a world war later.
 - Kandinsky painted it in July 1923, during his years teaching at the Bauhaus in Weimar.
 - The large black disc haloed in pink and violet in the upper left anchors the whole composition.
-- Solomon R. Guggenheim bought the picture directly from Kandinsky in 1930, on a visit to the Bauhaus in Dessau.
+- Solomon R. Guggenheim bought the picture directly from Kandinsky in 1929, on a visit to the Bauhaus in Dessau.
 - It became a cornerstone of the Guggenheim's collection, which is among the largest holdings of Kandinsky's work anywhere.
 - At the Bauhaus in Dessau, Kandinsky and his close friend Paul Klee lived side by side in a pair of adjoining masters' houses.
