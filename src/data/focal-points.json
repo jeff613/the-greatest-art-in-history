@@ -1,0 +1,450 @@
+{
+  "a-bar-at-the-folies-bergere" : {
+    "x" : 50,
+    "y" : 18
+  },
+  "a-burial-at-ornans" : {
+    "x" : 47,
+    "y" : 48
+  },
+  "a-young-girl-reading" : {
+    "x" : 41,
+    "y" : 32
+  },
+  "bacchus-and-ariadne" : {
+    "x" : 50,
+    "y" : 52
+  },
+  "cafe-terrace-at-night" : {
+    "x" : 47,
+    "y" : 51
+  },
+  "composition-vii" : {
+    "x" : 52,
+    "y" : 43
+  },
+  "composition-viii" : {
+    "x" : 51,
+    "y" : 44
+  },
+  "dance-at-le-moulin-de-la-galette" : {
+    "x" : 47,
+    "y" : 61
+  },
+  "david-with-the-head-of-goliath" : {
+    "x" : 69,
+    "y" : 61
+  },
+  "doni-tondo" : {
+    "x" : 52,
+    "y" : 26
+  },
+  "equestrian-portrait-of-charles-v" : {
+    "x" : 59,
+    "y" : 38
+  },
+  "family-of-saltimbanques" : {
+    "x" : 86,
+    "y" : 54
+  },
+  "ginevra-de-benci" : {
+    "x" : 57,
+    "y" : 48
+  },
+  "girl-with-a-pearl-earring" : {
+    "x" : 40,
+    "y" : 45
+  },
+  "hunters-in-the-snow" : {
+    "x" : 48,
+    "y" : 51
+  },
+  "impression-sunrise" : {
+    "x" : 40,
+    "y" : 57
+  },
+  "improvisation-28" : {
+    "x" : 49,
+    "y" : 46
+  },
+  "irises" : {
+    "x" : 52,
+    "y" : 46
+  },
+  "judith-beheading-holofernes" : {
+    "x" : 62,
+    "y" : 42
+  },
+  "judith-i" : {
+    "x" : 56,
+    "y" : 31
+  },
+  "labsinthe" : {
+    "x" : 74,
+    "y" : 19
+  },
+  "lady-with-an-ermine" : {
+    "x" : 58,
+    "y" : 29
+  },
+  "las-meninas" : {
+    "x" : 71,
+    "y" : 66
+  },
+  "le-dejeuner-sur-lherbe" : {
+    "x" : 41,
+    "y" : 48
+  },
+  "les-demoiselles-davignon" : {
+    "x" : 25,
+    "y" : 21
+  },
+  "liberty-leading-the-people" : {
+    "x" : 74,
+    "y" : 37
+  },
+  "luncheon-of-the-boating-party" : {
+    "x" : 21,
+    "y" : 53
+  },
+  "madonna" : {
+    "x" : 47,
+    "y" : 27
+  },
+  "madonna-and-child-stoclet" : {
+    "x" : 54,
+    "y" : 33
+  },
+  "maesta" : {
+    "x" : 23,
+    "y" : 33
+  },
+  "massacre-of-the-innocents" : {
+    "x" : 50,
+    "y" : 41
+  },
+  "melencolia-i" : {
+    "x" : 50,
+    "y" : 47
+  },
+  "mona-lisa" : {
+    "x" : 45,
+    "y" : 27
+  },
+  "mont-sainte-victoire" : {
+    "x" : 51,
+    "y" : 48
+  },
+  "napoleon-crossing-the-alps" : {
+    "x" : 45,
+    "y" : 43
+  },
+  "netherlandish-proverbs" : {
+    "x" : 49,
+    "y" : 47
+  },
+  "oath-of-the-horatii" : {
+    "x" : 54,
+    "y" : 49
+  },
+  "ognissanti-madonna" : {
+    "x" : 51,
+    "y" : 28
+  },
+  "olympia" : {
+    "x" : 43,
+    "y" : 27
+  },
+  "portrait-of-a-man-in-a-red-turban" : {
+    "x" : 37,
+    "y" : 43
+  },
+  "portrait-of-adele-bloch-bauer-i" : {
+    "x" : 61,
+    "y" : 13
+  },
+  "portrait-of-innocent-x" : {
+    "x" : 45,
+    "y" : 33
+  },
+  "primavera" : {
+    "x" : 60,
+    "y" : 30
+  },
+  "rain-steam-and-speed" : {
+    "x" : 47,
+    "y" : 55
+  },
+  "rouen-cathedral-west-facade-sunlight" : {
+    "x" : 50,
+    "y" : 46
+  },
+  "rucellai-madonna" : {
+    "x" : 50,
+    "y" : 33
+  },
+  "saturn-devouring-his-son" : {
+    "x" : 49,
+    "y" : 39
+  },
+  "self-portrait-at-twenty-eight" : {
+    "x" : 49,
+    "y" : 30
+  },
+  "self-portrait-with-two-circles" : {
+    "x" : 45,
+    "y" : 31
+  },
+  "snow-storm-steam-boat" : {
+    "x" : 51,
+    "y" : 47
+  },
+  "stacks-of-wheat-end-of-summer" : {
+    "x" : 51,
+    "y" : 48
+  },
+  "sunflowers" : {
+    "x" : 48,
+    "y" : 49
+  },
+  "the-anatomy-lesson" : {
+    "x" : 63,
+    "y" : 36
+  },
+  "the-angelus" : {
+    "x" : 49,
+    "y" : 31
+  },
+  "the-arnolfini-portrait" : {
+    "x" : 50,
+    "y" : 23
+  },
+  "the-art-of-painting" : {
+    "x" : 45,
+    "y" : 45
+  },
+  "the-artists-studio" : {
+    "x" : 51,
+    "y" : 61
+  },
+  "the-ballet-class" : {
+    "x" : 53,
+    "y" : 37
+  },
+  "the-basket-of-apples" : {
+    "x" : 50,
+    "y" : 41
+  },
+  "the-birth-of-venus" : {
+    "x" : 48,
+    "y" : 35
+  },
+  "the-bolt" : {
+    "x" : 63,
+    "y" : 42
+  },
+  "the-calling-of-saint-matthew" : {
+    "x" : 43,
+    "y" : 48
+  },
+  "the-card-players" : {
+    "x" : 72,
+    "y" : 27
+  },
+  "the-creation-of-adam" : {
+    "x" : 14,
+    "y" : 42
+  },
+  "the-death-of-marat" : {
+    "x" : 18,
+    "y" : 50
+  },
+  "the-death-of-sardanapalus" : {
+    "x" : 50,
+    "y" : 46
+  },
+  "the-descent-from-the-cross" : {
+    "x" : 54,
+    "y" : 36
+  },
+  "the-dog" : {
+    "x" : 52,
+    "y" : 49
+  },
+  "the-fighting-temeraire" : {
+    "x" : 51,
+    "y" : 55
+  },
+  "the-ghent-altarpiece" : {
+    "x" : 49,
+    "y" : 48
+  },
+  "the-gleaners" : {
+    "x" : 49,
+    "y" : 47
+  },
+  "the-green-line" : {
+    "x" : 47,
+    "y" : 42
+  },
+  "the-jewish-bride" : {
+    "x" : 46,
+    "y" : 24
+  },
+  "the-joy-of-life" : {
+    "x" : 50,
+    "y" : 60
+  },
+  "the-kiss" : {
+    "x" : 52,
+    "y" : 42
+  },
+  "the-kiss-of-judas" : {
+    "x" : 56,
+    "y" : 45
+  },
+  "the-lamentation" : {
+    "x" : 48,
+    "y" : 44
+  },
+  "the-last-judgment" : {
+    "x" : 51,
+    "y" : 49
+  },
+  "the-last-supper" : {
+    "x" : 51,
+    "y" : 48
+  },
+  "the-massacre-at-chios" : {
+    "x" : 24,
+    "y" : 55
+  },
+  "the-milkmaid" : {
+    "x" : 56,
+    "y" : 28
+  },
+  "the-mystical-nativity" : {
+    "x" : 51,
+    "y" : 43
+  },
+  "the-night-watch" : {
+    "x" : 53,
+    "y" : 49
+  },
+  "the-old-guitarist" : {
+    "x" : 32,
+    "y" : 24
+  },
+  "the-return-of-the-prodigal-son" : {
+    "x" : 44,
+    "y" : 38
+  },
+  "the-school-of-athens" : {
+    "x" : 53,
+    "y" : 50
+  },
+  "the-scream" : {
+    "x" : 38,
+    "y" : 43
+  },
+  "the-sick-child" : {
+    "x" : 49,
+    "y" : 46
+  },
+  "the-sistine-madonna" : {
+    "x" : 55,
+    "y" : 49
+  },
+  "the-slave-ship" : {
+    "x" : 49,
+    "y" : 54
+  },
+  "the-sower" : {
+    "x" : 49,
+    "y" : 18
+  },
+  "the-starry-night" : {
+    "x" : 50,
+    "y" : 53
+  },
+  "the-supper-at-emmaus" : {
+    "x" : 57,
+    "y" : 34
+  },
+  "the-surrender-of-breda" : {
+    "x" : 47,
+    "y" : 41
+  },
+  "the-swing" : {
+    "x" : 49,
+    "y" : 54
+  },
+  "the-third-of-may-1808" : {
+    "x" : 47,
+    "y" : 57
+  },
+  "the-three-graces" : {
+    "x" : 47,
+    "y" : 25
+  },
+  "the-tower-of-babel" : {
+    "x" : 48,
+    "y" : 47
+  },
+  "the-transfiguration" : {
+    "x" : 84,
+    "y" : 64
+  },
+  "the-tub" : {
+    "x" : 53,
+    "y" : 46
+  },
+  "the-wounded-man" : {
+    "x" : 43,
+    "y" : 24
+  },
+  "two-sisters-on-the-terrace" : {
+    "x" : 52,
+    "y" : 56
+  },
+  "venus-and-mars" : {
+    "x" : 17,
+    "y" : 19
+  },
+  "venus-of-urbino" : {
+    "x" : 17,
+    "y" : 42
+  },
+  "view-of-delft" : {
+    "x" : 49,
+    "y" : 64
+  },
+  "water-lilies" : {
+    "x" : 48,
+    "y" : 49
+  },
+  "wheatfield-with-crows" : {
+    "x" : 48,
+    "y" : 40
+  },
+  "witches-sabbath" : {
+    "x" : 51,
+    "y" : 46
+  },
+  "woman-with-a-hat" : {
+    "x" : 52,
+    "y" : 45
+  },
+  "woman-with-a-parasol" : {
+    "x" : 46,
+    "y" : 39
+  },
+  "women-of-algiers" : {
+    "x" : 10,
+    "y" : 52
+  },
+  "young-hare" : {
+    "x" : 52,
+    "y" : 53
+  }
+}

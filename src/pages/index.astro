@@ -2,6 +2,7 @@
 import { getCollection, getEntry } from 'astro:content';
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import focal from '../data/focal-points.json';
 
 const works = await getCollection('works');
 const entries = await Promise.all(
@@ -11,6 +12,7 @@ const entries = await Promise.all(
       const artist = await getEntry(work.data.artist);
       const period = await getEntry(work.data.period);
       const hero = await getImage({ src: work.data.image, width: 2400, format: 'webp' });
+      const f = (focal as Record<string, { x: number; y: number }>)[work.id];
       return {
         slug: work.id,
         title: work.data.title,
@@ -18,6 +20,8 @@ const entries = await Promise.all(
         year: work.data.year,
         period: period.data.name,
         src: hero.src,
+        fx: f?.x ?? 50,
+        fy: f?.y ?? 50,
       };
     })
 );
@@ -138,6 +142,8 @@ const entries = await Promise.all(
     year: string;
     period: string;
     src: string;
+    fx: number;
+    fy: number;
   };
 
   function initHome(): void {
@@ -156,6 +162,9 @@ const entries = await Promise.all(
     dailyImg.addEventListener('load', () => dailyImg.classList.add('is-loaded'), { once: true });
     dailyImg.src = daily.src;
     dailyImg.alt = `${daily.title} by ${daily.artist}`;
+    // Crop pivots around the painting's focal point (face/subject) so the
+    // full-bleed treatment never cuts off what matters.
+    dailyImg.style.objectPosition = `${daily.fx}% ${daily.fy}%`;
     if (dailyImg.complete) dailyImg.classList.add('is-loaded');
 
     const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
@@ -187,6 +196,7 @@ const entries = await Promise.all(
       img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
       img.src = entry.src;
       img.alt = `${entry.title} by ${entry.artist}`;
+      img.style.objectPosition = `${entry.fx}% ${entry.fy}%`;
       node.querySelector('.room-period')!.textContent = entry.period;
       node.querySelector('.room-title')!.textContent = entry.title;
       node.querySelector('.room-byline')!.textContent = `${entry.artist}, ${entry.year}`;

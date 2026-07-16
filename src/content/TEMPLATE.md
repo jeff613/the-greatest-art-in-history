@@ -113,3 +113,15 @@ Rules:
 - Encode with `ffmpeg -codec:a libmp3lame -q:a 4` to
   `public/audio/<period-slug>.mp3`, ≤ 10 MB.
 - `sourceUrl` must be the exact page for the file actually used.
+
+## Focal points (smart cropping on the home walk)
+
+After adding or replacing artwork images, regenerate focal points:
+
+    swift scripts/focal-points.swift
+
+Apple Vision finds faces (largest face for wide group scenes, weighted
+centroid otherwise; saliency fallback) and writes src/data/focal-points.json,
+which the homepage uses to pivot its full-bleed crops so subjects are never
+cut off. Hand-tune a work by editing its x/y (percentages from top-left) in
+that JSON if Vision picks the wrong anchor.
