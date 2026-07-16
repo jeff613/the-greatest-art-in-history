@@ -16,7 +16,7 @@ withPeriod.sort(
 ---
 
 <Base title="Artists — The Greatest Art in History">
-  <div class="page-head">
+  <div class="page-head page-head-wide">
     <h1 class="display">Thirty-three lives<br />that changed how we see.</h1>
   </div>
   <div class="grid">
@@ -35,3 +35,8 @@ withPeriod.sort(
     ))}
   </div>
 </Base>
+
+<style>
+  /* The explicit two-line break governs; don't let the width cap re-wrap it. */
+  .page-head-wide { max-width: none; }
+</style>
