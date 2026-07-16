@@ -12,6 +12,16 @@ import ImageIO
 let artDir = "src/assets/art"
 let outPath = "src/data/focal-points.json"
 
+// Hand-tuned anchors that beat detection (applied last; survive regeneration).
+// David: Vision picks Goliath's severed head — anchor on David's living face.
+// The two equestrians: riders' heads sit near the canvas top, above what
+// saliency finds; anchor the faces so wide crops keep them.
+let OVERRIDES: [String: (x: Int, y: Int)] = [
+  "david-with-the-head-of-goliath": (46, 16),
+  "napoleon-crossing-the-alps": (55, 14),
+  "equestrian-portrait-of-charles-v": (43, 10),
+]
+
 let fm = FileManager.default
 var result: [String: [String: Int]] = [:]
 var faceCount = 0, saliencyCount = 0, centerCount = 0
@@ -72,6 +82,11 @@ for file in files {
   }
 
   let slug = String(file.dropLast(4))
+  if let o = OVERRIDES[slug] {
+    fx = Double(o.x)
+    fy = Double(o.y)
+    how = "override"
+  }
   result[slug] = ["x": Int(fx.rounded()), "y": Int(fy.rounded())]
   print("\(slug): \(Int(fx.rounded())),\(Int(fy.rounded()))  [\(how)]")
 }
