@@ -18,7 +18,6 @@ const entries = await Promise.all(
         year: work.data.year,
         period: period.data.name,
         src: hero.src,
-        ar: +(work.data.image.width / work.data.image.height).toFixed(3),
       };
     })
 );
@@ -157,7 +156,6 @@ const entries = await Promise.all(
     dailyImg.addEventListener('load', () => dailyImg.classList.add('is-loaded'), { once: true });
     dailyImg.src = daily.src;
     dailyImg.alt = `${daily.title} by ${daily.artist}`;
-    dailyImg.dataset.ar = String(daily.ar);
     if (dailyImg.complete) dailyImg.classList.add('is-loaded');
 
     const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
@@ -172,10 +170,7 @@ const entries = await Promise.all(
 
     // Gallery walk: remaining works, shuffled fresh each visit.
     const walk = document.getElementById('gallery-walk')!;
-    if (walk.childElementCount > 0) {
-      fitRooms(); // daily image may have changed even when the walk persists
-      return;
-    }
+    if (walk.childElementCount > 0) return; // already built (defensive)
     const template = document.getElementById('room-template') as HTMLTemplateElement;
 
     const WALK_SIZE = 24;
@@ -192,7 +187,6 @@ const entries = await Promise.all(
       img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
       img.src = entry.src;
       img.alt = `${entry.title} by ${entry.artist}`;
-      img.dataset.ar = String(entry.ar);
       node.querySelector('.room-period')!.textContent = entry.period;
       node.querySelector('.room-title')!.textContent = entry.title;
       node.querySelector('.room-byline')!.textContent = `${entry.artist}, ${entry.year}`;
@@ -205,26 +199,7 @@ const entries = await Promise.all(
     }
 
     document.getElementById('walk-end')!.hidden = false;
-    fitRooms();
   }
-
-  // A room goes full-bleed (cover) when the painting's shape roughly matches
-  // the screen; on extreme mismatch it hangs the whole painting on the dark
-  // wall instead (contain) — no more faces cropped by portrait/landscape clashes.
-  const FIT_THRESHOLD = 1.6;
-  function fitRooms(): void {
-    const va = window.innerWidth / window.innerHeight;
-    document.querySelectorAll<HTMLImageElement>('.daily-bg img[data-ar]').forEach((img) => {
-      const ar = parseFloat(img.dataset.ar!);
-      const mismatch = Math.max(ar / va, va / ar);
-      img.classList.toggle('fit-contain', mismatch > FIT_THRESHOLD);
-    });
-  }
-  let fitTimer: ReturnType<typeof setTimeout> | undefined;
-  window.addEventListener('resize', () => {
-    clearTimeout(fitTimer);
-    fitTimer = setTimeout(fitRooms, 150);
-  });
 
   document.addEventListener('astro:page-load', initHome);
 </script>
