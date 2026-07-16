@@ -20,6 +20,7 @@ let OVERRIDES: [String: (x: Int, y: Int)] = [
   "david-with-the-head-of-goliath": (46, 16),
   "napoleon-crossing-the-alps": (55, 14),
   "equestrian-portrait-of-charles-v": (43, 10),
+  "the-scream": (49, 70), // the screaming face sits low on the canvas
 ]
 
 let fm = FileManager.default
