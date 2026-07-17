@@ -123,5 +123,8 @@ After adding or replacing artwork images, regenerate focal points:
 Apple Vision finds faces (largest face for wide group scenes, weighted
 centroid otherwise; saliency fallback) and writes src/data/focal-points.json,
 which the homepage uses to pivot its full-bleed crops so subjects are never
-cut off. Hand-tune a work by editing its x/y (percentages from top-left) in
-that JSON if Vision picks the wrong anchor.
+cut off. If Vision picks the wrong anchor (it has anchored on a severed head,
+and misses faces near canvas tops), add the work to the OVERRIDES table at
+the top of scripts/focal-points.swift — NOT the JSON, which regeneration
+overwrites — then re-run the script. After any batch of new works, eyeball
+the walk on both a wide monitor and a phone and override what looks wrong.

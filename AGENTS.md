@@ -82,6 +82,12 @@ styling guides as needed).
    set it.
 7. **Voice**: cinematic scene-first openings, human drama, hedged legends, no
    technique analysis. Read 2–3 existing work files before writing any new one.
+8. **Focal points**: whenever works are added or images replaced, run
+   `swift scripts/focal-points.swift` (Apple Vision face/saliency detection →
+   `src/data/focal-points.json`; the home walk pivots its full-bleed crops
+   around these so subjects never get cut off). Wrong anchors go in the
+   script's OVERRIDES table, never the generated JSON. Eyeball new rooms on
+   wide and phone screens as part of every collection batch.
 
 ## Design system ("the dimmed gallery and the reading room")
 
