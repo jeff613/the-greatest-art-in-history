@@ -94,14 +94,32 @@ styling guides as needed).
 Dark image rooms (`--room #121010`) alternate with warm paper (`--paper
 #f6f3ec`); gilt accent (`--gilt`, with `--gilt-room` for dark contexts —
 contrast was tuned, don't swap them). Cormorant Garamond display (italic ONLY
-for artwork titles) + Inter. Floating header, fixed on the home walk, active
-nav tab underlined via `aria-current`. Homepage: deterministic daily pick
-(date-hash over the full works JSON) + gallery walk of 24 random rooms per
-visit (`WALK_SIZE` in index.astro), mandatory scroll-snap, scroll cue in the
-hero. Period and artist pages hang the most vertical relevant canvas beside
-their intro text on wide screens. Motion is subtle/slow and fully disabled
-under `prefers-reduced-motion`. All page scripts init via `astro:page-load`
+for artwork titles) + Inter. Wordmark reads "The Greatest" (rebranded
+2026-07-14). Floating header, fixed on the home walk, active nav tab
+underlined via `aria-current`. Homepage: deterministic daily pick (date-hash
+over the full works JSON) + gallery walk of 24 random rooms per visit
+(`WALK_SIZE` in index.astro), mandatory scroll-snap, scroll cue in the hero,
+and full-bleed crops that pivot around each painting's focal point
+(convention #8). Period and artist pages hang the most vertical relevant
+canvas beside their intro text on wide screens. The index pages' two-line
+headlines break deliberately (`<br>`) and align under their nav tab (artists
+left, periods right). Motion is subtle/slow and fully disabled under
+`prefers-reduced-motion`. All page scripts init via `astro:page-load`
 (ClientRouter view transitions) with idempotence guards.
+
+### The periods timeline (src/pages/periods/index.astro)
+
+The hero of the periods page: a gilt axis (c. 1280–1940) with 10 named period
+cameos, 6 smaller title-labelled artwork cameos filling sparse centuries, and
+9 historical anchor events (Black Death → Great War). Everything is
+HAND-BALANCED in two config arrays — `TIMELINE_CFG` (per cameo: work, side
+above/below, tier near/mid/far/lowered) and `EVENTS` (per event: side, plus
+leftward/snug label tweaks). Positions derive from artwork years (the
+4-digit sort-year convention). When periods or signature works change: add or
+adjust config entries, then CHECK FOR COLLISIONS visually at narrow (66rem
+scroll floor), laptop, and ultrawide widths — every current placement was
+tuned against real screenshots. Unconfigured periods fall back to their first
+work as a cameo.
 
 ## Known quirks (all deliberate)
 
@@ -133,6 +151,11 @@ Nighthawks, Rockwell, Hockney) blocked by copyright until their terms lapse.
 Image upgrades wanted: witches-sabbath.jpg (soft scan), botticelli.jpg portrait
 (halftone pattern). Minor prose nits are logged in `.superpowers/sdd/progress.md`
 (gitignored scratch — local only).
+
+**Open decision — rebrand scope:** the visible wordmark became "The Greatest"
+(2026-07-14) but page `<title>`s, PRD, and docs still use the full name "The
+Greatest Art in History." Jeff hasn't decided whether the rebrand goes all the
+way down; ask before sweeping.
 
 **Mobile compatibility pass (Jeff, 2026-07-14):** the home walk scrolls inside a
 fixed 100dvh container as a workaround for iOS Safari toolbar-resize snap drift
