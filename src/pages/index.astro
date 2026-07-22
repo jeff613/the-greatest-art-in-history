@@ -30,12 +30,12 @@ const entries = await Promise.all(
 <Base dark bare>
   <div class="walk-scroller">
   <section class="daily-hero">
-    <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of today's artwork">
+    <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of the featured artwork">
       <img id="daily-img" alt="" />
       <span class="scrim"></span>
     </a>
     <div class="wall-label">
-      <p class="kicker anim-rise" id="daily-kicker">Artwork of the Day</p>
+      <p class="kicker anim-rise" id="daily-kicker"></p>
       <h1 class="display italic anim-rise" id="daily-title"></h1>
       <p class="byline anim-rise-2" id="daily-byline"></p>
       <a class="read-link anim-rise-2" id="daily-read" href="/artists/">Read the story →</a>
@@ -151,44 +151,40 @@ const entries = await Promise.all(
     if (!dataEl) return; // not the home page
     const data: Entry[] = JSON.parse(dataEl.textContent!);
 
-    const now = new Date();
-    const key = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
-    let hash = 0;
-    for (const ch of key) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-    const dailyIndex = hash % data.length;
-    const daily = data[dailyIndex];
+    // First slide + walk: one fresh shuffle of every work each visit. The
+    // first work simply leads the walk — no "artwork of the day" framing.
+    const shuffled = [...data];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const hero = shuffled[0];
 
-    const dailyImg = document.getElementById('daily-img') as HTMLImageElement;
-    dailyImg.addEventListener('load', () => dailyImg.classList.add('is-loaded'), { once: true });
-    dailyImg.src = daily.src;
-    dailyImg.alt = `${daily.title} by ${daily.artist}`;
+    const heroImg = document.getElementById('daily-img') as HTMLImageElement;
+    heroImg.addEventListener('load', () => heroImg.classList.add('is-loaded'), { once: true });
+    heroImg.src = hero.src;
+    heroImg.alt = `${hero.title} by ${hero.artist}`;
     // Crop pivots around the painting's focal point (face/subject) so the
     // full-bleed treatment never cuts off what matters.
-    dailyImg.style.objectPosition = `${daily.fx}% ${daily.fy}%`;
-    if (dailyImg.complete) dailyImg.classList.add('is-loaded');
+    heroImg.style.objectPosition = `${hero.fx}% ${hero.fy}%`;
+    if (heroImg.complete) heroImg.classList.add('is-loaded');
 
-    const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-    document.getElementById('daily-kicker')!.textContent = `Artwork of the Day — ${dateLabel}`;
-    document.getElementById('daily-title')!.textContent = daily.title;
-    document.getElementById('daily-byline')!.textContent = `${daily.artist}, ${daily.year}`;
-    const dailyUrl = `/works/${daily.slug}/`;
-    (document.getElementById('daily-link') as HTMLAnchorElement).href = dailyUrl;
-    (document.getElementById('daily-read') as HTMLAnchorElement).href = dailyUrl;
-    document.getElementById('daily-link')!.setAttribute('aria-label', `Read the story of ${daily.title}`);
-    document.getElementById('daily-read')!.setAttribute('aria-label', `Read the story of ${daily.title}`);
+    document.getElementById('daily-kicker')!.textContent = hero.period;
+    document.getElementById('daily-title')!.textContent = hero.title;
+    document.getElementById('daily-byline')!.textContent = `${hero.artist}, ${hero.year}`;
+    const heroUrl = `/works/${hero.slug}/`;
+    (document.getElementById('daily-link') as HTMLAnchorElement).href = heroUrl;
+    (document.getElementById('daily-read') as HTMLAnchorElement).href = heroUrl;
+    document.getElementById('daily-link')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
+    document.getElementById('daily-read')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
 
-    // Gallery walk: remaining works, shuffled fresh each visit.
+    // Gallery walk: the works after the first, same shuffle.
     const walk = document.getElementById('gallery-walk')!;
     if (walk.childElementCount > 0) return; // already built (defensive)
     const template = document.getElementById('room-template') as HTMLTemplateElement;
 
     const WALK_SIZE = 24;
-    const rest = data.filter((_, i) => i !== dailyIndex);
-    for (let i = rest.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [rest[i], rest[j]] = [rest[j], rest[i]];
-    }
-    const rooms = rest.slice(0, WALK_SIZE);
+    const rooms = shuffled.slice(1, 1 + WALK_SIZE);
 
     for (const entry of rooms) {
       const node = template.content.cloneNode(true) as DocumentFragment;
