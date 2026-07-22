@@ -132,6 +132,10 @@ const entries = await Promise.all(
   }
   .walk-end-links { margin: 0; }
   .walk-end-links a { border-bottom: 1px solid var(--gilt); }
+  /* TV gallery mode: while auto-scrolling, drop the cursor and the (now
+     redundant) scroll hint so the display reads as pure art. */
+  .walk-scroller.autoscrolling { cursor: none; }
+  .walk-scroller.autoscrolling .scroll-cue { display: none; }
 </style>
 
 <script>
@@ -208,4 +212,104 @@ const entries = await Promise.all(
   }
 
   document.addEventListener('astro:page-load', initHome);
+
+  // --- TV gallery mode: idle auto-scroll -------------------------------------
+  // On the home walk, after the viewer stops touching it, drift through the
+  // rooms on our own (one room every DWELL_MS) for an unattended TV display.
+  // Any real input stops it and re-arms the idle countdown.
+  const IDLE_MS = 60_000;        // no input for this long → auto-scroll starts
+  const DWELL_MS = 15 * 60_000;  // hold each room this long before advancing
+
+  function initTvMode(): void {
+    const scroller = document.querySelector<HTMLElement>('.walk-scroller');
+    if (!scroller || scroller.dataset.tvBound) return;                  // home page only, once
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; // motion opt-out: never auto-scroll
+    scroller.dataset.tvBound = '1';
+
+    const ctrl = new AbortController();
+    const { signal } = ctrl;
+    let idleTimer = 0;
+    let stepTimer = 0;
+    let running = false;
+    let lastX = -1;
+    let lastY = -1;
+    let wakeLock: WakeLockSentinel | null = null;
+
+    // Keep the TV/display from sleeping mid-gallery. Silently degrade where
+    // the API is absent (older/embedded browsers) or the request is denied.
+    const acquireWake = async (): Promise<void> => {
+      try { wakeLock = (await navigator.wakeLock?.request('screen')) ?? null; }
+      catch { /* unsupported or denied — carry on without it */ }
+    };
+    const releaseWake = (): void => {
+      try { void wakeLock?.release(); } catch { /* already gone */ }
+      wakeLock = null;
+    };
+
+    const atBottom = (): boolean =>
+      scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2;
+
+    const advance = (): void => {
+      if (atBottom()) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+      else scroller.scrollBy({ top: scroller.clientHeight, behavior: 'smooth' });
+    };
+
+    const start = (): void => {
+      if (running) return;
+      running = true;
+      scroller.classList.add('autoscrolling');
+      void acquireWake();
+      stepTimer = window.setInterval(advance, DWELL_MS);
+    };
+
+    const stop = (): void => {
+      if (!running) return;
+      running = false;
+      scroller.classList.remove('autoscrolling');
+      window.clearInterval(stepTimer);
+      releaseWake();
+    };
+
+    const armIdle = (): void => {
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(start, IDLE_MS);
+    };
+
+    const onInput = (): void => {
+      stop();
+      armIdle();
+    };
+
+    // A stationary cursor with content scrolling beneath it emits mousemove
+    // events at UNCHANGED coordinates. If we treated those as input, our own
+    // programmatic scroll would cancel itself. Only a real pointer move counts.
+    const onMouseMove = (e: MouseEvent): void => {
+      if (e.clientX === lastX && e.clientY === lastY) return;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      onInput();
+    };
+
+    scroller.addEventListener('wheel', onInput, { passive: true, signal });
+    scroller.addEventListener('touchstart', onInput, { passive: true, signal });
+    scroller.addEventListener('pointerdown', onInput, { signal });
+    window.addEventListener('keydown', onInput, { signal });
+    window.addEventListener('mousemove', onMouseMove, { signal });
+    // The lock is auto-released when the tab is hidden; re-acquire on return.
+    document.addEventListener('visibilitychange', () => {
+      if (running && document.visibilityState === 'visible') void acquireWake();
+    }, { signal });
+
+    // ClientRouter keeps the old DOM alive during a view-transition swap;
+    // tear down timers and listeners explicitly so nothing leaks.
+    document.addEventListener('astro:before-swap', () => {
+      stop();
+      window.clearTimeout(idleTimer);
+      ctrl.abort();
+      delete scroller.dataset.tvBound;
+    }, { once: true });
+
+    armIdle();
+  }
+  document.addEventListener('astro:page-load', initTvMode);
 </script>
