@@ -59,6 +59,9 @@ const track = period.data.music?.[0];
 </Base>
 
 <style>
+  /* On wide screens the intro composition (title + essay + hung canvas) is
+     capped and centered as one block (84rem ≈ text column + gap + canvas
+     column), so it never sprawls edge-to-edge with a void in the middle. */
   .intro-row { margin-bottom: 1.5rem; }
   .intro {
     margin: 0;
@@ -67,12 +70,15 @@ const track = period.data.music?.[0];
   }
   .intro-art { display: none; }
   @media (min-width: 1150px) {
+    .page-head { max-width: 84rem; margin-inline: auto; }
     .intro-row {
       display: grid;
       grid-template-columns: minmax(0, calc(var(--measure) + 2 * var(--pad))) minmax(0, 1fr);
       gap: 2rem;
       align-items: start;
       padding-right: var(--pad);
+      max-width: 84rem;
+      margin-inline: auto;
     }
     .intro-art { display: block; justify-self: center; }
     .intro-art img { max-height: min(46rem, 78vh); width: auto; }
