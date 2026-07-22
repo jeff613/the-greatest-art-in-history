@@ -6,10 +6,13 @@ Astro 7 static site, local-only today, public deploy planned eventually
 (an app may follow). **Product vision and principles: `PRD.md`** — read it
 before proposing features.
 
-**Current state (2026-07-14):** 10 periods · 33 artists · 112 works,
+**Current state (2026-07-21):** 10 periods · 33 artists · 112 works,
 c. 1290–1929 (Giotto → Kandinsky). 158 built pages. Every period page carries
 an ambient period-matched classical track (period music, merged 2026-07-14).
-Everything is on `main`; no remote configured.
+The home walk has a silent idle-triggered TV auto-scroll mode for AirPlay
+display (merged 2026-07-21); the old "artwork of the day" pick was dropped
+that day (first slide is now a random shuffle lead). Everything is on `main`;
+no remote configured.
 
 ## Development
 
@@ -50,7 +53,7 @@ styling guides as needed).
   licensing).
 - `src/assets/art/<work-slug>.jpg` + `src/assets/portraits/<artist-slug>.jpg` —
   masters, ~1GB total, stored in plain git (Jeff's explicit decision; no LFS).
-- `src/pages/` — index (daily pick + gallery walk), works/[slug], artists/,
+- `src/pages/` — index (gallery walk + idle TV auto-scroll), works/[slug], artists/,
   periods/. `src/layouts/Base.astro` carries the floating header.
 - `src/styles/global.css` — the whole design system.
 - `docs/superpowers/specs/` + `docs/superpowers/plans/` — every feature and
@@ -96,11 +99,18 @@ Dark image rooms (`--room #121010`) alternate with warm paper (`--paper
 contrast was tuned, don't swap them). Cormorant Garamond display (italic ONLY
 for artwork titles) + Inter. Wordmark reads "The Greatest" (rebranded
 2026-07-14). Floating header, fixed on the home walk, active nav tab
-underlined via `aria-current`. Homepage: deterministic daily pick (date-hash
-over the full works JSON) + gallery walk of 24 random rooms per visit
+underlined via `aria-current`. Homepage: one fresh shuffle of all works per
+visit — the first leads as a full-screen hero (labelled with its period, like
+every room; no "artwork of the day" framing), then a gallery walk of 24 rooms
 (`WALK_SIZE` in index.astro), mandatory scroll-snap, scroll cue in the hero,
 and full-bleed crops that pivot around each painting's focal point
-(convention #8). Period and artist pages hang the most vertical relevant
+(convention #8). **TV gallery mode** (idle auto-scroll): after 60s of no input
+the walk advances one room every 15 min and loops, for unattended
+AirPlay-to-TV display — holds a screen Wake Lock, hides cursor + scroll-cue,
+and never runs under `prefers-reduced-motion`; any real input stops it and
+re-arms (`IDLE_MS`/`DWELL_MS` in index.astro). The wall-label title sizes to
+the available width (`calc(100% - 2*--pad)`) so it wraps only when it truly
+runs out of horizontal room. Period and artist pages hang the most vertical relevant
 canvas beside their intro text on wide screens. The index pages' two-line
 headlines break deliberately (`<br>`) and align under their nav tab (artists
 left, periods right). Motion is subtle/slow and fully disabled under

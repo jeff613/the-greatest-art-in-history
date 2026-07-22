@@ -35,15 +35,17 @@ building designed like a high-end gallery:
 
 ## The experience
 
-1. **Something is always on view.** Every visit opens on the Artwork of the
-   Day — one painting, full screen, chosen deterministically so the whole
-   household sees the same picture that day.
+1. **Something is always on view.** Every visit opens on a single painting,
+   full screen — a fresh pick each time, no menu to cross first.
 2. **You can always wander.** Scrolling continues into a gallery walk: two
    dozen works in a fresh random order every visit, each a full-screen room,
    the way you drift through a physical museum without a plan.
 3. **You can always go deeper.** Every painting opens into its story; every
    artist has a life; every period has an essay and its works hung together.
    Browse by artist or by period — both are first-class doors.
+4. **You can just watch.** Put it on a TV and step away; after a minute of
+   stillness the walk drifts on its own, one painting at a time, and keeps
+   the screen awake — a living gallery wall. Touch anything and it stops.
 
 ## Principles
 
