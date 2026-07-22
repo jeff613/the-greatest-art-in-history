@@ -250,7 +250,7 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
   top: calc(100svh - clamp(2rem, 7vh, 4.5rem));
   transform: translateY(-100%);
   z-index: 2;
-  max-width: min(46rem, 88vw);
+  max-width: calc(100% - 2 * var(--pad));
   color: var(--chalk);
   pointer-events: none;
 }

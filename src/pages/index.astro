@@ -30,12 +30,12 @@ const entries = await Promise.all(
 <Base dark bare>
   <div class="walk-scroller">
   <section class="daily-hero">
-    <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of today's artwork">
+    <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of the featured artwork">
       <img id="daily-img" alt="" />
       <span class="scrim"></span>
     </a>
     <div class="wall-label">
-      <p class="kicker anim-rise" id="daily-kicker">Artwork of the Day</p>
+      <p class="kicker anim-rise" id="daily-kicker"></p>
       <h1 class="display italic anim-rise" id="daily-title"></h1>
       <p class="byline anim-rise-2" id="daily-byline"></p>
       <a class="read-link anim-rise-2" id="daily-read" href="/artists/">Read the story →</a>
@@ -132,6 +132,10 @@ const entries = await Promise.all(
   }
   .walk-end-links { margin: 0; }
   .walk-end-links a { border-bottom: 1px solid var(--gilt); }
+  /* TV gallery mode: while auto-scrolling, drop the cursor and the (now
+     redundant) scroll hint so the display reads as pure art. */
+  .walk-scroller.autoscrolling { cursor: none; }
+  .walk-scroller.autoscrolling .scroll-cue { display: none; }
 </style>
 
 <script>
@@ -151,44 +155,40 @@ const entries = await Promise.all(
     if (!dataEl) return; // not the home page
     const data: Entry[] = JSON.parse(dataEl.textContent!);
 
-    const now = new Date();
-    const key = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
-    let hash = 0;
-    for (const ch of key) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-    const dailyIndex = hash % data.length;
-    const daily = data[dailyIndex];
+    // First slide + walk: one fresh shuffle of every work each visit. The
+    // first work simply leads the walk — no "artwork of the day" framing.
+    const shuffled = [...data];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    const hero = shuffled[0];
 
-    const dailyImg = document.getElementById('daily-img') as HTMLImageElement;
-    dailyImg.addEventListener('load', () => dailyImg.classList.add('is-loaded'), { once: true });
-    dailyImg.src = daily.src;
-    dailyImg.alt = `${daily.title} by ${daily.artist}`;
+    const heroImg = document.getElementById('daily-img') as HTMLImageElement;
+    heroImg.addEventListener('load', () => heroImg.classList.add('is-loaded'), { once: true });
+    heroImg.src = hero.src;
+    heroImg.alt = `${hero.title} by ${hero.artist}`;
     // Crop pivots around the painting's focal point (face/subject) so the
     // full-bleed treatment never cuts off what matters.
-    dailyImg.style.objectPosition = `${daily.fx}% ${daily.fy}%`;
-    if (dailyImg.complete) dailyImg.classList.add('is-loaded');
+    heroImg.style.objectPosition = `${hero.fx}% ${hero.fy}%`;
+    if (heroImg.complete) heroImg.classList.add('is-loaded');
 
-    const dateLabel = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-    document.getElementById('daily-kicker')!.textContent = `Artwork of the Day — ${dateLabel}`;
-    document.getElementById('daily-title')!.textContent = daily.title;
-    document.getElementById('daily-byline')!.textContent = `${daily.artist}, ${daily.year}`;
-    const dailyUrl = `/works/${daily.slug}/`;
-    (document.getElementById('daily-link') as HTMLAnchorElement).href = dailyUrl;
-    (document.getElementById('daily-read') as HTMLAnchorElement).href = dailyUrl;
-    document.getElementById('daily-link')!.setAttribute('aria-label', `Read the story of ${daily.title}`);
-    document.getElementById('daily-read')!.setAttribute('aria-label', `Read the story of ${daily.title}`);
+    document.getElementById('daily-kicker')!.textContent = hero.period;
+    document.getElementById('daily-title')!.textContent = hero.title;
+    document.getElementById('daily-byline')!.textContent = `${hero.artist}, ${hero.year}`;
+    const heroUrl = `/works/${hero.slug}/`;
+    (document.getElementById('daily-link') as HTMLAnchorElement).href = heroUrl;
+    (document.getElementById('daily-read') as HTMLAnchorElement).href = heroUrl;
+    document.getElementById('daily-link')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
+    document.getElementById('daily-read')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
 
-    // Gallery walk: remaining works, shuffled fresh each visit.
+    // Gallery walk: the works after the first, same shuffle.
     const walk = document.getElementById('gallery-walk')!;
     if (walk.childElementCount > 0) return; // already built (defensive)
     const template = document.getElementById('room-template') as HTMLTemplateElement;
 
     const WALK_SIZE = 24;
-    const rest = data.filter((_, i) => i !== dailyIndex);
-    for (let i = rest.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [rest[i], rest[j]] = [rest[j], rest[i]];
-    }
-    const rooms = rest.slice(0, WALK_SIZE);
+    const rooms = shuffled.slice(1, 1 + WALK_SIZE);
 
     for (const entry of rooms) {
       const node = template.content.cloneNode(true) as DocumentFragment;
@@ -212,4 +212,104 @@ const entries = await Promise.all(
   }
 
   document.addEventListener('astro:page-load', initHome);
+
+  // --- TV gallery mode: idle auto-scroll -------------------------------------
+  // On the home walk, after the viewer stops touching it, drift through the
+  // rooms on our own (one room every DWELL_MS) for an unattended TV display.
+  // Any real input stops it and re-arms the idle countdown.
+  const IDLE_MS = 60_000;        // no input for this long → auto-scroll starts
+  const DWELL_MS = 15 * 60_000;  // hold each room this long before advancing
+
+  function initTvMode(): void {
+    const scroller = document.querySelector<HTMLElement>('.walk-scroller');
+    if (!scroller || scroller.dataset.tvBound) return;                  // home page only, once
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; // motion opt-out: never auto-scroll
+    scroller.dataset.tvBound = '1';
+
+    const ctrl = new AbortController();
+    const { signal } = ctrl;
+    let idleTimer = 0;
+    let stepTimer = 0;
+    let running = false;
+    let lastX = -1;
+    let lastY = -1;
+    let wakeLock: WakeLockSentinel | null = null;
+
+    // Keep the TV/display from sleeping mid-gallery. Silently degrade where
+    // the API is absent (older/embedded browsers) or the request is denied.
+    const acquireWake = async (): Promise<void> => {
+      try { wakeLock = (await navigator.wakeLock?.request('screen')) ?? null; }
+      catch { /* unsupported or denied — carry on without it */ }
+    };
+    const releaseWake = (): void => {
+      try { void wakeLock?.release(); } catch { /* already gone */ }
+      wakeLock = null;
+    };
+
+    const atBottom = (): boolean =>
+      scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2;
+
+    const advance = (): void => {
+      if (atBottom()) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+      else scroller.scrollBy({ top: scroller.clientHeight, behavior: 'smooth' });
+    };
+
+    const start = (): void => {
+      if (running) return;
+      running = true;
+      scroller.classList.add('autoscrolling');
+      void acquireWake();
+      stepTimer = window.setInterval(advance, DWELL_MS);
+    };
+
+    const stop = (): void => {
+      if (!running) return;
+      running = false;
+      scroller.classList.remove('autoscrolling');
+      window.clearInterval(stepTimer);
+      releaseWake();
+    };
+
+    const armIdle = (): void => {
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(start, IDLE_MS);
+    };
+
+    const onInput = (): void => {
+      stop();
+      armIdle();
+    };
+
+    // A stationary cursor with content scrolling beneath it emits mousemove
+    // events at UNCHANGED coordinates. If we treated those as input, our own
+    // programmatic scroll would cancel itself. Only a real pointer move counts.
+    const onMouseMove = (e: MouseEvent): void => {
+      if (e.clientX === lastX && e.clientY === lastY) return;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      onInput();
+    };
+
+    scroller.addEventListener('wheel', onInput, { passive: true, signal });
+    scroller.addEventListener('touchstart', onInput, { passive: true, signal });
+    scroller.addEventListener('pointerdown', onInput, { signal });
+    window.addEventListener('keydown', onInput, { signal });
+    window.addEventListener('mousemove', onMouseMove, { signal });
+    // The lock is auto-released when the tab is hidden; re-acquire on return.
+    document.addEventListener('visibilitychange', () => {
+      if (running && document.visibilityState === 'visible') void acquireWake();
+    }, { signal });
+
+    // ClientRouter keeps the old DOM alive during a view-transition swap;
+    // tear down timers and listeners explicitly so nothing leaks.
+    document.addEventListener('astro:before-swap', () => {
+      stop();
+      window.clearTimeout(idleTimer);
+      ctrl.abort();
+      delete scroller.dataset.tvBound;
+    }, { once: true });
+
+    armIdle();
+  }
+  document.addEventListener('astro:page-load', initTvMode);
 </script>
