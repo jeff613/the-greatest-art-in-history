@@ -35,31 +35,33 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
   </section>
 
   <div class="reading-room">
-    <div class="bio-row">
-      <article class="prose">
-        <Content />
-      </article>
-      <a class="bio-art" href={`/works/${featured.id}/`}>
-        <Image
-          src={featured.data.image}
-          widths={[600, 1200]}
-          sizes="40vw"
-          alt={`${featured.data.title} by ${artist.data.name}`}
-        />
-        <p class="bio-art-caption">
-          <em>{featured.data.title}</em> · {featured.data.year}
-        </p>
-      </a>
-    </div>
+    <div class="reading-center">
+      <div class="bio-row">
+        <article class="prose">
+          <Content />
+        </article>
+        <a class="bio-art" href={`/works/${featured.id}/`}>
+          <Image
+            src={featured.data.image}
+            widths={[600, 1200]}
+            sizes="40vw"
+            alt={`${featured.data.title} by ${artist.data.name}`}
+          />
+          <p class="bio-art-caption">
+            <em>{featured.data.title}</em> · {featured.data.year}
+          </p>
+        </a>
+      </div>
 
-    <section class="timeline prose">
-      <h2>Life in brief</h2>
-      <ul>
-        {artist.data.timeline.map((item) => (
-          <li><strong>{item.year}</strong> — {item.event}</li>
-        ))}
-      </ul>
-    </section>
+      <section class="timeline prose">
+        <h2>Life in brief</h2>
+        <ul>
+          {artist.data.timeline.map((item) => (
+            <li><strong>{item.year}</strong> — {item.event}</li>
+          ))}
+        </ul>
+      </section>
+    </div>
 
     <section class="collection-band">
       <p class="kicker">In the collection</p>
@@ -100,6 +102,11 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
   }
   .bio-art { display: none; }
   @media (min-width: 1150px) {
+    /* Center the reading composition (hero + bio + timeline) as one
+       --wide-max block so the hung canvas sits beside the text instead of
+       floating in a wide 1fr column. The collection grid stays full-bleed. */
+    .artist-hero { max-width: var(--wide-max); margin-inline: auto; }
+    .reading-center { max-width: var(--wide-max); margin-inline: auto; }
     .bio-row {
       display: grid;
       grid-template-columns: minmax(0, calc(var(--measure) + 2 * var(--pad))) minmax(0, 1fr);
@@ -121,6 +128,17 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
       letter-spacing: 0.04em;
     }
     .bio-art-caption em { font-family: var(--serif); font-size: 1rem; }
+    /* Life in brief + the collection sit centered under the intro block,
+       using the same wide max as everything else. The timeline fills the wide
+       frame but its heading, accent bar, and list are centered within it. */
+    .reading-center .timeline { max-width: var(--wide-max); margin-inline: auto; }
+    .reading-center .timeline h2 { text-align: center; }
+    .reading-center .timeline h2::before { margin-inline: auto; }
+    .reading-center .timeline ul { width: fit-content; margin-inline: auto; }
+    .collection-band { max-width: var(--wide-max); margin-inline: auto; }
+    .collection-band .grid { justify-content: center; }
+    .collection-band .grid::after { display: none; }
+    .collection-band .grid :global(.card) { flex-grow: 0; }
   }
   .timeline ul { list-style: none; padding: 0; }
   .timeline li {

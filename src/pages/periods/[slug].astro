@@ -60,8 +60,8 @@ const track = period.data.music?.[0];
 
 <style>
   /* On wide screens the intro composition (title + essay + hung canvas) is
-     capped and centered as one block (84rem ≈ text column + gap + canvas
-     column), so it never sprawls edge-to-edge with a void in the middle. */
+     capped and centered as one --wide-max block, so it never sprawls
+     edge-to-edge with a void in the middle. */
   .intro-row { margin-bottom: 1.5rem; }
   .intro {
     margin: 0;
@@ -70,14 +70,14 @@ const track = period.data.music?.[0];
   }
   .intro-art { display: none; }
   @media (min-width: 1150px) {
-    .page-head { max-width: 84rem; margin-inline: auto; }
+    .page-head { max-width: var(--wide-max); margin-inline: auto; }
     .intro-row {
       display: grid;
       grid-template-columns: minmax(0, calc(var(--measure) + 2 * var(--pad))) minmax(0, 1fr);
       gap: 2rem;
       align-items: start;
       padding-right: var(--pad);
-      max-width: 84rem;
+      max-width: var(--wide-max);
       margin-inline: auto;
     }
     .intro-art { display: block; justify-self: center; }
@@ -89,5 +89,14 @@ const track = period.data.music?.[0];
       letter-spacing: 0.04em;
     }
     .intro-art-caption em { font-family: var(--serif); font-size: 1rem; }
+    /* The works grid sits centered under the intro, capped to the same wide
+       max, with cards centered instead of justified edge-to-edge. */
+    .grid {
+      max-width: var(--wide-max);
+      margin-inline: auto;
+      justify-content: center;
+    }
+    .grid::after { display: none; }
+    .grid :global(.card) { flex-grow: 0; }
   }
 </style>

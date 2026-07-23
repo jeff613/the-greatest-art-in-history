@@ -14,6 +14,9 @@
   --sans: 'Inter', system-ui, sans-serif;
   --measure: 42rem;
   --pad: clamp(1.25rem, 4vw, 3.5rem);
+  /* Max width of the centered intro/reading composition on wide screens & TV
+     (period + artist detail pages). Bump for more width on large displays. */
+  --wide-max: 100rem;
 }
 
 * { box-sizing: border-box; }
