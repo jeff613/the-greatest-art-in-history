@@ -246,11 +246,20 @@ const entries = await Promise.all(
       wakeLock = null;
     };
 
-    const atBottom = (): boolean =>
-      scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2;
+    // Loop as soon as the LAST artwork room is on screen, not at the very
+    // bottom — otherwise the "you've walked the whole gallery" end card would
+    // sit frozen on the TV for a full dwell before the walk restarts.
+    const atLastRoom = (): boolean => {
+      const last = scroller.querySelector<HTMLElement>('#gallery-walk .room:last-child');
+      if (!last) return true;
+      return last.getBoundingClientRect().top - scroller.getBoundingClientRect().top <= 2;
+    };
 
     const advance = (): void => {
-      if (atBottom()) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+      // Reset instantly, not smoothly: a long smooth scroll back across two
+      // dozen rooms fights `scroll-snap-type: mandatory` and stalls partway,
+      // so the walk never reaches the top. One cut is fine at this pace.
+      if (atLastRoom()) scroller.scrollTo({ top: 0 });
       else scroller.scrollBy({ top: scroller.clientHeight, behavior: 'smooth' });
     };
 
