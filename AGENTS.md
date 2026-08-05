@@ -11,8 +11,11 @@ c. 1290–1929 (Giotto → Kandinsky). 158 built pages. Every period page carrie
 an ambient period-matched classical track (period music, merged 2026-07-14).
 The home walk has a silent idle-triggered TV auto-scroll mode for AirPlay
 display (merged 2026-07-21); the old "artwork of the day" pick was dropped
-that day (first slide is now a random shuffle lead). Everything is on `main`;
-no remote configured.
+that day (first slide is now a random shuffle lead). Everything is on `main`,
+pushed to the public GitHub repo `jeff613/the-greatest-art-in-history`
+(2026-08-04) — plain git, no LFS; the ~1GB of image masters lives in history
+by design. The site itself stays local/Tailscale-only; publishing the repo is
+not a public deploy, so the pre-deploy checklist below still applies.
 
 ## Development
 
