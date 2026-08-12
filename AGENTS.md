@@ -6,8 +6,8 @@ Astro 7 static site, local-only today, public deploy planned eventually
 (an app may follow). **Product vision and principles: `PRD.md`** — read it
 before proposing features.
 
-**Current state (2026-07-21):** 10 periods · 33 artists · 112 works,
-c. 1290–1929 (Giotto → Kandinsky). 158 built pages. Every period page carries
+**Current state (2026-08-12):** 10 periods · 50 artists · 163 works,
+c. 1280–1929 (Cimabue → Kandinsky). 226 built pages. Every period page carries
 an ambient period-matched classical track (period music, merged 2026-07-14).
 The home walk has a silent idle-triggered TV auto-scroll mode for AirPlay
 display (merged 2026-07-21); the old "artwork of the day" pick was dropped
@@ -140,14 +140,25 @@ work as a cameo.
   outlier; MFA's own download caps at 1600px. Reviewed and accepted.
 - Matisse's *The Dance* has NO floor-clearing scan anywhere; *The Green Line*
   was substituted. Don't re-attempt without a new source. Same for Courbet's
-  *The Desperate Man* (→ *The Wounded Man*).
+  *The Desperate Man* (→ *The Wounded Man*), and for four works found in the
+  2026-08-12 batch: Ingres's *La Grande Odalisque* (nothing above 2200px; the
+  larger file is a head detail) and *Monsieur Bertin* (only ≥2500px file
+  includes the gilt frame, and cropping it drops to ~2090px); El Greco's *El
+  Espolio* (only visitor photos of the Toledo sacristy); Géricault's *Wounded
+  Cuirassier* (only large file is a 16:9 phone photo); Repin's *Reply of the
+  Zaporozhian Cossacks* (only a Yorck plate trimmed 4% off the canvas ratio).
+- Commons traps this repo has hit: exact 2×/3× upscales presented as large
+  files, framed gallery photos with the museum wall label in shot, vertically
+  stretched scans, and "remastered colour" Photoshop derivatives. **Always check
+  a candidate's aspect ratio against the documented canvas dimensions** — it
+  catches all four.
 - Giotto/Duccio portraits: no life portraits exist (posthumous portrait /
   Maestà-detail stand-in; the bios disclose this).
 - `periods/[slug].astro` guards against zero-work periods (needed when a new
   period lands before its artists).
 - Two hardcoded count headlines must be updated when the collection changes:
   `src/pages/periods/index.astro` ("Six hundred years, ten revolutions.") and
-  `src/pages/artists/index.astro` ("Thirty-three lives that changed how we see.").
+  `src/pages/artists/index.astro` ("Fifty lives that changed how we see.").
 - Jeff likes round numbers: 11 periods were distilled to 10 by merging
   Symbolism & Fin de Siècle into Post-Impressionism.
 
@@ -158,11 +169,16 @@ rendition cap (`getImage` with no width re-encodes 8000px masters), BASE_URL
 threading, Picasso EU caveat. baroque.mp3 and early-modernism.mp3 are PD-US only (US-government-work
 doctrine — same EU-caveat shape as the Picasso works); northern-renaissance.mp3's
 Commons page has a pending license review (CC BY 3.0 confirmed at its Free
-Music Archive origin — re-check before deploy). Wait-listed artists: Gauguin, Seurat, El Greco,
-Ingres, Watteau, Holbein, Schiele, Rousseau; post-1929 moderns (Hopper's
-Nighthawks, Rockwell, Hockney) blocked by copyright until their terms lapse.
+Music Archive origin — re-check before deploy). The 2026-08-12 batch cleared the
+whole wait-list (Gauguin, Seurat, El Greco, Ingres, Watteau, Holbein, Schiele,
+Rousseau) plus nine more; the new wait-list is Toulouse-Lautrec, Modigliani,
+Simone Martini or Ambrogio Lorenzetti (Gothic is still the thinnest period at
+3), Frans Hals, Corot. Post-1929 moderns (Hopper's Nighthawks, Rockwell,
+Hockney) stay blocked by copyright until their terms lapse.
 Image upgrades wanted: witches-sabbath.jpg (soft scan), botticelli.jpg portrait
-(halftone pattern). Minor prose nits are logged in `.superpowers/sdd/progress.md`
+(halftone pattern), seurat.jpg portrait (halftone — the only PD Seurat likeness
+is a book reproduction), saying-grace.jpg (hazy-blue Louvre scan, ~4.5% wide of
+the catalogue ratio from photographic margin). Minor prose nits are logged in `.superpowers/sdd/progress.md`
 (gitignored scratch — local only).
 
 **Open decision — rebrand scope:** the visible wordmark became "The Greatest"

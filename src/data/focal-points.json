@@ -7,6 +7,10 @@
     "x" : 47,
     "y" : 48
   },
+  "a-sunday-on-la-grande-jatte" : {
+    "x" : 48,
+    "y" : 44
+  },
   "a-young-girl-reading" : {
     "x" : 41,
     "y" : 32
@@ -15,9 +19,21 @@
     "x" : 50,
     "y" : 52
   },
+  "barge-haulers-on-the-volga" : {
+    "x" : 20,
+    "y" : 39
+  },
+  "bathers-at-asnieres" : {
+    "x" : 51,
+    "y" : 51
+  },
   "cafe-terrace-at-night" : {
     "x" : 47,
     "y" : 51
+  },
+  "christina-of-denmark" : {
+    "x" : 43,
+    "y" : 13
   },
   "composition-vii" : {
     "x" : 52,
@@ -27,6 +43,10 @@
     "x" : 51,
     "y" : 44
   },
+  "crucifix-of-santa-croce" : {
+    "x" : 50,
+    "y" : 45
+  },
   "dance-at-le-moulin-de-la-galette" : {
     "x" : 47,
     "y" : 61
@@ -34,6 +54,10 @@
   "david-with-the-head-of-goliath" : {
     "x" : 46,
     "y" : 16
+  },
+  "death-and-the-maiden" : {
+    "x" : 53,
+    "y" : 40
   },
   "doni-tondo" : {
     "x" : 52,
@@ -55,6 +79,14 @@
     "x" : 40,
     "y" : 45
   },
+  "haymaking-eragny" : {
+    "x" : 53,
+    "y" : 42
+  },
+  "hoar-frost" : {
+    "x" : 49,
+    "y" : 44
+  },
   "hunters-in-the-snow" : {
     "x" : 48,
     "y" : 51
@@ -67,9 +99,17 @@
     "x" : 49,
     "y" : 46
   },
+  "in-the-loge" : {
+    "x" : 56,
+    "y" : 36
+  },
   "irises" : {
     "x" : 52,
     "y" : 46
+  },
+  "ivan-the-terrible-and-his-son-ivan" : {
+    "x" : 39,
+    "y" : 51
   },
   "judith-beheading-holofernes" : {
     "x" : 62,
@@ -77,6 +117,10 @@
   },
   "judith-i" : {
     "x" : 56,
+    "y" : 31
+  },
+  "judith-slaying-holofernes" : {
+    "x" : 73,
     "y" : 31
   },
   "labsinthe" : {
@@ -87,6 +131,10 @@
     "x" : 58,
     "y" : 29
   },
+  "laocoon" : {
+    "x" : 52,
+    "y" : 38
+  },
   "las-meninas" : {
     "x" : 71,
     "y" : 66
@@ -94,6 +142,10 @@
   "le-dejeuner-sur-lherbe" : {
     "x" : 41,
     "y" : 48
+  },
+  "lenseigne-de-gersaint" : {
+    "x" : 47,
+    "y" : 43
   },
   "les-demoiselles-davignon" : {
     "x" : 25,
@@ -103,9 +155,17 @@
     "x" : 74,
     "y" : 37
   },
+  "little-girl-in-a-blue-armchair" : {
+    "x" : 71,
+    "y" : 27
+  },
   "luncheon-of-the-boating-party" : {
     "x" : 21,
     "y" : 53
+  },
+  "madame-moitessier" : {
+    "x" : 52,
+    "y" : 20
   },
   "madonna" : {
     "x" : 47,
@@ -119,6 +179,10 @@
     "x" : 23,
     "y" : 33
   },
+  "maesta-of-the-louvre" : {
+    "x" : 51,
+    "y" : 26
+  },
   "massacre-of-the-innocents" : {
     "x" : 50,
     "y" : 41
@@ -130,6 +194,10 @@
   "mona-lisa" : {
     "x" : 45,
     "y" : 27
+  },
+  "monk-by-the-sea" : {
+    "x" : 53,
+    "y" : 55
   },
   "mont-sainte-victoire" : {
     "x" : 51,
@@ -154,6 +222,14 @@
   "olympia" : {
     "x" : 43,
     "y" : 27
+  },
+  "pierrot" : {
+    "x" : 53,
+    "y" : 40
+  },
+  "pilgrimage-to-cythera" : {
+    "x" : 45,
+    "y" : 58
   },
   "portrait-of-a-man-in-a-red-turban" : {
     "x" : 37,
@@ -183,12 +259,28 @@
     "x" : 50,
     "y" : 33
   },
+  "santa-trinita-maesta" : {
+    "x" : 52,
+    "y" : 18
+  },
   "saturn-devouring-his-son" : {
     "x" : 49,
     "y" : 39
   },
+  "saying-grace" : {
+    "x" : 31,
+    "y" : 47
+  },
+  "self-portrait-as-the-allegory-of-painting" : {
+    "x" : 52,
+    "y" : 30
+  },
   "self-portrait-at-twenty-eight" : {
     "x" : 49,
+    "y" : 30
+  },
+  "self-portrait-with-physalis" : {
+    "x" : 63,
     "y" : 30
   },
   "self-portrait-with-two-circles" : {
@@ -199,6 +291,10 @@
     "x" : 51,
     "y" : 47
   },
+  "soap-bubbles" : {
+    "x" : 59,
+    "y" : 46
+  },
   "stacks-of-wheat-end-of-summer" : {
     "x" : 51,
     "y" : 48
@@ -206,6 +302,14 @@
   "sunflowers" : {
     "x" : 48,
     "y" : 49
+  },
+  "susanna-and-the-elders" : {
+    "x" : 41,
+    "y" : 32
+  },
+  "the-ambassadors" : {
+    "x" : 50,
+    "y" : 22
   },
   "the-anatomy-lesson" : {
     "x" : 63,
@@ -239,9 +343,21 @@
     "x" : 48,
     "y" : 35
   },
+  "the-body-of-the-dead-christ-in-the-tomb" : {
+    "x" : 11,
+    "y" : 38
+  },
   "the-bolt" : {
     "x" : 63,
     "y" : 42
+  },
+  "the-boulevard-montmartre-at-night" : {
+    "x" : 49,
+    "y" : 58
+  },
+  "the-burial-of-the-count-of-orgaz" : {
+    "x" : 49,
+    "y" : 45
   },
   "the-calling-of-saint-matthew" : {
     "x" : 43,
@@ -250,6 +366,18 @@
   "the-card-players" : {
     "x" : 72,
     "y" : 27
+  },
+  "the-charging-chasseur" : {
+    "x" : 44,
+    "y" : 26
+  },
+  "the-childs-bath" : {
+    "x" : 51,
+    "y" : 26
+  },
+  "the-circus" : {
+    "x" : 55,
+    "y" : 46
   },
   "the-creation-of-adam" : {
     "x" : 14,
@@ -271,9 +399,21 @@
     "x" : 52,
     "y" : 49
   },
+  "the-dream" : {
+    "x" : 44,
+    "y" : 44
+  },
+  "the-family" : {
+    "x" : 47,
+    "y" : 27
+  },
   "the-fighting-temeraire" : {
     "x" : 51,
     "y" : 55
+  },
+  "the-garden-of-earthly-delights" : {
+    "x" : 50,
+    "y" : 46
   },
   "the-ghent-altarpiece" : {
     "x" : 49,
@@ -286,6 +426,10 @@
   "the-green-line" : {
     "x" : 47,
     "y" : 42
+  },
+  "the-haywain-triptych" : {
+    "x" : 50,
+    "y" : 49
   },
   "the-jewish-bride" : {
     "x" : 46,
@@ -323,6 +467,10 @@
     "x" : 56,
     "y" : 28
   },
+  "the-monomaniac-of-envy" : {
+    "x" : 43,
+    "y" : 38
+  },
   "the-mystical-nativity" : {
     "x" : 51,
     "y" : 43
@@ -334,6 +482,14 @@
   "the-old-guitarist" : {
     "x" : 32,
     "y" : 24
+  },
+  "the-raft-of-the-medusa" : {
+    "x" : 48,
+    "y" : 42
+  },
+  "the-ray" : {
+    "x" : 50,
+    "y" : 43
   },
   "the-return-of-the-prodigal-son" : {
     "x" : 44,
@@ -347,6 +503,14 @@
     "x" : 49,
     "y" : 70
   },
+  "the-sea-of-ice" : {
+    "x" : 50,
+    "y" : 49
+  },
+  "the-ship-of-fools" : {
+    "x" : 49,
+    "y" : 48
+  },
   "the-sick-child" : {
     "x" : 49,
     "y" : 46
@@ -358,6 +522,10 @@
   "the-slave-ship" : {
     "x" : 49,
     "y" : 54
+  },
+  "the-sleeping-gypsy" : {
+    "x" : 54,
+    "y" : 52
   },
   "the-sower" : {
     "x" : 49,
@@ -399,9 +567,33 @@
     "x" : 53,
     "y" : 46
   },
+  "the-turkish-bath" : {
+    "x" : 73,
+    "y" : 40
+  },
+  "the-valpincon-bather" : {
+    "x" : 54,
+    "y" : 47
+  },
+  "the-vision-after-the-sermon" : {
+    "x" : 50,
+    "y" : 43
+  },
   "the-wounded-man" : {
     "x" : 43,
     "y" : 24
+  },
+  "the-yellow-christ" : {
+    "x" : 50,
+    "y" : 35
+  },
+  "they-did-not-expect-him" : {
+    "x" : 25,
+    "y" : 29
+  },
+  "tiger-in-a-tropical-storm" : {
+    "x" : 50,
+    "y" : 54
   },
   "two-sisters-on-the-terrace" : {
     "x" : 52,
@@ -419,6 +611,14 @@
     "x" : 49,
     "y" : 64
   },
+  "view-of-toledo" : {
+    "x" : 50,
+    "y" : 53
+  },
+  "wanderer-above-the-sea-of-fog" : {
+    "x" : 48,
+    "y" : 50
+  },
   "water-lilies" : {
     "x" : 48,
     "y" : 49
@@ -426,6 +626,10 @@
   "wheatfield-with-crows" : {
     "x" : 48,
     "y" : 40
+  },
+  "where-do-we-come-from" : {
+    "x" : 44,
+    "y" : 44
   },
   "witches-sabbath" : {
     "x" : 51,

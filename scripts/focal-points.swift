@@ -21,6 +21,8 @@ let OVERRIDES: [String: (x: Int, y: Int)] = [
   "napoleon-crossing-the-alps": (55, 14),
   "equestrian-portrait-of-charles-v": (43, 10),
   "the-scream": (49, 70), // the screaming face sits low on the canvas
+  "the-yellow-christ": (50, 35), // Vision anchors on the Breton women at the far left; the subject is the central crucifix
+  "the-ambassadors": (50, 22), // two sitters flank the frame — one face pulls the crop off-centre
 ]
 
 let fm = FileManager.default
