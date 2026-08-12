@@ -9,8 +9,12 @@ artists. Spec: `docs/superpowers/specs/2026-08-11-collection-to-fifty-artists.md
 2026-08-12 · stop at 45% weekly quota (29% at launch) · no new work stretch above
 85% session window · nothing pushed, nothing merged.
 
-**Branch:** `collect-more-artists` in `.claude/worktrees/collect-more-artists`.
-Main checkout untouched. **Nothing is merged — that is your call.**
+**Branch:** built on `collect-more-artists` in a gobble worktree, one commit per
+artist. **Merged to `main` on 2026-08-12** (`033ea08`); the branch and worktree
+were deleted after the merge. Jeff approved the merge explicitly, as the repo
+requires. Two later commits on the same branch — the artists-index card cascade
+and its follow-up fix — are UI work he requested after this run finished, and
+are not covered by this report.
 
 **Status:** **DONE.** All 17 artists landed. 50 artists · 163 works · 226 pages.
 `npm run check` green, `npm run build` green. Stopped because the goal was met,
@@ -21,7 +25,7 @@ the time ceiling, with weekly quota at ~36% against your 45% limit.
 
 ## Review me in this order
 
-1. **Browse the site.** `astro dev` in the worktree, then walk the home gallery
+1. **Browse the site.** `astro dev --background` from the repo root, then walk the home gallery
    and the artists index. That is the real acceptance test and nothing below
    substitutes for it.
 2. **The two women.** Artemisia Gentileschi and Mary Cassatt are the first women
