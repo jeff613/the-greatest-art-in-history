@@ -278,6 +278,12 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
   #daily-img.is-loaded { opacity: 1; }
   .anim-rise { animation: rise 0.9s ease-out 0.35s both; }
   .anim-rise-2 { animation: rise 0.9s ease-out 0.55s both; }
+  /* Opt-in card cascade (artists index). Each card carries its own
+     animation-delay inline. This lives here rather than in a page-scoped
+     <style> because the dev server injects scoped styles as JS modules, and
+     ClientRouter drops them on navigation — the rule would silently vanish
+     when you switch tabs. global.css is on every page, so it survives. */
+  .grid.cascade .card { animation: rise 0.45s ease-out both; }
 }
 @keyframes rise {
   from { opacity: 0; transform: translateY(8px); }

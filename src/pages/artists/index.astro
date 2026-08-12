@@ -19,7 +19,7 @@ withPeriod.sort(
   <div class="page-head page-head-wide">
     <h1 class="display">Fifty lives<br />that changed how we see.</h1>
   </div>
-  <div class="grid">
+  <div class="grid cascade">
     {withPeriod.map(({ artist }, i) => (
       <a class="card" href={`/artists/${artist.id}/`} style={`--ar: ${(artist.data.portrait.width / artist.data.portrait.height).toFixed(3)}; animation-delay: ${Math.min(0.04 + i * 0.022, 0.54).toFixed(3)}s`}>
         <Image
@@ -40,14 +40,7 @@ withPeriod.sort(
   /* The explicit two-line break governs; don't let the width cap re-wrap it. */
   .page-head-wide { max-width: none; }
 
-  /* Cards rise in one by one, like the timeline medallions — but fifty of them,
-     so the tempo is much faster and the delay is capped: the whole cascade is
-     over in about a second, and nothing below the fold is ever left waiting. */
-  @media (prefers-reduced-motion: no-preference) {
-    .grid .card { animation: card-rise 0.45s ease-out both; }
-  }
-  @keyframes card-rise {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: none; }
-  }
+  /* The cards cascade in one by one — see `.grid.cascade` in global.css.
+     Each card's animation-delay is written inline above; the delay is capped
+     so the whole cascade settles in about a second. */
 </style>
