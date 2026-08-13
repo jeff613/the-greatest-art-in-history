@@ -105,11 +105,16 @@ for artwork titles) + Inter. Wordmark reads "The Greatest" (rebranded
 underlined via `aria-current`. Homepage: one fresh shuffle of all works per
 visit — the first leads as a full-screen hero (labelled with its period, like
 every room; no "artwork of the day" framing), then a gallery walk of 24 rooms
-(`WALK_SIZE` in index.astro), mandatory scroll-snap, scroll cue in the hero,
-and full-bleed crops that pivot around each painting's focal point
-(convention #8). **TV gallery mode** (idle auto-scroll): after 60s of no input
-the walk advances one room every 15 min and loops, for unattended
-AirPlay-to-TV display — holds a screen Wake Lock, hides cursor + scroll-cue,
+(`WALK_SIZE` in index.astro), mandatory scroll-snap, and full-bleed crops that
+pivot around each painting's focal point (convention #8). There is no standing
+scroll cue: ~2.6s after load (clear of the hero's 1450ms entrance) the walk
+drifts down a sliver to show the next canvas and eases back — one-shot,
+abandoned the instant the viewer scrolls, and it suspends scroll-snap for the
+drift or mandatory snapping eats it (`HINT_*` in index.astro). Under
+`prefers-reduced-motion` the drift never runs and a static rail appears
+bottom-right instead. **TV gallery mode** (idle auto-scroll): after 60s of no
+input the walk advances one room every 15 min and loops, for unattended
+AirPlay-to-TV display — holds a screen Wake Lock, hides the cursor,
 and never runs under `prefers-reduced-motion`; any real input stops it and
 re-arms (`IDLE_MS`/`DWELL_MS` in index.astro). The wall-label title sizes to
 the available width (`calc(100% - 2*--pad)`) so it wraps only when it truly
