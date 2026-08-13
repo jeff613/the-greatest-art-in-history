@@ -40,7 +40,7 @@ const entries = await Promise.all(
       <p class="byline anim-rise-2" id="daily-byline"></p>
       <a class="read-link anim-rise-2" id="daily-read" href="/artists/">Read the story →</a>
     </div>
-    <div class="scroll-cue anim-rise-2" aria-hidden="true"><span></span></div>
+    <div class="scroll-cue" aria-hidden="true"><span class="cue-track"></span></div>
     <noscript>
       <div class="noscript-home">
         <p class="wordmark">The Greatest</p>
@@ -87,30 +87,28 @@ const entries = await Promise.all(
   }
   :global(.site-header) { position: fixed; }
   .daily-hero { scroll-snap-align: start; }
-  .scroll-cue {
-    position: absolute;
-    top: calc(100svh - 4.4rem); /* 1.4rem margin + own 3rem height above the small viewport's bottom */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1px;
-    height: 3rem;
-    overflow: hidden;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .scroll-cue span {
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: rgb(255 255 255 / 0.65);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .scroll-cue span { animation: cue-drop 2.8s ease-in-out infinite; }
-  }
-  @keyframes cue-drop {
-    0% { transform: translateY(-100%); }
-    55% { transform: translateY(0); }
-    100% { transform: translateY(100%); }
+  /* No standing scroll cue: the walk hints at itself by drifting down a
+     sliver and settling back (initScrollHint below), which shows the next
+     canvas rather than pointing at it.
+     The one exception is prefers-reduced-motion, where that drift never runs
+     — those viewers get a quiet static rail instead of no signal at all.
+     Bottom-RIGHT because the wall label is bottom-left at the same height. */
+  .scroll-cue { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue {
+      display: block;
+      position: absolute;
+      top: calc(100svh - 3.8rem);
+      right: var(--pad);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .cue-track {
+      display: block;
+      width: 1px;
+      height: 2.4rem;
+      background: linear-gradient(to bottom, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.5));
+    }
   }
   :global(#gallery-walk .room) {
     position: relative;
@@ -132,10 +130,11 @@ const entries = await Promise.all(
   }
   .walk-end-links { margin: 0; }
   .walk-end-links a { border-bottom: 1px solid var(--gilt); }
-  /* TV gallery mode: while auto-scrolling, drop the cursor and the (now
-     redundant) scroll hint so the display reads as pure art. */
+  /* TV gallery mode: while auto-scrolling, drop the cursor so the display
+     reads as pure art. (No cue to hide: the drift hint is one-shot and long
+     finished by the time the 60s idle timer fires, and the reduced-motion
+     rail can't coexist with TV mode, which never starts under that setting.) */
   .walk-scroller.autoscrolling { cursor: none; }
-  .walk-scroller.autoscrolling .scroll-cue { display: none; }
 </style>
 
 <script>
@@ -182,6 +181,11 @@ const entries = await Promise.all(
     document.getElementById('daily-link')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
     document.getElementById('daily-read')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
 
+    // Bound before the "already built" bail-out below so a view-transition
+    // re-entry still arms the hint.
+    const hintScroller = document.querySelector<HTMLElement>('.walk-scroller');
+    if (hintScroller) initScrollHint(hintScroller);
+
     // Gallery walk: the works after the first, same shuffle.
     const walk = document.getElementById('gallery-walk')!;
     if (walk.childElementCount > 0) return; // already built (defensive)
@@ -209,6 +213,74 @@ const entries = await Promise.all(
     }
 
     document.getElementById('walk-end')!.hidden = false;
+  }
+
+  // --- first-visit scroll hint ----------------------------------------------
+  // Instead of an icon, the walk demonstrates itself: shortly after the hero
+  // settles it drifts down far enough to show the top edge of the next canvas,
+  // then eases back. Runs once, and only if the viewer hasn't already moved.
+  // The hero's last entrance animation (.anim-rise-2) ends at 1450ms
+  // (0.55s delay + 0.9s rise), so anything near that treads on it. Wait out
+  // the entrance and then hold still a beat, so the drift reads as a separate
+  // gesture rather than the tail of the animation.
+  const HINT_DELAY = 2600;
+  const HINT_DOWN = 560;
+  const HINT_HOLD = 260;
+  const HINT_UP = 700;
+
+  function initScrollHint(scroller: HTMLElement): void {
+    if (scroller.dataset.hintBound) return;
+    scroller.dataset.hintBound = '1';
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; // static rail instead
+
+    let cancelled = false;
+    // Any real input means they've found it themselves — abandon the hint and
+    // leave the scroll position wherever they put it.
+    const cancel = (): void => { cancelled = true; };
+    for (const evt of ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const) {
+      window.addEventListener(evt, cancel, { passive: true, once: true });
+    }
+
+    window.setTimeout(() => {
+      if (cancelled || scroller.scrollTop > 0) return;
+
+      // A sliver of the next room: enough to read as "there is another canvas
+      // below", not so much that it looks like the page jumped.
+      const dist = Math.min(96, Math.max(48, Math.round(scroller.clientHeight * 0.08)));
+
+      // `scroll-snap-type: y mandatory` yanks any partial offset straight back
+      // to a snap point, which would eat the drift entirely. Suspend snapping
+      // for the hint and restore it once we're back at rest.
+      const snap = scroller.style.scrollSnapType;
+      scroller.style.scrollSnapType = 'none';
+      const restore = (): void => { scroller.style.scrollSnapType = snap; };
+
+      const easeOut = (t: number): number => 1 - Math.pow(1 - t, 3);
+      const easeInOut = (t: number): number =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      const tween = (
+        from: number, to: number, dur: number,
+        ease: (t: number) => number, then: () => void,
+      ): void => {
+        const t0 = performance.now();
+        const step = (now: number): void => {
+          if (cancelled) { restore(); return; }
+          const p = Math.min(1, (now - t0) / dur);
+          scroller.scrollTop = from + (to - from) * ease(p);
+          if (p < 1) requestAnimationFrame(step);
+          else then();
+        };
+        requestAnimationFrame(step);
+      };
+
+      tween(0, dist, HINT_DOWN, easeOut, () => {
+        window.setTimeout(() => {
+          if (cancelled) { restore(); return; }
+          tween(dist, 0, HINT_UP, easeInOut, () => { scroller.scrollTop = 0; restore(); });
+        }, HINT_HOLD);
+      });
+    }, HINT_DELAY);
   }
 
   document.addEventListener('astro:page-load', initHome);
