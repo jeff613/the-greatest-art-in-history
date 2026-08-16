@@ -20,8 +20,24 @@ const path = Astro.url.pathname;
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    {/* Added to the iPhone home screen, the site runs as a standalone web app.
+        black-translucent drops iOS's opaque status bar so the artwork reaches
+        the true top edge; viewport-fit=cover above lets the page fill the
+        safe areas it vacates. Layout compensates with env(safe-area-inset-*)
+        in global.css — the status glyphs are always white, so dark pages lean
+        on the room scrim and cream pages keep a cap. */}
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    {/* The home-screen label, which would otherwise be the per-page <title> —
+        the artwork's name on a work page, and truncated to nothing useful
+        anywhere. Matches the visible wordmark. */}
+    <meta name="apple-mobile-web-app-title" content="The Greatest" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* iOS ignores SVG favicons and falls back to a screenshot of the page,
+        so the home-screen icon needs its own opaque PNG. Regenerate from
+        favicon.svg at 180×180 if the mark changes. */}
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <ClientRouter />
   </head>

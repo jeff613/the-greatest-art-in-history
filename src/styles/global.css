@@ -13,10 +13,39 @@
   --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --sans: 'Inter', system-ui, sans-serif;
   --measure: 42rem;
-  --pad: clamp(1.25rem, 4vw, 3.5rem);
+  /* Every horizontal gutter on the site reads from this one value, so folding
+     the landscape safe-area insets in here keeps text clear of the notch
+     everywhere at once. Held symmetric on purpose: only one side is notched,
+     but centred rows (.facts-line, the footer) would sit off-centre if the
+     gutters differed. Both insets are 0 in a browser, where this collapses
+     back to the plain clamp. */
+  --pad: max(
+    clamp(1.25rem, 4vw, 3.5rem),
+    env(safe-area-inset-left, 0px),
+    env(safe-area-inset-right, 0px)
+  );
   /* Max width of the centered intro/reading composition on wide screens & TV
      (period + artist detail pages). Bump for more width on large displays. */
   --wide-max: 100rem;
+  /* Full height the walk has to fill. Measured on iOS 26, iPhone 17 Pro,
+     874pt screen:
+       standalone  dvh = 812, and the top inset = 62. The web view is anchored
+         at the PHYSICAL top of the screen but its viewport is shortened by the
+         status-bar inset, so dvh-sized rooms left a 62pt band of bare --room
+         along the bottom. Adding the inset back gives the true 874.
+       browser     dvh = 713.7 and the inset is 0, so this is plain 100dvh —
+         the walk sits in the viewport above Safari's toolbar, deliberately.
+     Safari CAN paint to the bottom edge (a tall enough element reaches 873.7),
+     but reaching it needs a height no unit expresses — the visible area is
+     812pt while the biggest unit, 100vh, gives 777.7 — so it would mean
+     overshooting and cropping every artwork harder. Jeff's call (2026-08-15):
+     full screen is what the home-screen app is for; in a browser tab the walk
+     stays inside the viewport. Do not "fix" this with lvh/vh. */
+  --screen: calc(100dvh + env(safe-area-inset-top, 0px));
+  /* Small-viewport twin, for captions that must stay above Safari's toolbar.
+     The top inset is added back because in standalone svh is short by exactly
+     that much (see above); it is 0 in a browser tab. */
+  --screen-small: calc(100svh + env(safe-area-inset-top, 0px));
 }
 
 * { box-sizing: border-box; }
@@ -56,10 +85,31 @@ img { max-width: 100%; height: auto; display: block; }
   grid-template-columns: 1fr auto 1fr;
   align-items: baseline;
   gap: 1rem;
-  padding: 1.7rem var(--pad);
+  /* The inset is 0 in a browser tab and only lifts the row clear of the clock
+     when the site runs as a standalone home-screen app (viewport-fit=cover).
+     It is added HERE and nowhere else: narrow viewports retune the rhythm
+     through --header-pad-y below, so an override can never drop the inset the
+     way a plain `padding` shorthand silently did. */
+  --header-pad-y: 1.7rem;
+  padding: calc(var(--header-pad-y) + env(safe-area-inset-top, 0px)) var(--pad) var(--header-pad-y);
   color: var(--ink);
 }
 body.dark .site-header { color: var(--chalk); }
+
+/* Standalone app: the page runs under the status bar so the art reaches the
+   top edge, and the rooms' own top scrim carries the white status glyphs.
+   Cream pages have nothing up there to carry them, so they keep a quiet cap
+   in the room colour. Zero-height in a browser, where the inset is 0. */
+body:not(.dark)::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background: var(--room);
+  z-index: 20;
+}
 
 .wordmark {
   font-family: var(--sans);
@@ -222,7 +272,7 @@ body.dark .reading-room .kicker { color: var(--gilt); }
 
 /* ---------- footer ---------- */
 .site-footer {
-  padding: 2.6rem var(--pad);
+  padding: 2.6rem var(--pad) calc(2.6rem + env(safe-area-inset-bottom));
   border-top: 1px solid var(--line);
   color: var(--muted);
   font-size: 0.78rem;
@@ -233,10 +283,10 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
 .site-footer p { margin: 0; }
 
 /* ---------- home: full-bleed daily artwork ---------- */
-/* Rooms fill the home walk-scroller (100dvh container scroll — see
+/* Rooms fill the home walk-scroller (--screen container scroll — see
    index.astro); captions pin within the SMALL viewport so they stay
    visible above iOS Safari's toolbar. */
-.daily-hero { position: relative; height: 100vh; height: 100dvh; }
+.daily-hero { position: relative; height: 100vh; height: var(--screen); }
 .daily-bg { position: absolute; inset: 0; display: block; cursor: pointer; }
 .daily-bg img { width: 100%; height: 100%; object-fit: cover; }
 .scrim {
@@ -250,7 +300,9 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
 .wall-label {
   position: absolute;
   left: var(--pad);
-  top: calc(100svh - clamp(2rem, 7vh, 4.5rem));
+  /* --screen-small spans under the home indicator (viewport-fit=cover), so the
+     inset is subtracted back out to keep the label off it. */
+  top: calc(var(--screen-small) - clamp(2rem, 7vh, 4.5rem) - env(safe-area-inset-bottom, 0px));
   transform: translateY(-100%);
   z-index: 2;
   max-width: calc(100% - 2 * var(--pad));
@@ -299,7 +351,7 @@ body.dark .site-footer { border-color: var(--line-room); color: var(--muted-room
 
 /* ---------- narrow viewports: keep the floating header on one line ---------- */
 @media (max-width: 640px) {
-  .site-header { padding: 1.2rem var(--pad); }
+  .site-header { --header-pad-y: 1.2rem; }
   .wordmark { letter-spacing: 0.22em; font-size: 0.78rem; }
   .site-header .nav-left, .site-header .nav-right { font-size: 0.65rem; letter-spacing: 0.14em; }
 }

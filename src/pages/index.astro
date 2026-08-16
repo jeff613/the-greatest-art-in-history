@@ -79,9 +79,9 @@ const entries = await Promise.all(
   /* The walk scrolls inside a fixed-height container, not the document:
      iOS Safari's collapsing toolbar can't change the scrollport mid-scroll,
      so snap positions never drift and no neighboring room peeks through. */
-  :global(html), :global(body) { height: 100%; overflow: hidden; }
+  :global(html), :global(body) { height: var(--screen); overflow: hidden; }
   .walk-scroller {
-    height: 100dvh;
+    height: var(--screen);
     overflow-y: auto;
     scroll-snap-type: y mandatory;
   }
@@ -98,7 +98,7 @@ const entries = await Promise.all(
     .scroll-cue {
       display: block;
       position: absolute;
-      top: calc(100svh - 3.8rem);
+      top: calc(var(--screen-small) - 3.8rem - env(safe-area-inset-bottom, 0px));
       right: var(--pad);
       z-index: 2;
       pointer-events: none;
@@ -112,7 +112,7 @@ const entries = await Promise.all(
   }
   :global(#gallery-walk .room) {
     position: relative;
-    height: 100dvh;
+    height: var(--screen);
     scroll-snap-align: start;
   }
   :global(#gallery-walk .room-img) { opacity: 1; }
