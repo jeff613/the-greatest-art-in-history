@@ -40,6 +40,12 @@ withPeriod.sort(
   /* The explicit two-line break governs; don't let the width cap re-wrap it. */
   .page-head-wide { max-width: none; }
 
+  @media (max-width: 640px) {
+    .page-head-wide {
+      padding-top: calc(5.75rem + env(safe-area-inset-top, 0px));
+    }
+  }
+
   /* The cards cascade in one by one — see `.grid.cascade` in global.css.
      Each card's animation-delay is written inline above; the delay is capped
      so the whole cascade settles in about a second. */
