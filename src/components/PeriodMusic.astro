@@ -1,4 +1,5 @@
 ---
+import { isChinese, text } from '../lib/i18n';
 interface Props {
   track: {
     title: string;
@@ -12,6 +13,8 @@ interface Props {
   };
 }
 const { track } = Astro.props;
+const chinese = isChinese(Astro.url);
+const t = (english: string, zh: string) => text(chinese, english, zh);
 
 const DEEDS: Record<string, string> = {
   'CC BY 3.0': 'https://creativecommons.org/licenses/by/3.0/',
@@ -21,6 +24,11 @@ const DEEDS: Record<string, string> = {
   'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/',
 };
 const deed = DEEDS[track.license];
+const licenseLabel = track.license === 'Public domain (U.S. Air Force work)'
+  ? t(track.license, '公有领域（美国空军作品）')
+  : track.license === 'Public domain (U.S. government work)'
+    ? t(track.license, '公有领域（美国政府作品）')
+    : track.license;
 ---
 
 <div class="period-music">
@@ -28,15 +36,15 @@ const deed = DEEDS[track.license];
     class="music-toggle"
     type="button"
     aria-pressed="false"
-    aria-label={`Play ${track.title} by ${track.composer}`}
+    aria-label={t(`Play ${track.title} by ${track.composer}`, `播放音乐：${track.composer}，${track.title}`)}
   >
     <span class="music-glyph" aria-hidden="true">♪</span>
-    <span class="music-state">Listen</span>
+    <span class="music-state">{t("Listen", "聆听")}</span>
   </button>
   <p class="music-credit">
-    {track.composer} — <em>{track.title}</em>, {track.composed} ·{' '}
+    {track.composer} - <em>{track.title}</em>, {track.composed} ·{' '}
     {track.performer} · <a href={track.sourceUrl}>{track.source}</a> ·{' '}
-    {deed ? <a href={deed}>{track.license}</a> : track.license}
+    {deed ? <a href={deed}>{licenseLabel}</a> : licenseLabel}
   </p>
   <audio preload="none" loop src={track.file}></audio>
 </div>
@@ -50,6 +58,8 @@ const deed = DEEDS[track.license];
   }
   .music-toggle {
     display: inline-flex;
+    flex-shrink: 0;
+    white-space: nowrap;
     align-items: center;
     gap: 0.45rem;
     background: none;
@@ -90,27 +100,60 @@ const deed = DEEDS[track.license];
 <script>
   function initPeriodMusic(): void {
     const root = document.querySelector<HTMLElement>('.period-music');
-    if (!root) return;
+    if (!root || root.dataset.initialized) return;
     const button = root.querySelector<HTMLButtonElement>('.music-toggle');
     const state = root.querySelector<HTMLElement>('.music-state');
     const audio = root.querySelector<HTMLAudioElement>('audio');
     if (!button || !state || !audio) return;
+    const chinese = document.documentElement.lang === 'zh-Hans';
     const playLabel = button.getAttribute('aria-label') ?? 'Play';
+    root.dataset.initialized = 'true';
     audio.volume = 0.7;
-    button.addEventListener('click', () => {
-      if (audio.paused) audio.play().catch(() => {});
-      else audio.pause();
-    });
-    const sync = (): void => {
-      const playing = !audio.paused;
-      button.setAttribute('aria-pressed', String(playing));
-      button.setAttribute('aria-label', playing ? 'Pause the music' : playLabel);
-      state.textContent = playing ? 'Pause' : 'Listen';
+    let request = 0;
+    const show = (status: 'idle' | 'loading' | 'playing' | 'error'): void => {
+      const active = status === 'loading' || status === 'playing';
+      button.setAttribute('aria-pressed', String(active));
+      button.setAttribute('aria-busy', String(status === 'loading'));
+      const labels = {
+        idle: chinese ? '聆听' : 'Listen',
+        loading: chinese ? '加载中…' : 'Loading…',
+        playing: chinese ? '暂停' : 'Pause',
+        error: chinese ? '重试' : 'Retry',
+      };
+      state.textContent = labels[status];
+      button.setAttribute('aria-label', status === 'loading'
+        ? (chinese ? '音乐加载中，点击取消' : 'Loading music, click to cancel')
+        : status === 'playing' ? (chinese ? '暂停音乐' : 'Pause the music')
+        : status === 'error' ? (chinese ? '音乐未能播放，点击重试' : 'Music could not play, click to retry')
+        : playLabel);
     };
-    audio.addEventListener('play', sync);
-    audio.addEventListener('pause', sync);
+    button.addEventListener('click', () => {
+      const currentRequest = ++request;
+      if (!audio.paused) {
+        audio.pause();
+        show('idle');
+        return;
+      }
+      if (audio.error) audio.load();
+      show('loading');
+      audio.play().catch((error: DOMException) => {
+        if (currentRequest !== request || error.name === 'AbortError') return;
+        show('error');
+      });
+    });
+    audio.addEventListener('playing', () => show('playing'));
+    audio.addEventListener('waiting', () => {
+      if (!audio.paused) show('loading');
+    });
+    audio.addEventListener('pause', () => {
+      if (audio.paused) show(audio.error ? 'error' : 'idle');
+    });
+    audio.addEventListener('error', () => show('error'));
   }
   document.addEventListener('astro:page-load', initPeriodMusic);
+  // Also initialize when this module arrives after the initial page-load event.
+  // The per-element guard keeps both paths from attaching duplicate handlers.
+  initPeriodMusic();
   // View transitions keep the old page's DOM alive during swap — stop sound explicitly.
   document.addEventListener('astro:before-swap', () => {
     document.querySelector<HTMLAudioElement>('.period-music audio')?.pause();

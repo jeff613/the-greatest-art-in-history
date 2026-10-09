@@ -1,16 +1,22 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { localizedContent, isChinese, localizedPath, text } from '../../lib/i18n';
+import { getCollection as sourceCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import PeriodMusic from '../../components/PeriodMusic.astro';
 
 export async function getStaticPaths() {
-  const periods = await getCollection('periods');
+  const periods = await sourceCollection('periods');
   return periods.map((period) => ({ params: { slug: period.id }, props: { period } }));
 }
 
-const { period } = Astro.props;
+const chinese = isChinese(Astro.url);
+const href = (path: string) => localizedPath(path, chinese);
+const t = (english: string, zh: string) => text(chinese, english, zh);
+const { getCollection, getEntry, render, localize } = localizedContent(Astro.url);
+
+const period = localize(Astro.props.period);
 const { Content } = await render(period);
 const works = await getCollection('works', (w) => w.data.period.id === period.id);
 const cards = await Promise.all(
@@ -27,7 +33,7 @@ const featured = cards.length
 const track = period.data.music?.[0];
 ---
 
-<Base title={`${period.data.name} — The Greatest Art in History`}>
+<Base title={`${period.data.name} - ${t("The Greatest Art in History", "艺术史上的伟大杰作")}`}>
   <div class="page-head">
     <p class="kicker">{period.data.years}</p>
     <h1 class="display">{period.data.name}</h1>
@@ -38,12 +44,12 @@ const track = period.data.music?.[0];
       <Content />
     </article>
     {featured && (
-      <a class="intro-art" href={`/works/${featured.work.id}/`}>
+      <a class="intro-art" href={href(`/works/${featured.work.id}/`)}>
         <Image
           src={featured.work.data.image}
           widths={[600, 1200]}
           sizes="40vw"
-          alt={`${featured.work.data.title} by ${featured.artistName}`}
+          alt={t(`${featured.work.data.title} by ${featured.artistName}`, `${featured.artistName}《${featured.work.data.title}》`)}
         />
         <p class="intro-art-caption">
           <em>{featured.work.data.title}</em> · {featured.artistName}, {featured.work.data.year}

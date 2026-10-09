@@ -128,3 +128,24 @@ and misses faces near canvas tops), add the work to the OVERRIDES table at
 the top of scripts/focal-points.swift — NOT the JSON, which regeneration
 overwrites — then re-run the script. After any batch of new works, eyeball
 the walk on both a wide monitor and a phone and override what looks wrong.
+
+## Simplified Chinese edition
+
+Every collection entry also has a complete translation at
+`src/translations/zh/<collection>/<slug>.md`. Keep the original slug, paragraph
+structure, story details, uncertainty, attribution, links, and fact-list items.
+Translate the prose, rather than summarizing it. The Chinese work headings are
+`## 画作的故事`, `## 时代背景`, `## 此刻的艺术家`, and `## 趣闻`.
+
+Translation frontmatter contains only reader-facing fields:
+- Works: `title`, `medium`, `location`, `teaser`.
+- Artists: `name`, `hook`, `timeline` (preserve the year strings).
+- Periods: `name`, `years`, `music` (translate credits, preserve audio paths,
+  source URLs, and exact license identifiers).
+
+Images, collection references, sorting years, and image licenses come from the
+original collections. Do not duplicate or change them in translations. Update
+both editions when editing content. `npm run check` verifies translation
+coverage and structure; `npm run build` renders both editions and fails on
+missing translations. The English routes stay unchanged; Chinese routes use
+`/zh/`. Both editions share page templates and the bottom-right language toggle.

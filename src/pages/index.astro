@@ -1,8 +1,13 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { localizedContent, isChinese, localizedPath, text } from '../lib/i18n';
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import focal from '../data/focal-points.json';
+
+const chinese = isChinese(Astro.url);
+const href = (path: string) => localizedPath(path, chinese);
+const t = (english: string, zh: string) => text(chinese, english, zh);
+const { getCollection, getEntry } = localizedContent(Astro.url);
 
 const works = await getCollection('works');
 const entries = await Promise.all(
@@ -30,21 +35,21 @@ const entries = await Promise.all(
 <Base dark bare>
   <div class="walk-scroller">
   <section class="daily-hero">
-    <a id="daily-link" class="daily-bg" href="/artists/" aria-label="Read the story of the featured artwork">
-      <img id="daily-img" alt="" />
+    <a id="daily-link" class="daily-bg" href={href("/artists/")} aria-label={t("Read the story of the featured artwork", "阅读这幅画的故事")}>
+      <img id="daily-img" alt="" decoding="async" />
       <span class="scrim"></span>
     </a>
     <div class="wall-label">
       <p class="kicker anim-rise" id="daily-kicker"></p>
       <h1 class="display italic anim-rise" id="daily-title"></h1>
       <p class="byline anim-rise-2" id="daily-byline"></p>
-      <a class="read-link anim-rise-2" id="daily-read" href="/artists/">Read the story →</a>
+      <a class="read-link anim-rise-2" id="daily-read" href={href("/artists/")}>{t("Read the story →", "阅读故事 →")}</a>
     </div>
     <div class="scroll-cue" aria-hidden="true"><span class="cue-track"></span></div>
     <noscript>
       <div class="noscript-home">
         <p class="wordmark">The Greatest</p>
-        <p><a href="/artists/">Artists</a> · <a href="/periods/">Periods</a></p>
+        <p><a href={href("/artists/")}>{t("Artists", "艺术家")}</a> · <a href={href("/periods/")}>{t("Periods", "艺术时期")}</a></p>
       </div>
     </noscript>
   </section>
@@ -53,7 +58,7 @@ const entries = await Promise.all(
 
   <template id="room-template">
     <section class="room">
-      <a class="daily-bg room-link" href="/">
+      <a class="daily-bg room-link" href={href("/")}>
         <img class="room-img" alt="" loading="lazy" decoding="async" />
         <span class="scrim"></span>
       </a>
@@ -61,14 +66,14 @@ const entries = await Promise.all(
         <p class="kicker room-period"></p>
         <h2 class="display italic room-title"></h2>
         <p class="byline room-byline"></p>
-        <a class="read-link room-read" href="/">Read the story →</a>
+        <a class="read-link room-read" href={href("/")}>{t("Read the story →", "阅读故事 →")}</a>
       </div>
     </section>
   </template>
 
   <section class="walk-end" id="walk-end" hidden>
-    <p class="kicker">You've walked the whole gallery</p>
-    <p class="walk-end-links"><a href="/artists/">Artists</a> · <a href="/periods/">Periods</a></p>
+    <p class="kicker">{t("You've walked the whole gallery", "你已漫步整个画廊")}</p>
+    <p class="walk-end-links"><a href={href("/artists/")}>{t("Artists", "艺术家")}</a> · <a href={href("/periods/")}>{t("Periods", "艺术时期")}</a></p>
   </section>
 
   <script type="application/json" id="works-data" set:html={JSON.stringify(entries).replace(/</g, '\\u003c')} />
@@ -98,7 +103,7 @@ const entries = await Promise.all(
     .scroll-cue {
       display: block;
       position: absolute;
-      top: calc(var(--screen-small) - 3.8rem - env(safe-area-inset-bottom, 0px));
+      top: calc(var(--screen-small) - 5.5rem - env(safe-area-inset-bottom, 0px));
       right: var(--pad);
       z-index: 2;
       pointer-events: none;
@@ -151,7 +156,12 @@ const entries = await Promise.all(
 
   function initHome(): void {
     const dataEl = document.getElementById('works-data');
-    if (!dataEl) return; // not the home page
+    if (!dataEl || dataEl.dataset.initialized) return;
+    dataEl.dataset.initialized = 'true';
+    const chinese = document.documentElement.lang === 'zh-Hans';
+    const prefix = chinese ? '/zh' : '';
+    const storyLabel = (title: string) => chinese ? `阅读《${title}》的故事` : `Read the story of ${title}`;
+    const imageLabel = (entry: Entry) => chinese ? `${entry.artist}《${entry.title}》` : `${entry.title} by ${entry.artist}`;
     const data: Entry[] = JSON.parse(dataEl.textContent!);
 
     // First slide + walk: one fresh shuffle of every work each visit. The
@@ -161,34 +171,50 @@ const entries = await Promise.all(
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
+    // A language switch keeps the current walk; an ordinary visit still shuffles.
+    let roomIndex = 0;
+    try {
+      const saved = sessionStorage.getItem('language-switch-walk');
+      sessionStorage.removeItem('language-switch-walk');
+      if (saved) {
+        const walk = JSON.parse(saved) as { slugs: string[]; room: number };
+        const ordered = walk.slugs.map((slug) => data.find((entry) => entry.slug === slug));
+        if (ordered.length === data.length && ordered.every(Boolean)) {
+          shuffled.splice(0, shuffled.length, ...ordered as Entry[]);
+          roomIndex = walk.room;
+        }
+      }
+    } catch { /* Storage may be unavailable; the fresh shuffle still works. */ }
     const hero = shuffled[0];
 
     const heroImg = document.getElementById('daily-img') as HTMLImageElement;
-    heroImg.addEventListener('load', () => heroImg.classList.add('is-loaded'), { once: true });
     heroImg.src = hero.src;
-    heroImg.alt = `${hero.title} by ${hero.artist}`;
+    heroImg.alt = imageLabel(hero);
     // Crop pivots around the painting's focal point (face/subject) so the
     // full-bleed treatment never cuts off what matters.
     heroImg.style.objectPosition = `${hero.fx}% ${hero.fy}%`;
-    if (heroImg.complete) heroImg.classList.add('is-loaded');
+    // Reveal one decoded frame instead of starting a fade while Safari is
+    // still preparing the large image for paint.
+    void heroImg.decode().then(() => {
+      if (heroImg.isConnected) heroImg.classList.add('is-loaded');
+    }).catch(() => {
+      if (heroImg.isConnected && heroImg.naturalWidth > 0) heroImg.classList.add('is-loaded');
+    });
 
     document.getElementById('daily-kicker')!.textContent = hero.period;
     document.getElementById('daily-title')!.textContent = hero.title;
     document.getElementById('daily-byline')!.textContent = `${hero.artist}, ${hero.year}`;
-    const heroUrl = `/works/${hero.slug}/`;
+    const heroUrl = `${prefix}/works/${hero.slug}/`;
     (document.getElementById('daily-link') as HTMLAnchorElement).href = heroUrl;
     (document.getElementById('daily-read') as HTMLAnchorElement).href = heroUrl;
-    document.getElementById('daily-link')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
-    document.getElementById('daily-read')!.setAttribute('aria-label', `Read the story of ${hero.title}`);
+    document.getElementById('daily-link')!.setAttribute('aria-label', storyLabel(hero.title));
+    document.getElementById('daily-read')!.setAttribute('aria-label', storyLabel(hero.title));
 
-    // Bound before the "already built" bail-out below so a view-transition
-    // re-entry still arms the hint.
     const hintScroller = document.querySelector<HTMLElement>('.walk-scroller');
     if (hintScroller) initScrollHint(hintScroller);
 
     // Gallery walk: the works after the first, same shuffle.
     const walk = document.getElementById('gallery-walk')!;
-    if (walk.childElementCount > 0) return; // already built (defensive)
     const template = document.getElementById('room-template') as HTMLTemplateElement;
 
     const WALK_SIZE = 24;
@@ -199,20 +225,33 @@ const entries = await Promise.all(
       const img = node.querySelector('.room-img') as HTMLImageElement;
       img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
       img.src = entry.src;
-      img.alt = `${entry.title} by ${entry.artist}`;
+      img.alt = imageLabel(entry);
       img.style.objectPosition = `${entry.fx}% ${entry.fy}%`;
       node.querySelector('.room-period')!.textContent = entry.period;
       node.querySelector('.room-title')!.textContent = entry.title;
       node.querySelector('.room-byline')!.textContent = `${entry.artist}, ${entry.year}`;
-      const url = `/works/${entry.slug}/`;
+      const url = `${prefix}/works/${entry.slug}/`;
       (node.querySelector('.room-link') as HTMLAnchorElement).href = url;
       (node.querySelector('.room-read') as HTMLAnchorElement).href = url;
-      (node.querySelector('.room-link') as HTMLAnchorElement).setAttribute('aria-label', `Read the story of ${entry.title}`);
-      (node.querySelector('.room-read') as HTMLAnchorElement).setAttribute('aria-label', `Read the story of ${entry.title}`);
+      (node.querySelector('.room-link') as HTMLAnchorElement).setAttribute('aria-label', storyLabel(entry.title));
+      (node.querySelector('.room-read') as HTMLAnchorElement).setAttribute('aria-label', storyLabel(entry.title));
       walk.appendChild(node);
     }
 
     document.getElementById('walk-end')!.hidden = false;
+    if (hintScroller) {
+      hintScroller.scrollTop = roomIndex * hintScroller.clientHeight;
+      document.querySelectorAll<HTMLAnchorElement>('.language-toggle a:not([aria-current])').forEach((link) => {
+        link.addEventListener('click', () => {
+          try {
+            sessionStorage.setItem('language-switch-walk', JSON.stringify({
+              slugs: shuffled.map((entry) => entry.slug),
+              room: Math.round(hintScroller.scrollTop / hintScroller.clientHeight),
+            }));
+          } catch { /* Language links work without storage. */ }
+        });
+      });
+    }
   }
 
   // --- first-visit scroll hint ----------------------------------------------
@@ -299,7 +338,11 @@ const entries = await Promise.all(
     }, HINT_DELAY);
   }
 
+  // Populate the new page before its transition paints. Initialize only once
+  // per DOM so page-load cannot reshuffle the hero after it has appeared.
+  document.addEventListener('astro:after-swap', initHome);
   document.addEventListener('astro:page-load', initHome);
+  initHome();
 
   // --- TV gallery mode: idle auto-scroll -------------------------------------
   // On the home walk, after the viewer stops touching it, drift through the

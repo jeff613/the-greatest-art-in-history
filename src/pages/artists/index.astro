@@ -1,7 +1,12 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { localizedContent, isChinese, localizedPath, text } from '../../lib/i18n';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+
+const chinese = isChinese(Astro.url);
+const href = (path: string) => localizedPath(path, chinese);
+const t = (english: string, zh: string) => text(chinese, english, zh);
+const { getCollection, getEntry } = localizedContent(Astro.url);
 
 const artists = await getCollection('artists');
 const withPeriod = await Promise.all(
@@ -15,18 +20,18 @@ withPeriod.sort(
 );
 ---
 
-<Base title="Artists — The Greatest Art in History">
+<Base title={t("Artists - The Greatest Art in History", "艺术家 - 艺术史上的伟大杰作")}>
   <div class="page-head page-head-wide">
-    <h1 class="display">Fifty lives<br />that changed how we see.</h1>
+    <h1 class="display">{t("Fifty lives", "五十位艺术家")}<br />{t("that changed how we see.", "改变了我们观看世界的方式。")}</h1>
   </div>
   <div class="grid cascade">
     {withPeriod.map(({ artist }, i) => (
-      <a class="card" href={`/artists/${artist.id}/`} style={`--ar: ${(artist.data.portrait.width / artist.data.portrait.height).toFixed(3)}; animation-delay: ${Math.min(0.04 + i * 0.022, 0.54).toFixed(3)}s`}>
+      <a class="card" href={href(`/artists/${artist.id}/`)} style={`--ar: ${(artist.data.portrait.width / artist.data.portrait.height).toFixed(3)}; animation-delay: ${Math.min(0.04 + i * 0.022, 0.54).toFixed(3)}s`}>
         <Image
           src={artist.data.portrait}
           widths={[400, 800]}
           sizes="(min-width: 700px) 400px, 100vw"
-          alt={`Portrait of ${artist.data.name}`}
+          alt={t(`Portrait of ${artist.data.name}`, `${artist.data.name}肖像`)}
         />
         <h3>{artist.data.name}</h3>
         <p>{artist.data.birth}–{artist.data.death}</p>

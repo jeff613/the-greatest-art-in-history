@@ -1,15 +1,21 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { localizedContent, isChinese, localizedPath, text } from '../../lib/i18n';
+import { getCollection as sourceCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
 
 export async function getStaticPaths() {
-  const artists = await getCollection('artists');
+  const artists = await sourceCollection('artists');
   return artists.map((artist) => ({ params: { slug: artist.id }, props: { artist } }));
 }
 
-const { artist } = Astro.props;
+const chinese = isChinese(Astro.url);
+const href = (path: string) => localizedPath(path, chinese);
+const t = (english: string, zh: string) => text(chinese, english, zh);
+const { getCollection, getEntry, render, localize } = localizedContent(Astro.url);
+
+const artist = localize(Astro.props.artist);
 const period = await getEntry(artist.data.period);
 const { Content } = await render(artist);
 const works = (await getCollection('works', (w) => w.data.artist.id === artist.id)).sort(
@@ -19,13 +25,13 @@ const aspect = (w: (typeof works)[number]) => w.data.image.height / w.data.image
 const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best));
 ---
 
-<Base title={`${artist.data.name} — The Greatest Art in History`} dark>
+<Base title={`${artist.data.name} - ${t("The Greatest Art in History", "艺术史上的伟大杰作")}`} dark>
   <section class="artist-hero">
     <Image
       src={artist.data.portrait}
       widths={[400, 800]}
       sizes="320px"
-      alt={`Portrait of ${artist.data.name}`}
+      alt={t(`Portrait of ${artist.data.name}`, `${artist.data.name}肖像`)}
     />
     <div>
       <p class="kicker">{period.data.name} · {artist.data.birth}–{artist.data.death}</p>
@@ -40,12 +46,12 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
         <article class="prose">
           <Content />
         </article>
-        <a class="bio-art" href={`/works/${featured.id}/`}>
+        <a class="bio-art" href={href(`/works/${featured.id}/`)}>
           <Image
             src={featured.data.image}
             widths={[600, 1200]}
             sizes="40vw"
-            alt={`${featured.data.title} by ${artist.data.name}`}
+            alt={t(`${featured.data.title} by ${artist.data.name}`, `${artist.data.name}《${featured.data.title}》`)}
           />
           <p class="bio-art-caption">
             <em>{featured.data.title}</em> · {featured.data.year}
@@ -54,17 +60,20 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
       </div>
 
       <section class="timeline prose">
-        <h2>Life in brief</h2>
-        <ul>
+        <h2>{t("Life in brief", "生平年表")}</h2>
+        <ul role="list">
           {artist.data.timeline.map((item) => (
-            <li><strong>{item.year}</strong> — {item.event}</li>
+            <li>
+              <span class="timeline-year">{chinese ? item.year.replace(/^(\d{4})s$/, '$1年代') : item.year}</span>
+              <span class="timeline-event">{item.event}</span>
+            </li>
           ))}
         </ul>
       </section>
     </div>
 
     <section class="collection-band">
-      <p class="kicker">In the collection</p>
+      <p class="kicker">{t("In the collection", "馆藏作品")}</p>
       <div class="grid">
         {works.map((work) => (
           <ArtworkCard work={work} artistName={artist.data.name} />
@@ -128,13 +137,7 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
       letter-spacing: 0.04em;
     }
     .bio-art-caption em { font-family: var(--serif); font-size: 1rem; }
-    /* Life in brief + the collection sit centered under the intro block,
-       using the same wide max as everything else. The timeline fills the wide
-       frame but its heading, accent bar, and list are centered within it. */
-    .reading-center .timeline { max-width: var(--wide-max); margin-inline: auto; }
-    .reading-center .timeline h2 { text-align: center; }
-    .reading-center .timeline h2::before { margin-inline: auto; }
-    .reading-center .timeline ul { width: fit-content; margin-inline: auto; }
+    .reading-center .timeline { margin-inline: auto; }
     .collection-band { max-width: var(--wide-max); margin-inline: auto; }
     .collection-band .grid { justify-content: center; }
     .collection-band .grid::after { display: none; }
@@ -142,9 +145,27 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
   }
   .timeline ul { list-style: none; padding: 0; }
   .timeline li {
-    border-left: 1px solid var(--gilt);
-    padding-left: 1.25rem;
-    margin-bottom: 0.9rem;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1.25rem;
+    border-top: 1px solid var(--line);
+    padding: 1.25rem 0;
+    margin: 0;
+  }
+  .timeline-year {
+    color: var(--gilt);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.3rem;
+  }
+  .timeline-event {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    line-height: 1.65;
+  }
+  @media (max-width: 480px) {
+    .timeline li { grid-template-columns: 1fr; gap: 0.35rem; }
+    .timeline-year { padding-top: 0; }
   }
   .collection-band { padding-top: 3.5rem; }
   .collection-band .kicker { text-align: center; }

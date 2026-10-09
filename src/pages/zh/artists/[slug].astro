@@ -1,0 +1,5 @@
+---
+import Page, { getStaticPaths as sourcePaths } from '../../artists/[slug].astro';
+export async function getStaticPaths() { return sourcePaths(); }
+---
+<Page {...Astro.props} />

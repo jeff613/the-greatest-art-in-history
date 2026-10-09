@@ -1,7 +1,12 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { localizedContent, isChinese, localizedPath, text } from '../../lib/i18n';
 import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+
+const chinese = isChinese(Astro.url);
+const href = (path: string) => localizedPath(path, chinese);
+const t = (english: string, zh: string) => text(chinese, english, zh);
+const { getCollection, getEntry } = localizedContent(Astro.url);
 
 const periods = (await getCollection('periods')).sort(
   (a, b) => a.data.order - b.data.order
@@ -61,21 +66,21 @@ const ticks = [1300, 1400, 1500, 1600, 1700, 1800, 1900].map((y) => ({
 }));
 // A few historical anchors for orientation — hand-placed (side) to clear the stems.
 const EVENTS: { year: number; name: string; display?: string; below?: boolean; leftward?: boolean; snug?: boolean }[] = [
-  { year: 1347, name: 'The Black Death' },
-  { year: 1450, name: 'Gutenberg', below: true },
-  { year: 1492, name: 'Columbus' },
-  { year: 1543, name: 'Copernicus' },
-  { year: 1609, name: 'Galileo' },
-  { year: 1687, name: 'Newton', below: true },
-  { year: 1789, name: 'The French Revolution', below: true, leftward: true },
-  { year: 1826, name: 'Photography' },
-  { year: 1916, display: '1914–18', name: 'The Great War', snug: true },
+  { year: 1347, name: t('The Black Death', '黑死病') },
+  { year: 1450, name: t('Gutenberg', '古腾堡'), below: true },
+  { year: 1492, name: t('Columbus', '哥伦布') },
+  { year: 1543, name: t('Copernicus', '哥白尼') },
+  { year: 1609, name: t('Galileo', '伽利略') },
+  { year: 1687, name: t('Newton', '牛顿'), below: true },
+  { year: 1789, name: t('The French Revolution', '法国大革命'), below: true, leftward: true },
+  { year: 1826, name: t('Photography', '摄影术') },
+  { year: 1916, display: '1914–18', name: t('The Great War', '第一次世界大战'), snug: true },
 ].map((e) => ({ ...e, pct: ((e.year - SPAN_START) / (SPAN_END - SPAN_START)) * 100 }));
 ---
 
-<Base title="Periods — The Greatest Art in History">
+<Base title={t("Periods - The Greatest Art in History", "艺术时期 - 艺术史上的伟大杰作")}>
   <div class="page-head page-head-right">
-    <h1 class="display">Six hundred years,<br />ten revolutions.</h1>
+    <h1 class="display">{t("Six hundred years,", "六百年光阴，")}<br />{t("ten revolutions.", "十次艺术变革。")}</h1>
   </div>
   <div class="timeline-scroll">
     <div class="timeline">
@@ -99,7 +104,7 @@ const EVENTS: { year: number; name: string; display?: string; below?: boolean; l
         <a
           class:list={['medallion', { below, far, mid, lowered, secondary: !period }]}
           style={`left: ${pct}%; animation-delay: ${0.15 + i * 0.06}s`}
-          href={period ? `/periods/${period.id}/` : `/works/${work.id}/`}
+          href={href(period ? `/periods/${period.id}/` : `/works/${work.id}/`)}
           aria-label={period ? period.data.name : `${work.data.title}, ${year}`}
         >
           <span class="stem" aria-hidden="true"></span>
@@ -112,10 +117,10 @@ const EVENTS: { year: number; name: string; display?: string; below?: boolean; l
   <ol class="period-list">
     {periods.map((period) => (
       <li>
-        <a href={`/periods/${period.id}/`}>
+        <a href={href(`/periods/${period.id}/`)}>
           <span class="years">{period.data.years}</span>
           <span class="name">{period.data.name}</span>
-          <span class="count">{countByPeriod.get(period.id) ?? 0} works →</span>
+          <span class="count">{countByPeriod.get(period.id) ?? 0} {t("works", "件作品")} →</span>
         </a>
       </li>
     ))}

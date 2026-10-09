@@ -1,14 +1,20 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { localizedContent, isChinese, localizedPath, text } from '../../lib/i18n';
+import { getCollection as sourceCollection } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
-  const works = await getCollection('works');
+  const works = await sourceCollection('works');
   return works.map((work) => ({ params: { slug: work.id }, props: { work } }));
 }
 
-const { work } = Astro.props;
+const chinese = isChinese(Astro.url);
+const href = (path: string) => localizedPath(path, chinese);
+const t = (english: string, zh: string) => text(chinese, english, zh);
+const { getCollection, getEntry, render, localize } = localizedContent(Astro.url);
+
+const work = localize(Astro.props.work);
 const artist = await getEntry(work.data.artist);
 const period = await getEntry(work.data.period);
 const { Content } = await render(work);
@@ -20,9 +26,9 @@ const index = all.findIndex((w) => w.id === work.id);
 const next = all[(index + 1) % all.length];
 ---
 
-<Base title={`${work.data.title} — ${artist.data.name}`} dark>
+<Base title={`${work.data.title} - ${artist.data.name}`} dark>
   <section class="art-hero">
-    <button class="zoom-open" aria-label="View full screen">
+    <button class="zoom-open" aria-label={t("View full screen", "全屏欣赏")}>
       <Image
         src={work.data.image}
         widths={[800, 1400, 2000]}
@@ -32,19 +38,19 @@ const next = all[(index + 1) % all.length];
     </button>
     <h1 class="display italic">{work.data.title}</h1>
     <p class="byline">
-      <a href={`/artists/${artist.id}/`}>{artist.data.name}</a>, {work.data.year}
+      <a href={href(`/artists/${artist.id}/`)}>{artist.data.name}</a>, {work.data.year}
     </p>
   </section>
 
   <p class="facts-line">
-    <a href={`/periods/${period.id}/`}>{period.data.name}</a>
+    <a href={href(`/periods/${period.id}/`)}>{period.data.name}</a>
     <span>{work.data.medium}</span>
     <span>{work.data.location}</span>
   </p>
 
   <dialog class="lightbox">
     <img src={fullRes.src} alt={work.data.title} loading="lazy" />
-    <button class="zoom-close" aria-label="Close full screen view">×</button>
+    <button class="zoom-close" aria-label={t("Close full screen view", "关闭全屏")}>×</button>
   </dialog>
 
   <div class="reading-room">
@@ -54,14 +60,33 @@ const next = all[(index + 1) % all.length];
   </div>
 
   <nav class="next-work">
-    <a href={`/works/${next.id}/`}>
-      <span class="kicker">Next artwork</span>
+    <a href={href(`/works/${next.id}/`)}>
+      <span class="kicker">{t("Next artwork", "下一幅作品")}</span>
       <span class="next-title">{next.data.title} →</span>
     </a>
   </nav>
 </Base>
 
 <style>
+  .reading-room :global(.prose > h2:last-of-type + ul) {
+    list-style-type: decimal-leading-zero;
+    padding-left: 2.6rem;
+    margin-top: 1.8rem;
+  }
+  .reading-room :global(.prose > h2:last-of-type + ul > li) {
+    padding: 1.1rem 0 1.1rem 0.65rem;
+    margin: 0;
+    border-top: 1px solid var(--line);
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    line-height: 1.65;
+  }
+  .reading-room :global(.prose > h2:last-of-type + ul > li::marker) {
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    color: var(--gilt);
+    font-variant-numeric: tabular-nums;
+  }
   .art-hero {
     padding: 7rem var(--pad) 0;
     text-align: center;

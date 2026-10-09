@@ -64,7 +64,7 @@ building designed like a high-end gallery:
 
 ## Scope today / non-goals today
 
-Local, personal, English-only. No accounts, no comments, no social features,
+Local, personal, available in English and Simplified Chinese. No accounts, no comments, no social features,
 no search (the collection is small enough to wander), no modern/contemporary
 art, no AI-generated imagery — ever. The site is a static build with no
 backend.

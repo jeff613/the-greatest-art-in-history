@@ -6,8 +6,11 @@ Astro 7 static site, local-only today, public deploy planned eventually
 (an app may follow). **Product vision and principles: `PRD.md`** — read it
 before proposing features.
 
-**Current state (2026-08-12):** 10 periods · 50 artists · 163 works,
-c. 1280–1929 (Cimabue → Kandinsky). 226 built pages. Every period page carries
+**Current state (2026-10-09):** 10 periods · 50 artists · 163 works,
+c. 1280–1929 (Cimabue → Kandinsky). 452 built pages across English and
+Simplified Chinese. All 223 content entries have full Chinese translations;
+the bottom-right EN / 中文 toggle preserves the current page and gallery room.
+Every period page carries
 an ambient period-matched classical track (period music, merged 2026-07-14).
 The home walk has a silent idle-triggered TV auto-scroll mode for AirPlay
 display (merged 2026-07-21); the old "artwork of the day" pick was dropped
@@ -35,8 +38,8 @@ clear: `astro dev stop && rm -rf .astro && astro dev --background`.
 Gates that must stay green after ANY content change:
 
 ```
-npm run check   # scripts/check-content.mjs — image floors + story sections
-npm run build   # 158 pages currently; page count = 2 + periods + 1 + artists + works
+npm run check   # content/image checks + complete Chinese translation coverage
+npm run build   # 452 pages: 2 languages × (3 indexes + periods + artists + works)
 ```
 
 Astro docs: https://docs.astro.build (routing, components, content collections,
@@ -44,6 +47,15 @@ styling guides as needed).
 
 ## Architecture map
 
+- `src/translations/zh/{periods,artists,works}/*.md` supplies Chinese metadata
+  and full prose; `src/lib/i18n.ts` overlays it on the original collections.
+  `src/pages/zh/` reuses the English page templates. Missing translations fail
+  the build; `scripts/check-translations.mjs` checks coverage and structure.
+- Homepage initialization is guarded before shuffling and runs on script load,
+  `astro:after-swap`, and `astro:page-load`. Its image fades in after decoding;
+  the homepage disables the outer page transition to avoid a double reveal.
+  Music initializes immediately as well as on `astro:page-load`, with a guard
+  against duplicate listeners. These address Safari issues confirmed by Jeff.
 - `src/content.config.ts` — collections schema (periods/artists/works, plus the
   optional per-period `music` array). **Frozen: do not modify** without explicit
   direction; everything depends on it.

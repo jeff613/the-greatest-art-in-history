@@ -5,6 +5,7 @@ import '@fontsource/cormorant-garamond/700.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '../styles/global.css';
+import { isChinese, localizedPath, text } from '../lib/i18n';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
@@ -13,11 +14,14 @@ interface Props {
   bare?: boolean;
 }
 const { title = 'The Greatest Art in History', dark = false, bare = false } = Astro.props;
-const path = Astro.url.pathname;
+const chinese = isChinese(Astro.url);
+const path = Astro.url.pathname.replace(/^\/zh(?=\/|$)/, '') || '/';
+const href = (path: string) => localizedPath(path, chinese);
+const t = (english: string, zh: string) => text(chinese, english, zh);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={chinese ? "zh-Hans" : "en"} transition:animate={bare ? 'none' : 'fade'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -38,22 +42,29 @@ const path = Astro.url.pathname;
         so the home-screen icon needs its own opaque PNG. Regenerate from
         favicon.svg at 180×180 if the mark changes. */}
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>{title}</title>
+    <title>{title === 'The Greatest Art in History' && chinese ? '艺术史上的伟大杰作' : title}</title>
+    <link rel="alternate" hreflang="en" href={path} />
+    <link rel="alternate" hreflang="zh-Hans" href={localizedPath(path, true)} />
     <ClientRouter />
   </head>
   <body class:list={[{ dark }]}>
     <header class="site-header">
-      <a class="wordmark" href="/">The Greatest</a>
-      <nav aria-label="Site">
-        <a class="nav-left" href="/artists/" aria-current={path.startsWith('/artists') ? 'page' : undefined}>Artists</a>
-        <a class="nav-right" href="/periods/" aria-current={path.startsWith('/periods') ? 'page' : undefined}>Periods</a>
+      <a class="wordmark" href={href("/")}>The Greatest</a>
+      <nav aria-label={t("Site", "网站导航")}>
+        <a class="nav-left" href={href("/artists/")} aria-current={path.startsWith('/artists') ? 'page' : undefined}>{t("Artists", "艺术家")}</a>
+        <a class="nav-right" href={href("/periods/")} aria-current={path.startsWith('/periods') ? 'page' : undefined}>{t("Periods", "艺术时期")}</a>
       </nav>
     </header>
     <main><slot /></main>
     {!bare && (
       <footer class="site-footer">
-        <p>A personal gallery of public-domain masterpieces · images courtesy of museum open-access programs and Wikimedia Commons</p>
+        <p>{t("A personal gallery of public-domain masterpieces · images courtesy of museum open-access programs and Wikimedia Commons", "一座收藏公版艺术杰作的私人美术馆 · 图像来自博物馆开放资源与维基共享资源")}</p>
       </footer>
     )}
+    <nav class="language-toggle" aria-label={t("Language", "语言")}>
+      <a href={path} lang="en" hreflang="en" aria-label="Read in English" aria-current={!chinese ? 'true' : undefined}>EN</a>
+      <span aria-hidden="true">/</span>
+      <a href={localizedPath(path, true)} lang="zh-Hans" hreflang="zh-Hans" aria-label="切换到简体中文" aria-current={chinese ? 'true' : undefined}>中文</a>
+    </nav>
   </body>
 </html>
