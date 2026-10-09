@@ -13,8 +13,8 @@ the bottom-right EN / 中文 toggle preserves the current page and gallery room.
 Artwork, artist and period pages share an opt-in ambient music player with an
 icon-only next-piece control. The library has 14 recordings; artwork dates
 determine eligible choices, and artist/period pages pool their artworks' choices.
-Period pages retain their original opening track. The 2026-10-09 expansion is on
-`artwork-music`, pending merge approval.
+Period pages retain their original opening track. The music expansion merged
+to `main` on 2026-10-09.
 The home walk has a silent idle-triggered TV auto-scroll mode for AirPlay
 display (merged 2026-07-21); the old "artwork of the day" pick was dropped
 that day (first slide is now a random shuffle lead). The baseline is on `main`,
