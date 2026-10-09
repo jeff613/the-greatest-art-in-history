@@ -4,6 +4,8 @@ import { getCollection as sourceCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
+import PeriodMusic from '../../components/PeriodMusic.astro';
+import { musicForWorks } from '../../lib/artwork-music';
 
 export async function getStaticPaths() {
   const artists = await sourceCollection('artists');
@@ -23,6 +25,7 @@ const works = (await getCollection('works', (w) => w.data.artist.id === artist.i
 );
 const aspect = (w: (typeof works)[number]) => w.data.image.height / w.data.image.width;
 const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best));
+const tracks = musicForWorks(await getCollection('periods'), works, chinese);
 ---
 
 <Base title={`${artist.data.name} - ${t("The Greatest Art in History", "艺术史上的伟大杰作")}`} dark>
@@ -44,6 +47,9 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
     <div class="reading-center">
       <div class="bio-row">
         <article class="prose">
+          <div class="artist-music">
+            <PeriodMusic track={tracks[0]} alternatives={tracks.slice(1)} />
+          </div>
           <Content />
         </article>
         <a class="bio-art" href={href(`/works/${featured.id}/`)}>
@@ -84,6 +90,7 @@ const featured = works.reduce((best, w) => (aspect(w) > aspect(best) ? w : best)
 </Base>
 
 <style>
+  .artist-music { margin-bottom: 1.5rem; }
   .artist-hero {
     display: flex;
     flex-wrap: wrap;

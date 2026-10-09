@@ -10,11 +10,14 @@ before proposing features.
 c. 1280–1929 (Cimabue → Kandinsky). 452 built pages across English and
 Simplified Chinese. All 223 content entries have full Chinese translations;
 the bottom-right EN / 中文 toggle preserves the current page and gallery room.
-Every period page carries
-an ambient period-matched classical track (period music, merged 2026-07-14).
+Artwork, artist and period pages share an opt-in ambient music player with an
+icon-only next-piece control. The library has 14 recordings; artwork dates
+determine eligible choices, and artist/period pages pool their artworks' choices.
+Period pages retain their original opening track. The 2026-10-09 expansion is on
+`artwork-music`, pending merge approval.
 The home walk has a silent idle-triggered TV auto-scroll mode for AirPlay
 display (merged 2026-07-21); the old "artwork of the day" pick was dropped
-that day (first slide is now a random shuffle lead). Everything is on `main`,
+that day (first slide is now a random shuffle lead). The baseline is on `main`,
 pushed to the public GitHub repo `jeff613/the-greatest-art-in-history`
 (2026-08-04) — plain git, no LFS; the ~1GB of image masters lives in history
 by design. The site itself stays local/Tailscale-only; publishing the repo is
@@ -59,10 +62,12 @@ styling guides as needed).
 - `src/content.config.ts` — collections schema (periods/artists/works, plus the
   optional per-period `music` array). **Frozen: do not modify** without explicit
   direction; everything depends on it.
-- `public/audio/<period-slug>.mp3` + `src/components/PeriodMusic.astro` — the
-  period-music player (one ambient track per period, ~34MB total). Authoring
-  rules in TEMPLATE.md ("Period music"); licensing audit in
-  `docs/superpowers/2026-07-14-period-music-licensing-audit.md`.
+- `public/audio/*.mp3` + `src/components/PeriodMusic.astro` - the shared music
+  player (14 recordings, ~50MB total). `src/lib/artwork-music.ts` owns listening
+  windows, additional bilingual credits and playlist selection without changing
+  the collection schema. Authoring rules in TEMPLATE.md ("Period music");
+  original licensing audit in `docs/superpowers/2026-07-14-period-music-licensing-audit.md`,
+  expansion and validation in `docs/superpowers/specs/2026-10-09-artwork-music.md`.
 - `src/content/{periods,artists,works}/*.md` — all content. `src/content/TEMPLATE.md`
   is the authoring guide (frontmatter shapes, section rules, image sourcing,
   licensing).
@@ -186,7 +191,10 @@ rendition cap (`getImage` with no width re-encodes 8000px masters), BASE_URL
 threading, Picasso EU caveat. baroque.mp3 and early-modernism.mp3 are PD-US only (US-government-work
 doctrine — same EU-caveat shape as the Picasso works); northern-renaissance.mp3's
 Commons page has a pending license review (CC BY 3.0 confirmed at its Free
-Music Archive origin — re-check before deploy). The 2026-08-12 batch cleared the
+Music Archive origin - re-check before deploy). The added Resurrexi, Lobo and
+Gibbons recordings also have pending Commons reviews, with FMA licenses checked
+separately; Du Fay relies on the Commons uploader's license declaration. Details
+are in the artwork-music spec. The 2026-08-12 batch cleared the
 whole wait-list (Gauguin, Seurat, El Greco, Ingres, Watteau, Holbein, Schiele,
 Rousseau) plus nine more; the new wait-list is Toulouse-Lautrec, Modigliani,
 Simone Martini or Ambrogio Lorenzetti (Gothic is still the thinnest period at

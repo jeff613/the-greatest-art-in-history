@@ -1,30 +1,24 @@
 ---
 import { isChinese, text } from '../lib/i18n';
+import type { MusicTrack } from '../lib/artwork-music';
 interface Props {
-  track: {
-    title: string;
-    composer: string;
-    composed: string;
-    performer: string;
-    source: string;
-    sourceUrl: string;
-    license: string;
-    file: string;
-  };
+  track: MusicTrack;
+  alternatives?: MusicTrack[];
 }
-const { track } = Astro.props;
+const { track, alternatives = [] } = Astro.props;
+const tracks = [track, ...alternatives];
 const chinese = isChinese(Astro.url);
 const t = (english: string, zh: string) => text(chinese, english, zh);
 
 const DEEDS: Record<string, string> = {
   'CC BY 3.0': 'https://creativecommons.org/licenses/by/3.0/',
   'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/',
+  'CC BY-SA 2.5': 'https://creativecommons.org/licenses/by-sa/2.5/',
   'CC BY-SA 3.0': 'https://creativecommons.org/licenses/by-sa/3.0/',
   'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
   'CC0': 'https://creativecommons.org/publicdomain/zero/1.0/',
 };
-const deed = DEEDS[track.license];
-const licenseLabel = track.license === 'Public domain (U.S. Air Force work)'
+const licenseLabel = (track: MusicTrack) => track.license === 'Public domain (U.S. Air Force work)'
   ? t(track.license, '公有领域（美国空军作品）')
   : track.license === 'Public domain (U.S. government work)'
     ? t(track.license, '公有领域（美国政府作品）')
@@ -32,29 +26,46 @@ const licenseLabel = track.license === 'Public domain (U.S. Air Force work)'
 ---
 
 <div class="period-music">
-  <button
-    class="music-toggle"
-    type="button"
-    aria-pressed="false"
-    aria-label={t(`Play ${track.title} by ${track.composer}`, `播放音乐：${track.composer}，${track.title}`)}
-  >
-    <span class="music-glyph" aria-hidden="true">♪</span>
-    <span class="music-state">{t("Listen", "聆听")}</span>
-  </button>
-  <p class="music-credit">
-    {track.composer} - <em>{track.title}</em>, {track.composed} ·{' '}
-    {track.performer} · <a href={track.sourceUrl}>{track.source}</a> ·{' '}
-    {deed ? <a href={deed}>{licenseLabel}</a> : licenseLabel}
-  </p>
+  <div class="music-controls">
+    <button
+      class="music-toggle"
+      type="button"
+      aria-pressed="false"
+      aria-label={t(`Play ${track.title} by ${track.composer}`, `播放音乐：${track.composer}，${track.title}`)}
+    >
+      <span class="music-glyph" aria-hidden="true">♪</span>
+      <span class="music-state">{t("Listen", "聆听")}</span>
+    </button>
+    {alternatives.length > 0 && <button class="music-next" type="button"
+      aria-label={t('Another piece', '换一首')} title={t('Another piece', '换一首')}>
+      <span aria-hidden="true">↻</span>
+    </button>}
+  </div>
+  <div class="music-credits" aria-live="polite">
+    {tracks.map((item, index) => <p class="music-credit" hidden={index !== 0}
+      data-file={item.file}
+      data-play-label={t(`Play ${item.title} by ${item.composer}`, `播放音乐：${item.composer}，${item.title}`)}>
+      {item.composer} - <em>{item.title}</em>, {item.composed} ·{' '}
+      {item.performer} · <a href={item.sourceUrl}>{item.source}</a> ·{' '}
+      {DEEDS[item.license] ? <a href={DEEDS[item.license]}>{licenseLabel(item)}</a> : licenseLabel(item)}
+      {item.processing && <> · {item.processing}</>}
+    </p>)}
+  </div>
   <audio preload="none" loop src={track.file}></audio>
 </div>
 
 <style>
   .period-music {
     display: flex;
-    align-items: baseline;
-    gap: 0.85rem;
-    margin-top: 1.1rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.85rem;
+  }
+  .music-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
   }
   .music-toggle {
     display: inline-flex;
@@ -76,10 +87,27 @@ const licenseLabel = track.license === 'Public domain (U.S. Air Force work)'
   .music-toggle:hover {
     background: rgba(138, 109, 59, 0.09);
   }
+  .music-credits { flex: 1 1 20rem; min-width: 0; padding-top: 0.2rem; }
+  .music-next {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--gilt);
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .music-next:hover { text-decoration: underline; }
   .music-credit {
     margin: 0;
     color: var(--muted);
     font-size: 0.82rem;
+    line-height: 1.8;
     letter-spacing: 0.04em;
   }
   .music-credit em {
@@ -90,10 +118,7 @@ const licenseLabel = track.license === 'Public domain (U.S. Air Force work)'
     border-bottom: 1px solid var(--gilt);
   }
   @media (max-width: 640px) {
-    .period-music {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    .music-credits { flex-basis: 100%; padding-top: 0; }
   }
 </style>
 
@@ -106,7 +131,7 @@ const licenseLabel = track.license === 'Public domain (U.S. Air Force work)'
     const audio = root.querySelector<HTMLAudioElement>('audio');
     if (!button || !state || !audio) return;
     const chinese = document.documentElement.lang === 'zh-Hans';
-    const playLabel = button.getAttribute('aria-label') ?? 'Play';
+    let playLabel = button.getAttribute('aria-label') ?? 'Play';
     root.dataset.initialized = 'true';
     audio.volume = 0.7;
     let request = 0;
@@ -127,6 +152,24 @@ const licenseLabel = track.license === 'Public domain (U.S. Air Force work)'
         : status === 'error' ? (chinese ? '音乐未能播放，点击重试' : 'Music could not play, click to retry')
         : playLabel);
     };
+    const credits = [...root.querySelectorAll<HTMLElement>('.music-credit')];
+    let selected = 0;
+    root.querySelector('.music-next')?.addEventListener('click', () => {
+      const resume = !audio.paused;
+      const currentRequest = ++request;
+      audio.pause();
+      credits[selected].hidden = true;
+      selected = (selected + 1) % credits.length;
+      const credit = credits[selected];
+      credit.hidden = false;
+      audio.src = credit.dataset.file!;
+      playLabel = credit.dataset.playLabel!;
+      show(resume ? 'loading' : 'idle');
+      if (resume) audio.play().catch((error: DOMException) => {
+        if (currentRequest !== request || error.name === 'AbortError') return;
+        show('error');
+      });
+    });
     button.addEventListener('click', () => {
       const currentRequest = ++request;
       if (!audio.paused) {

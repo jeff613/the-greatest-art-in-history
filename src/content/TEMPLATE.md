@@ -114,6 +114,20 @@ Rules:
   `public/audio/<period-slug>.mp3`, ≤ 10 MB.
 - `sourceUrl` must be the exact page for the file actually used.
 
+The shared player also appears on artwork and artist pages. Extra recordings and
+their English/Chinese credits live in `src/lib/artwork-music.ts`, alongside
+curated listening windows. These windows describe suitable artwork dates, not
+exact composition dates. Keep composition dates visible and honest. Period
+frontmatter still supplies the original opening track; artist and period
+alternatives pool the choices for their artworks, deduplicated by audio file.
+
+Additional audio uses descriptive filenames under `public/audio/`. Apply the
+same recording-license, human-performance, duration, size and ambience checks.
+If loudness/dynamics are adjusted, disclose that in both languages, preserve the
+recording's license, and measure the final MP3. Record provenance, processing
+and measurements in the feature's audit. For the current library, see
+`docs/superpowers/specs/2026-10-09-artwork-music.md`.
+
 ## Focal points (smart cropping on the home walk)
 
 After adding or replacing artwork images, regenerate focal points:

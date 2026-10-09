@@ -3,6 +3,8 @@ import { localizedContent, isChinese, localizedPath, text } from '../../lib/i18n
 import { getCollection as sourceCollection } from 'astro:content';
 import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import PeriodMusic from '../../components/PeriodMusic.astro';
+import { artworkMusic } from '../../lib/artwork-music';
 
 export async function getStaticPaths() {
   const works = await sourceCollection('works');
@@ -18,6 +20,7 @@ const work = localize(Astro.props.work);
 const artist = await getEntry(work.data.artist);
 const period = await getEntry(work.data.period);
 const { Content } = await render(work);
+const tracks = artworkMusic(await getCollection('periods'), work.data.year, work.id, chinese);
 
 const fullRes = await getImage({ src: work.data.image, format: 'jpeg' });
 
@@ -54,6 +57,9 @@ const next = all[(index + 1) % all.length];
   </dialog>
 
   <div class="reading-room">
+    <div class="artwork-music">
+      <PeriodMusic track={tracks[0]} alternatives={tracks.slice(1)} />
+    </div>
     <article class="prose">
       <Content />
     </article>
@@ -68,6 +74,16 @@ const next = all[(index + 1) % all.length];
 </Base>
 
 <style>
+  .artwork-music {
+    max-width: var(--measure);
+    margin: 0 auto 2rem;
+    padding: 0 1.25rem;
+  }
+  .reading-room :global(.prose > h2:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
   .reading-room :global(.prose > h2:last-of-type + ul) {
     list-style-type: decimal-leading-zero;
     padding-left: 2.6rem;
@@ -173,10 +189,6 @@ const next = all[(index + 1) % all.length];
     }
     .reading-room {
       padding-top: 2.25rem;
-    }
-    .reading-room :global(.prose > h2:first-child) {
-      margin-top: 1.6rem;
-      padding-top: 0.8rem;
     }
     .reading-room :global(.prose > h2:first-child::before) {
       margin-bottom: 0.8rem;
